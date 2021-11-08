@@ -8,8 +8,8 @@
         .regAndSignIn{
             top:20%;
             left:85%;
-            width:140px;
-            height:40px;
+            width:180px;
+            height:45px;
             position: absolute;
             background: white;
             text-align: left;
@@ -68,14 +68,15 @@
 
     <button><a>Zaregistrovať</a></button><br><br>
     <p>Už máte účet?</p>
-    <button><a href='/preSignIn' >Prihlásiť sa</a></button>
+    <button><a href='/preSignIn'>Prihlásiť sa</a></button>
 </form>
 
 <a href='/'><img src="/static/bus_logo.jpg" alt="bus" width="250" height="230" class="buslogo"></a>
 
-<form class="busConfig" action="/registration" method="POST">
+<form class="busConfig" action="/busConfig" method="POST">
     <label for="fromCity">Odkiaľ:</label><br>
     <select name="fromCity" id="fromCity" class="optionBusConfig">
+        <option value="none" selected disabled hidden>Vyhľadať</option>
         <option value="Brno">Brno</option>
         <option value="Český Krumlov">Český Krumlov</option>
         <option value="Hradec Králové">Hradec Králové</option>
@@ -91,6 +92,7 @@
     </select><br><br>
     <label for="toCity">Kam:</label><br>
     <select name="toCity" id="toCity" class="optionBusConfig">
+        <option value="none" selected disabled hidden>Vyhľadať</option>
         <option value="Brno">Brno</option>
         <option value="Český Krumlov">Český Krumlov</option>
         <option value="Hradec Králové">Hradec Králové</option>

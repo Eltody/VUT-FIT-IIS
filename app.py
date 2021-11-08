@@ -26,7 +26,10 @@ def registration():
     password = request.form['password']
     passwordConfirm = request.form['passwordConfirm']
 
-    if fname == "" or lname == "" or login == "" or not re.search('(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])', email) or password != passwordConfirm or not re.search('^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{5,30}$', password):
+    if fname == "" or lname == "" or login == "" or not re.search(
+            '(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])',
+            email) or password != passwordConfirm or not re.search(
+            '^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{5,30}$', password):
         return render_template('index.html')
 
     cursor = connection.cursor(buffered=True)
@@ -44,6 +47,15 @@ def registration():
     cursor.close()
 
     return render_template('registrationSuccess.html', data=fname)
+
+
+@app.route('/busConfig', methods=['GET', 'POST'])
+def busConfig():
+    fromCity = request.form['fromCity']
+    toCity = request.form['toCity']
+    print(fromCity)
+    print(toCity)
+    return render_template('index.html')  # vyvolanie main page aby sme na nej pri vyhladavani spoju aj zostali
 
 
 @app.route('/preSignIn', methods=['GET', 'POST'])
