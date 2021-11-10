@@ -1,12 +1,9 @@
 from flask import Flask, render_template, request
-import mysql.connector
+import pymysql
 import re
 
 app = Flask(__name__)
-connection = mysql.connector.connect(host='92.52.58.251',
-                                     database='iis',
-                                     user='admin',
-                                     password='password')
+connection = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
 
 
 #############################################
@@ -31,17 +28,17 @@ def registration():
             '^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{5,30}$', password):
         return render_template('index.html')
 
-    cursor = connection.cursor(buffered=True)
+    cursor = connection.cursor()
     cursor.execute("SELECT email FROM Cestujuci")
     for (email) in cursor:
+        email = ''.join(email)
         if email == user_email:
             cursor.close()
             return render_template('index.html')
     cursor.close()
 
-    query = f"INSERT INTO Cestujuci (meno, priezvisko, email, heslo) VALUES ('{fname}', '{lname}', '{user_email}', '{password}')"
     cursor = connection.cursor()
-    cursor.execute(query)
+    cursor.execute("insert into `Cestujuci` (meno, priezvisko, email, heslo) VALUES (%s, %s, %s, %s)", (fname, lname, user_email, password))
     connection.commit()
     cursor.close()
 
@@ -67,7 +64,7 @@ def signIn():
     user_email = str(request.form['email'])
     password1 = str(request.form['password'])
     # kontrola spravnosti prihlasovacich udajov z webu a DB
-    cursor = connection.cursor(buffered=True)
+    cursor = connection.cursor()
     cursor.execute("SELECT meno, email, heslo FROM Cestujuci")
     for (meno, email, heslo) in cursor:
         if email == user_email and heslo == password1:
