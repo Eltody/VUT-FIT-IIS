@@ -48,27 +48,29 @@ CREATE TABLE Personal(
 		ON DELETE CASCADE
 ); 
 CREATE TABLE Spoj(
-    id VARCHAR(40) PRIMARY KEY,-- primarni klic
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (id),
     cenova_kategoria VARCHAR(40),
     id_dopravca_spoje INTEGER,
     CONSTRAINT PK_id_dopravca_spoje
 		FOREIGN KEY (id_dopravca_spoje) REFERENCES Dopravca (id)
 		ON DELETE CASCADE
-); 
+);
 CREATE TABLE Zastavky(
-    id VARCHAR(40) PRIMARY KEY,-- primarni klic
-    nazov_zastavky VARCHAR (30),
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (id),
+    nazov_zastavky VARCHAR (40),
     cas_prejazdu VARCHAR(20),
     geograficka_poloha VARCHAR(40)
-); 
+);
 CREATE TABLE Jizdenka(
     id INT(11) NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (id),
     meno VARCHAR(40) NOT NULL,
-    id_spoj_jizdenky VARCHAR (40),
-    id_zastavky_jizdenky VARCHAR (40),
+    id_spoj_jizdenky INT,
+    id_zastavky_jizdenky INT (40),
     id_personal_jizdenka INTEGER,
-    id_cestujuci_jizdenka INTEGER, 
+    id_cestujuci_jizdenka INTEGER,
     CONSTRAINT PK_id_spoj_jizdenky
 		FOREIGN KEY (id_spoj_jizdenky) REFERENCES Spoj (id)
 		ON DELETE CASCADE,
@@ -81,13 +83,13 @@ CREATE TABLE Jizdenka(
     CONSTRAINT PK_id_cestujuci_jizdenka
 		FOREIGN KEY (id_cestujuci_jizdenka) REFERENCES Cestujuci (id)
 		ON DELETE CASCADE
-); 
+);
 CREATE TABLE NavrhZastavky(
     id INT(11) NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (id),
-    id_zastavky_navrhy VARCHAR (40),
+    id_zastavky_navrhy INTEGER,
     id_dopravca_navrhy INTEGER,
-    id_administrator_navrh INTEGER, 
+    id_administrator_navrh INTEGER,
     CONSTRAINT PK_id_zastavky_navrhy
 		FOREIGN KEY (id_zastavky_navrhy) REFERENCES Zastavky (id)
 		ON DELETE CASCADE,
@@ -97,7 +99,7 @@ CREATE TABLE NavrhZastavky(
     CONSTRAINT PK_id_administrator_navrh
 		FOREIGN KEY (id_administrator_navrh) REFERENCES Administrator (id)
 		ON DELETE CASCADE
-); 
+);
 CREATE TABLE Vozidlo(
     id INT(11) NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (id),
@@ -111,8 +113,8 @@ CREATE TABLE Vozidlo(
 );
 
 CREATE TABLE Spoj_Zastavka(
-    id_spoju VARCHAR (40),-- primarni klic
-    id_zastavky VARCHAR(40),-- primarni klic
+    id_spoju INTEGER,-- primarni klic
+    id_zastavky INTEGER,
     CONSTRAINT Spoj_Zastavka_PK
 		PRIMARY KEY (id_spoju, id_zastavky),
 	CONSTRAINT Spoj_Zastavka_id_spoju_FK
@@ -125,7 +127,7 @@ CREATE TABLE Spoj_Zastavka(
 
 CREATE TABLE Vozidlo_Spoj(
     id_vozidla INTEGER,-- primarni klic
-    id_spoju VARCHAR(40),-- primarni klic
+    id_spoju INTEGER,
     CONSTRAINT Vozidlo_Spoj_PK
 		PRIMARY KEY (id_vozidla, id_spoju),
 	CONSTRAINT Vozidlo_Spoj_id_vozidla_FK
@@ -138,7 +140,7 @@ CREATE TABLE Vozidlo_Spoj(
 
 CREATE TABLE Personal_Spoj(
     id_personalu INTEGER,-- primarni klic
-    id_spoju VARCHAR(40),-- primarni klic
+    id_spoju INTEGER,
     CONSTRAINT Personal_Spoj_PK
 		PRIMARY KEY (id_personalu, id_spoju),
 	CONSTRAINT Personal_Spoj_id_personalu_FK
@@ -151,3 +153,28 @@ CREATE TABLE Personal_Spoj(
 
 INSERT INTO Administrator (meno, priezvisko, email, heslo)
 VALUES ('Admin', 'adminko', 'admin@admin.com', 'password');
+
+INSERT INTO Zastavky (nazov_zastavky)
+VALUES ('Brno - ÚAN Zvonařka');
+INSERT INTO Zastavky (nazov_zastavky)
+VALUES ('Český Krumlov - aut.nádr.');
+INSERT INTO Zastavky (nazov_zastavky)
+VALUES ('Hradec Králové - Terminál HD');
+INSERT INTO Zastavky (nazov_zastavky)
+VALUES ('Jihlava - aut.nádr.');
+INSERT INTO Zastavky (nazov_zastavky)
+VALUES ('Kroměříž - aut.nádr.');
+INSERT INTO Zastavky (nazov_zastavky)
+VALUES ('Liberec - aut.nádr.');
+INSERT INTO Zastavky (nazov_zastavky)
+VALUES ('Olomouc - hl.nádr.');
+INSERT INTO Zastavky (nazov_zastavky)
+VALUES ('Ostrava - ÚAN');
+INSERT INTO Zastavky (nazov_zastavky)
+VALUES ('Pardubice - hl.nádr.');
+INSERT INTO Zastavky (nazov_zastavky)
+VALUES ('Plzeň - CAN');
+INSERT INTO Zastavky (nazov_zastavky)
+VALUES ('Praha - Hlavní nádraží');
+INSERT INTO Zastavky (nazov_zastavky)
+VALUES ('Zlín - aut.nádr.');
