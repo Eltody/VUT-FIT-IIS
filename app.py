@@ -32,14 +32,14 @@ def registration():
         return render_template('index.html')
 
     cursor = connection.cursor(buffered=True)
-    cursor.execute("SELECT email FROM Administrator")
+    cursor.execute("SELECT email FROM Cestujuci")
     for (email) in cursor:
         if email == user_email:
             cursor.close()
             return render_template('index.html')
     cursor.close()
 
-    query = f"INSERT INTO Administrator (meno, priezvisko, email, heslo) VALUES ('{fname}', '{lname}', '{user_email}', '{password}')"
+    query = f"INSERT INTO Cestujuci (meno, priezvisko, email, heslo) VALUES ('{fname}', '{lname}', '{user_email}', '{password}')"
     cursor = connection.cursor()
     cursor.execute(query)
     connection.commit()
@@ -68,7 +68,7 @@ def signIn():
     password1 = str(request.form['password'])
     # kontrola spravnosti prihlasovacich udajov z webu a DB
     cursor = connection.cursor(buffered=True)
-    cursor.execute("SELECT meno, email, heslo FROM Administrator")
+    cursor.execute("SELECT meno, email, heslo FROM Cestujuci")
     for (meno, email, heslo) in cursor:
         if email == user_email and heslo == password1:
             cursor.close()
