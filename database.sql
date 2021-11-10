@@ -62,7 +62,8 @@ CREATE TABLE Zastavky(
     geograficka_poloha VARCHAR(40)
 ); 
 CREATE TABLE Jizdenka(
-    id INTEGER PRIMARY KEY,-- primarni klic
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (id),
     meno VARCHAR(40) NOT NULL,
     id_spoj_jizdenky VARCHAR (40),
     id_zastavky_jizdenky VARCHAR (40),
@@ -82,7 +83,8 @@ CREATE TABLE Jizdenka(
 		ON DELETE CASCADE
 ); 
 CREATE TABLE NavrhZastavky(
-    id INTEGER PRIMARY KEY, -- primarni klic
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (id),
     id_zastavky_navrhy VARCHAR (40),
     id_dopravca_navrhy INTEGER,
     id_administrator_navrh INTEGER, 
@@ -97,7 +99,8 @@ CREATE TABLE NavrhZastavky(
 		ON DELETE CASCADE
 ); 
 CREATE TABLE Vozidlo(
-    id INTEGER PRIMARY KEY,-- primarni klic
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (id),
     pocet_miest INTEGER,
     popis_vozidla VARCHAR(100),
     aktualna_poloha VARCHAR(100),

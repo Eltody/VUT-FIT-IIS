@@ -21,26 +21,25 @@ def index():
 def registration():
     fname = request.form['fname']
     lname = request.form['lname']
-    login = request.form['nickname']
-    email = request.form['email']
+    user_email = request.form['email']
     password = request.form['password']
     passwordConfirm = request.form['passwordConfirm']
 
-    if fname == "" or lname == "" or login == "" or not re.search(
+    if fname == "" or lname == "" or user_email == "" or not re.search(
             '(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])',
-            email) or password != passwordConfirm or not re.search(
+            user_email) or password != passwordConfirm or not re.search(
             '^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{5,30}$', password):
         return render_template('index.html')
 
     cursor = connection.cursor(buffered=True)
-    cursor.execute("SELECT nickname FROM Administrator")
-    for (nickname) in cursor:
-        if nickname == login:
+    cursor.execute("SELECT email FROM Administrator")
+    for (email) in cursor:
+        if email == user_email:
             cursor.close()
             return render_template('index.html')
     cursor.close()
 
-    query = f"INSERT INTO Administrator (meno, priezvisko, nickname, heslo) VALUES ('{fname}', '{lname}', '{nickname}', '{password}')"
+    query = f"INSERT INTO Administrator (meno, priezvisko, email, heslo) VALUES ('{fname}', '{lname}', '{user_email}', '{password}')"
     cursor = connection.cursor()
     cursor.execute(query)
     connection.commit()
@@ -65,15 +64,15 @@ def preSignIn():
 
 @app.route('/signIn', methods=['GET', 'POST'])
 def signIn():
-    nickname1 = str(request.form['nickname'])
+    user_email = str(request.form['email'])
     password1 = str(request.form['password'])
     # kontrola spravnosti prihlasovacich udajov z webu a DB
     cursor = connection.cursor(buffered=True)
-    cursor.execute("SELECT nickname, heslo FROM Administrator")
-    for (nickname, heslo) in cursor:
-        if nickname == nickname1 and heslo == password1:
+    cursor.execute("SELECT meno, email, heslo FROM Administrator")
+    for (meno, email, heslo) in cursor:
+        if email == user_email and heslo == password1:
             cursor.close()
-            return render_template('signInSuccess.html', data=nickname1)
+            return render_template('signInSuccess.html', data=meno)
     cursor.close()
     return render_template('signIn.html')
 
