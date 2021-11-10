@@ -148,3 +148,6 @@ CREATE TABLE Personal_Spoj(
 		FOREIGN KEY (id_spoju) REFERENCES Spoj (id)
 		ON DELETE CASCADE
 );
+
+INSERT INTO Administrator (meno, priezvisko, email, heslo)
+VALUES ('Admin', 'adminko', 'admin@admin.com', 'password');
