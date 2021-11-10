@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import pymysql
+import logging
 import re
 
 app = Flask(__name__)
@@ -49,8 +50,8 @@ def registration():
 def busConfig():
     fromCity = request.form['fromCity']
     toCity = request.form['toCity']
-    print(fromCity)
-    print(toCity)
+    app.logger.info(fromCity)
+    app.logger.info(toCity)
     return render_template('index.html')  # vyvolanie main page aby sme na nej pri vyhladavani spoju aj zostali
 
 
