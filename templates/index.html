@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="/static/style.css">
     <style>
         .regAndSignIn{
-            top:20%;
+            top:23%;
             left:85%;
             width:180px;
             height:45px;
@@ -73,39 +73,6 @@
 
 <form class="busConfig" action="/busConfig" method="POST">
     <label for="fromCity">Odkiaľ:</label><br>
-<<<<<<< Updated upstream
-    <select name="fromCity" id="fromCity" class="optionBusConfig">
-        <option value="none" selected disabled hidden>Vyhľadať</option>
-        <option value="Brno - ÚAN Zvonařka">Brno - ÚAN Zvonařka</option>
-        <option value="Český Krumlov - aut.nádr.">Český Krumlov - aut.nádr.</option>
-        <option value="Hradec Králové - Terminál HD">Hradec Králové - Terminál HD</option>
-        <option value="Jihlava - aut.nádr.">Jihlava - aut.nádr.</option>
-        <option value="Kroměříž - aut.nádr.">Kroměříž - aut.nádr.</option>
-        <option value="Liberec - aut.nádr.">Liberec - aut.nádr.</option>
-        <option value="Olomouc - hl.nádr.">Olomouc - hl.nádr.</option>
-        <option value="Ostrava - ÚAN">Ostrava - ÚAN</option>
-        <option value="Pardubice - hl.nádr.">Pardubice - hl.nádr.</option>
-        <option value="Plzeň - CAN">Plzeň - CAN</option>
-        <option value="Praha - Hlavní nádraží">Praha - Hlavní nádraží</option>
-        <option value="Zlín - aut.nádr.">Zlín - aut.nádr.</option>
-    </select><br><br>
-    <label for="toCity">Kam:</label><br>
-    <select name="toCity" id="toCity" class="optionBusConfig">
-        <option value="none" selected disabled hidden>Vyhľadať</option>
-        <option value="Brno - ÚAN Zvonařka">Brno - ÚAN Zvonařka</option>
-        <option value="Český Krumlov - aut.nádr.">Český Krumlov - aut.nádr.</option>
-        <option value="Hradec Králové - Terminál HD">Hradec Králové - Terminál HD</option>
-        <option value="Jihlava - aut.nádr.">Jihlava - aut.nádr.</option>
-        <option value="Kroměříž - aut.nádr.">Kroměříž - aut.nádr.</option>
-        <option value="Liberec - aut.nádr.">Liberec - aut.nádr.</option>
-        <option value="Olomouc - hl.nádr.">Olomouc - hl.nádr.</option>
-        <option value="Ostrava - ÚAN">Ostrava - ÚAN</option>
-        <option value="Pardubice - hl.nádr.">Pardubice - hl.nádr.</option>
-        <option value="Plzeň - CAN">Plzeň - CAN</option>
-        <option value="Praha - Hlavní nádraží">Praha - Hlavní nádraží</option>
-        <option value="Zlín - aut.nádr.">Zlín - aut.nádr.</option>
-    </select><br><br>
-=======
     <SELECT name="fromCity" id="fromCity" class="optionBusConfig">
         {% for i in cities %}
             <OPTION value={{i[0]}}>{{i[0]}}</OPTION>
@@ -117,7 +84,6 @@
             <OPTION value={{i[0]}}>{{i[0]}}</OPTION>
         {% endfor %}
     </SELECT><br><br>
->>>>>>> Stashed changes
     <button class="buttonSearch"><a>Hľadať</a></button><br><br>
 </form>
 
