@@ -1,5 +1,5 @@
 <div align="center">
-    <h1>VUT FIT ICP</h1>
+    <h1>VUT FIT IIS</h1>
 </div>
 
 # Informačné systémy - projekt č.1 (varianta 3)
