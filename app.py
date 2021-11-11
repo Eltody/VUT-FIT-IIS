@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
+import czech_sort
 import pymysql
-import logging
 import re
 
 app = Flask(__name__)
@@ -8,12 +8,16 @@ connection = pymysql.connect(host='92.52.58.251', user='admin', password='passwo
 
 
 #############################################
-
-
 @app.route('/')
 def index():
-    return render_template('index.html')
-
+    cursor = connection.cursor()
+    cursor.execute("SELECT nazov_zastavky from Zastavky")
+    tmp = cursor.fetchall()
+    cities = []
+    for i in tmp:
+        cities.append(''.join(i))
+    cities = tuple(zip(iter(sorted(cities, key=czech_sort.key))))
+    return render_template("index.html", cities=cities)
 
 @app.route('/registration', methods=['POST'])
 def registration():
