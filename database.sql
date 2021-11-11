@@ -18,7 +18,7 @@ CREATE TABLE Cestujuci(
     email VARCHAR(40) NOT NULL,
     heslo VARCHAR(40) NOT NULL,
 	PRIMARY KEY (id)
-); 
+);
 CREATE TABLE Administrator(
     id INT(11) NOT NULL AUTO_INCREMENT,
     meno VARCHAR(40) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE Administrator(
     email VARCHAR(40) NOT NULL,
     heslo VARCHAR(40) NOT NULL,
 	PRIMARY KEY (id)
-); 
+);
 CREATE TABLE Dopravca(
     id INT(11) NOT NULL AUTO_INCREMENT,
     meno VARCHAR(40) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE Dopravca(
     email VARCHAR(40) NOT NULL,
     heslo VARCHAR(40) NOT NULL,
 	PRIMARY KEY (id)
-); 
+);
 CREATE TABLE Personal(
     id INT(11) NOT NULL AUTO_INCREMENT,
     meno VARCHAR(40) NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE Personal(
     CONSTRAINT PK_id_dopravca_personal
 		FOREIGN KEY (id_dopravca_personal) REFERENCES Dopravca (id)
 		ON DELETE CASCADE
-); 
+);
 CREATE TABLE Spoj(
     id INT(11) NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (id),
@@ -104,7 +104,7 @@ CREATE TABLE Vozidlo(
     id INT(11) NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (id),
     pocet_miest INTEGER,
-    popis_vozidla VARCHAR(100),
+    popis_vozidla VARCHAR(1500),
     aktualna_poloha VARCHAR(100),
     id_dopravca_vozidlo INTEGER,
     CONSTRAINT PK_id_dopravca_vozidlo
@@ -178,3 +178,29 @@ INSERT INTO Zastavky (nazov_zastavky)
 VALUES ('Praha - Hlavní nádraží');
 INSERT INTO Zastavky (nazov_zastavky)
 VALUES ('Zlín - aut.nádr.');
+INSERT INTO Zastavky (nazov_zastavky)
+VALUES ('Ústí nad Labem');
+
+
+INSERT INTO Personal (meno, priezvisko, email, heslo)
+VALUES ('Patrik', 'Jacola', 'patrikus@jacolus.sk', '2BitStudent');
+INSERT INTO Personal (meno, priezvisko, email, heslo)
+VALUES ('Veronika', 'Marková', 'markovav@gmail.com', 'novakovaV7891');
+INSERT INTO Personal (meno, priezvisko, email, heslo)
+VALUES ('Eleonóra', 'Trúfalová', 'elitra@gmail.com', 'Mauricius2004');
+INSERT INTO Personal (meno, priezvisko, email, heslo)
+VALUES ('Jakub', 'Davinič', 'davinjacob@seznam.cz', 'petrone14H');
+
+INSERT INTO Dopravca (meno, priezvisko, email, heslo)
+VALUES ('Regio', 'Jet', 'regiojet@regiojet.com', 'studentAgency2011ToTheInfinityAndBeyond');
+INSERT INTO Dopravca (meno, priezvisko, email, heslo)
+VALUES ('leo', 'express', 'expressileo@leoexpress.com', 'Kah9-Cy.a55');
+INSERT INTO Dopravca (meno, priezvisko, email, heslo)
+VALUES ('Flix', 'BUS', 'flixmotors@flixbus.com', 'flexiBuZzes4596');
+
+INSERT INTO Vozidlo (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo)
+VALUES (61, 'Luxusní žluté autobusy. Vozový park v korporátní žluté barvě tvoří španělské autobusy Irizar na podvozcích Scania nebo Volvo s luxusní výbavou Fun&Relax. Vozový park každoročně obměňujeme o další nové autobusy ve stylu Fun&Relax. V červnu 2020 jsme přivítali v naší žluté flotile dalších 10 zbrusu nových vozů nejnovější modelové řady Irizar i8. Autobusy jsou 61místné s pohodlnými celokoženými sedačkami a monitory SDHD s vysokým rozlišením. Každé sedadlo má také nově nainstalovanou svou vlastní zásuvku. Bezpečnostní standardy posílilo nejmodernější špičkové samohasící zařízení motorového prostoru. Nové vozy navýšily počet autobusů Irizar i8 až na 55 vozů. Cestující čeká luxusní a moderní design, který na první pohled zaujme výraznějšími a ostřejšími liniemi. Interiér přináší nadstandardní pohodlí. Komforní sedadla jsou plně nastavitelná a v každém z nich je zabudovaná obrazovka s multimediálním zábavním systémem, v němž jsou dostupné filmy, seriály nebo online hry. V autobusech je bezplatně dostupné také připojení k internetu. Samozřejmostí je výkonný klimatizační systém, LED osvětlení a toaleta. Komfort a bezpečnost našich autobusů je pro nás prioritou, proto pravidelně investujeme do obnovy vozového parku. Novou generaci vozů Irizar i8 na podvozcích Volvo nebo Scania jsme nasadili do provozu jako první autobusoví dopravci ve střední Evropě. Autobusy Fun&Relax nabízíme i k pronájmu pro skupinové zájezdy nebo k prodeji.', ' ', 1);
+INSERT INTO Vozidlo (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo)
+VALUES (51, 'Business Class v autobusoch: Potrebujete v pokoji pracovať a chcete si užiť vybrané občerstvenie zadarmo? Doprajte si nadštandardný komfort i v priebehu cesty autobusom. Služby navyše v Business Class: Kráľovský priestor pre nohy. Balíček s občerstvením v cene lístka (balíček obsahuje ďalší nealkoholický nápoj, sladký a slaný snack). Na vybraných spojoch navyše. Luxusné kožené sedadlá s dodatočnou opierkou hlavy. Stolíky prispôsobené na prácu s notebookom. Stevard s prednostnou obsluhou.', ' ', 2);
+INSERT INTO Vozidlo (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo)
+VALUES (54, 'Naše služby v autobuse s FlixBusom Pri ceste FlixBusom máte zaručené najlepšie služby. Vo všetkých našich autobusoch nájdete bezplatnú Wi-fi, extra priestor na nohy, občerstvenie a nápoje za nízke ceny, mnoho zásuviek a dostatok priestoru na batožinu. Vďaka bezplatnej Wi-fi v našich autobusoch sa vyhnete nude – môžete stráviť cestu surfovaním po internete, online pokecom s priateľmi a prezeraním emailov, to všetko so 4G rýchlosťou! FlixBus vám garantuje tiež sedadlo s extra priestorom na nohy. Naše moderné autobusy sú vybavené pohodlnými sedadlami a množstvom priestoru. Všetky sedadlá majú nastaviteľné operadlá a sú pohodlné aj na dlhších cestách. Vo Flixbuse sa o vás vždy dobre postaráme: na palube niektorých autobusov si môžete kúpiť občerstvenie a nápoje za nízke ceny. Chcete surfovať po internete, pokecať si online s priateľmi alebo pracovať na notebooku, ale batéria je vybitá? Žiadny problém! Hľadajte symbol zásuvky alebo sa opýtajte našich priateľských šoférov, kde nájdete jednu z mnohých zásuviek v autobusoch FlixBus. Ešte bude chvíľu trvať, kým sa dostanete na svoju zástavku? Žiadny dôvod na nervozitu! Vo všetkých autobusoch FlixBus je toaleta. Naše FlixBus autobusy majú dostatok priestoru na batožinu. Uložte si príručnú batožinu do priehradiek nad hlavou a priateľskí šoféri vám pomôžu naložiť normálnu batožinu. ', ' ', 3);
