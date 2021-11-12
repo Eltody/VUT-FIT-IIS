@@ -358,43 +358,43 @@ VALUES ('6', '14'); -- flix bus, Liberec-Hradec Kralove-Pardubice
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('16', '8', '13:40'); -- Pardubice
+VALUES ('15', '8', '13:40'); -- Pardubice
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('16', '2', '14:20'); -- Hradec Kralove
+VALUES ('15', '2', '14:20'); -- Hradec Kralove
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('16', '5', '16:30'); -- Liberec
+VALUES ('15', '5', '16:30'); -- Liberec
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
-VALUES ('6', '16'); -- flix bus, Liberec-Hradec Kralove-Pardubice
+VALUES ('6', '15'); -- flix bus, Liberec-Hradec Kralove-Pardubice
 
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('17', '8', '6:42'); -- Pardubice
+VALUES ('16', '8', '6:42'); -- Pardubice
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('17', '2', '7:35'); -- Hradec Kralove
+VALUES ('16', '2', '7:35'); -- Hradec Kralove
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('17', '5', '9:30'); -- Liberec
+VALUES ('16', '5', '9:30'); -- Liberec
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
-VALUES ('6', '17'); -- flix bus, Pardubice-Hradec Kralove-Liberec
+VALUES ('6', '16'); -- flix bus, Pardubice-Hradec Kralove-Liberec
 
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('18', '8', '17:35'); -- Pardubice
+VALUES ('17', '8', '17:35'); -- Pardubice
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('18', '2', '18:35'); -- Hradec Kralove
+VALUES ('17', '2', '18:35'); -- Hradec Kralove
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('18', '5', '20:25'); -- Liberec
+VALUES ('17', '5', '20:25'); -- Liberec
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('7', '17'); -- flix bus, Pardubice-Hradec Kralove-Liberec
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('18', '8', '9:21'); -- Pardubice
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('18', '2', '13:25'); -- Hradec Kralove
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('18', '5', '12:30'); -- Liberec
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('7', '18'); -- flix bus, Pardubice-Hradec Kralove-Liberec
-
-INSERT INTO Spoj (id_dopravca_spoje)
-VALUES ('3');
-INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('19', '8', '9:21'); -- Pardubice
-INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('19', '2', '13:25'); -- Hradec Kralove
-INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('19', '5', '12:30'); -- Liberec
-INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
-VALUES ('7', '19'); -- flix bus, Pardubice-Hradec Kralove-Liberec
