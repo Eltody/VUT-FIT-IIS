@@ -181,14 +181,31 @@ INSERT INTO Zastavky (nazov_zastavky)
 VALUES ('Zlín - aut.nádr.');
 
 
-INSERT INTO Personal (meno, priezvisko, email, heslo)
-VALUES ('Patrik', 'Jacola', 'patrikus@jacolus.sk', '2BitStudent');
-INSERT INTO Personal (meno, priezvisko, email, heslo)
-VALUES ('Veronika', 'Marková', 'markovav@gmail.com', 'novakovaV7891');
-INSERT INTO Personal (meno, priezvisko, email, heslo)
-VALUES ('Eleonóra', 'Trúfalová', 'elitra@gmail.com', 'Mauricius2004');
-INSERT INTO Personal (meno, priezvisko, email, heslo)
-VALUES ('Jakub', 'Davinič', 'davinjacob@seznam.cz', 'petrone14H');
+INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
+VALUES ('Patrik', 'Jacola', 'patrikus@jacolus.sk', '2BitStudent', '1'); -- id_dopravca_personal (1: REGIOJET)
+INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
+VALUES ('Veronika', 'Marková', 'markovav@gmail.com', 'novakovaV7891', '1'); -- id_dopravca_personal (1: REGIOJET)
+INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
+VALUES ('Eleonóra', 'Trúfalová', 'elitra@gmail.com', 'Mauricius2004', '1'); -- id_dopravca_personal (1: REGIOJET)
+INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
+VALUES ('Jakub', 'Davinič', 'davinjacob@seznam.cz', 'petrone14H', '1'); -- id_dopravca_personal (1: REGIOJET)
+INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
+VALUES ('Robert', 'Štekláč', 'stekliR@gmail.com', 'monsterMan10', '2'); -- id_dopravca_personal (2: LEOEXPRESS)
+INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
+VALUES ('Natália', 'Chudíková', 'naty4997@seznam.cz', 'Kasyka54', '2'); -- id_dopravca_personal (2: LEOEXPRESS)
+INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
+VALUES ('Nikola', 'Švecová', 'nikita1997@seznam.cz', '9nicashA9', '2'); -- id_dopravca_personal (2: LEOEXPRESS)
+INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
+VALUES ('Vanda', 'Žlotířová', 'zlotir.vanda95@seznam.cz', 'aJzvsm04', '2'); -- id_dopravca_personal (1: REGIOJET)
+INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
+VALUES ('Vanesa', 'Slunská', 'slunskavanesa1@seznam.cz', 'van95Sluun', '3'); -- id_dopravca_personal (3: FLIXBUS)
+INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
+VALUES ('Tereza', 'Hečková', 'hecka.ter@seznam.cz', 'teHec6x', '3'); -- id_dopravca_personal (3: FLIXBUS)
+INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
+VALUES ('Markéta', 'Biernatová', 'biernatovam@seznam.cz', 'markBier2001', '3'); -- id_dopravca_personal (3: FLIXBUS)
+INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
+VALUES ('Mia', 'Bořecká', 'mia.borecka@seznam.cz', 'boreckaM2001', '3'); -- id_dopravca_personal (3: FLIXBUS)
+
 
 INSERT INTO Dopravca (meno, priezvisko, email, heslo)
 VALUES ('Regio', 'Jet', 'regiojet@regiojet.com', 'studentAgency2011ToTheInfinityAndBeyond'); -- dopravca c.1
@@ -197,7 +214,7 @@ VALUES ('leo', 'express', 'expressileo@leoexpress.com', 'Kah9-Cy.a55'); -- dopra
 INSERT INTO Dopravca (meno, priezvisko, email, heslo)
 VALUES ('Flix', 'BUS', 'flixmotors@flixbus.com', 'flexiBuZzes4596'); -- dopravca c.3
 
--- REGIOJET
+-- REGIOJET cisla vozidiel: 1-4
 INSERT INTO Vozidlo (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo)
 VALUES ('61', 'Luxusní žluté autobusy. Vozový park v korporátní žluté barvě tvoří španělské autobusy Irizar na podvozcích Scania nebo Volvo s luxusní výbavou Fun&Relax. Vozový park každoročně obměňujeme o další nové autobusy ve stylu Fun&Relax. V červnu 2020 jsme přivítali v naší žluté flotile dalších 10 zbrusu nových vozů nejnovější modelové řady Irizar i8. Autobusy jsou 61místné s pohodlnými celokoženými sedačkami a monitory SDHD s vysokým rozlišením. Každé sedadlo má také nově nainstalovanou svou vlastní zásuvku. Bezpečnostní standardy posílilo nejmodernější špičkové samohasící zařízení motorového prostoru. Nové vozy navýšily počet autobusů Irizar i8 až na 55 vozů. Cestující čeká luxusní a moderní design, který na první pohled zaujme výraznějšími a ostřejšími liniemi. Interiér přináší nadstandardní pohodlí. Komforní sedadla jsou plně nastavitelná a v každém z nich je zabudovaná obrazovka s multimediálním zábavním systémem, v němž jsou dostupné filmy, seriály nebo online hry. V autobusech je bezplatně dostupné také připojení k internetu. Samozřejmostí je výkonný klimatizační systém, LED osvětlení a toaleta. Komfort a bezpečnost našich autobusů je pro nás prioritou, proto pravidelně investujeme do obnovy vozového parku. Novou generaci vozů Irizar i8 na podvozcích Volvo nebo Scania jsme nasadili do provozu jako první autobusoví dopravci ve střední Evropě. Autobusy Fun&Relax nabízíme i k pronájmu pro skupinové zájezdy nebo k prodeji.', ' ', 1);
 INSERT INTO Vozidlo (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo)
@@ -207,15 +224,23 @@ VALUES ('47', 'Luxusní žluté autobusy. Vozový park v korporátní žluté ba
 INSERT INTO Vozidlo (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo)
 VALUES ('55', 'Luxusní žluté autobusy. Vozový park v korporátní žluté barvě tvoří španělské autobusy Irizar na podvozcích Scania nebo Volvo s luxusní výbavou Fun&Relax. Vozový park každoročně obměňujeme o další nové autobusy ve stylu Fun&Relax. V červnu 2020 jsme přivítali v naší žluté flotile dalších 10 zbrusu nových vozů nejnovější modelové řady Irizar i8. Autobusy jsou 61místné s pohodlnými celokoženými sedačkami a monitory SDHD s vysokým rozlišením. Každé sedadlo má také nově nainstalovanou svou vlastní zásuvku. Bezpečnostní standardy posílilo nejmodernější špičkové samohasící zařízení motorového prostoru. Nové vozy navýšily počet autobusů Irizar i8 až na 55 vozů. Cestující čeká luxusní a moderní design, který na první pohled zaujme výraznějšími a ostřejšími liniemi. Interiér přináší nadstandardní pohodlí. Komforní sedadla jsou plně nastavitelná a v každém z nich je zabudovaná obrazovka s multimediálním zábavním systémem, v němž jsou dostupné filmy, seriály nebo online hry. V autobusech je bezplatně dostupné také připojení k internetu. Samozřejmostí je výkonný klimatizační systém, LED osvětlení a toaleta. Komfort a bezpečnost našich autobusů je pro nás prioritou, proto pravidelně investujeme do obnovy vozového parku. Novou generaci vozů Irizar i8 na podvozcích Volvo nebo Scania jsme nasadili do provozu jako první autobusoví dopravci ve střední Evropě. Autobusy Fun&Relax nabízíme i k pronájmu pro skupinové zájezdy nebo k prodeji.', ' ', 1);
 
--- LEO EXPRESS
+-- LEO EXPRESS cisla vozidiel: 5
 INSERT INTO Vozidlo (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo)
 VALUES ('51', 'Business Class v autobusoch: Potrebujete v pokoji pracovať a chcete si užiť vybrané občerstvenie zadarmo? Doprajte si nadštandardný komfort i v priebehu cesty autobusom. Služby navyše v Business Class: Kráľovský priestor pre nohy. Balíček s občerstvením v cene lístka (balíček obsahuje ďalší nealkoholický nápoj, sladký a slaný snack). Na vybraných spojoch navyše. Luxusné kožené sedadlá s dodatočnou opierkou hlavy. Stolíky prispôsobené na prácu s notebookom. Stevard s prednostnou obsluhou.', ' ', 2);
 
--- FLIX BUS
+-- FLIX BUS cisla vozidiel: 6-11
 INSERT INTO Vozidlo (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo)
 VALUES ('54', 'Naše služby v autobuse s FlixBusom Pri ceste FlixBusom máte zaručené najlepšie služby. Vo všetkých našich autobusoch nájdete bezplatnú Wi-fi, extra priestor na nohy, občerstvenie a nápoje za nízke ceny, mnoho zásuviek a dostatok priestoru na batožinu. Vďaka bezplatnej Wi-fi v našich autobusoch sa vyhnete nude – môžete stráviť cestu surfovaním po internete, online pokecom s priateľmi a prezeraním emailov, to všetko so 4G rýchlosťou! FlixBus vám garantuje tiež sedadlo s extra priestorom na nohy. Naše moderné autobusy sú vybavené pohodlnými sedadlami a množstvom priestoru. Všetky sedadlá majú nastaviteľné operadlá a sú pohodlné aj na dlhších cestách. Vo Flixbuse sa o vás vždy dobre postaráme: na palube niektorých autobusov si môžete kúpiť občerstvenie a nápoje za nízke ceny. Chcete surfovať po internete, pokecať si online s priateľmi alebo pracovať na notebooku, ale batéria je vybitá? Žiadny problém! Hľadajte symbol zásuvky alebo sa opýtajte našich priateľských šoférov, kde nájdete jednu z mnohých zásuviek v autobusoch FlixBus. Ešte bude chvíľu trvať, kým sa dostanete na svoju zástavku? Žiadny dôvod na nervozitu! Vo všetkých autobusoch FlixBus je toaleta. Naše FlixBus autobusy majú dostatok priestoru na batožinu. Uložte si príručnú batožinu do priehradiek nad hlavou a priateľskí šoféri vám pomôžu naložiť normálnu batožinu. ', ' ', 3);
 INSERT INTO Vozidlo (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo)
 VALUES ('50', 'Naše služby v autobuse s FlixBusom Pri ceste FlixBusom máte zaručené najlepšie služby. Vo všetkých našich autobusoch nájdete bezplatnú Wi-fi, extra priestor na nohy, občerstvenie a nápoje za nízke ceny, mnoho zásuviek a dostatok priestoru na batožinu. Vďaka bezplatnej Wi-fi v našich autobusoch sa vyhnete nude – môžete stráviť cestu surfovaním po internete, online pokecom s priateľmi a prezeraním emailov, to všetko so 4G rýchlosťou! FlixBus vám garantuje tiež sedadlo s extra priestorom na nohy. Naše moderné autobusy sú vybavené pohodlnými sedadlami a množstvom priestoru. Všetky sedadlá majú nastaviteľné operadlá a sú pohodlné aj na dlhších cestách. Vo Flixbuse sa o vás vždy dobre postaráme: na palube niektorých autobusov si môžete kúpiť občerstvenie a nápoje za nízke ceny. Chcete surfovať po internete, pokecať si online s priateľmi alebo pracovať na notebooku, ale batéria je vybitá? Žiadny problém! Hľadajte symbol zásuvky alebo sa opýtajte našich priateľských šoférov, kde nájdete jednu z mnohých zásuviek v autobusoch FlixBus. Ešte bude chvíľu trvať, kým sa dostanete na svoju zástavku? Žiadny dôvod na nervozitu! Vo všetkých autobusoch FlixBus je toaleta. Naše FlixBus autobusy majú dostatok priestoru na batožinu. Uložte si príručnú batožinu do priehradiek nad hlavou a priateľskí šoféri vám pomôžu naložiť normálnu batožinu. ', ' ', 3);
+INSERT INTO Vozidlo (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo)
+VALUES ('56', 'Naše služby v autobuse s FlixBusom Pri ceste FlixBusom máte zaručené najlepšie služby. Vo všetkých našich autobusoch nájdete bezplatnú Wi-fi, extra priestor na nohy, občerstvenie a nápoje za nízke ceny, mnoho zásuviek a dostatok priestoru na batožinu. Vďaka bezplatnej Wi-fi v našich autobusoch sa vyhnete nude – môžete stráviť cestu surfovaním po internete, online pokecom s priateľmi a prezeraním emailov, to všetko so 4G rýchlosťou! FlixBus vám garantuje tiež sedadlo s extra priestorom na nohy. Naše moderné autobusy sú vybavené pohodlnými sedadlami a množstvom priestoru. Všetky sedadlá majú nastaviteľné operadlá a sú pohodlné aj na dlhších cestách. Vo Flixbuse sa o vás vždy dobre postaráme: na palube niektorých autobusov si môžete kúpiť občerstvenie a nápoje za nízke ceny. Chcete surfovať po internete, pokecať si online s priateľmi alebo pracovať na notebooku, ale batéria je vybitá? Žiadny problém! Hľadajte symbol zásuvky alebo sa opýtajte našich priateľských šoférov, kde nájdete jednu z mnohých zásuviek v autobusoch FlixBus. Ešte bude chvíľu trvať, kým sa dostanete na svoju zástavku? Žiadny dôvod na nervozitu! Vo všetkých autobusoch FlixBus je toaleta. Naše FlixBus autobusy majú dostatok priestoru na batožinu. Uložte si príručnú batožinu do priehradiek nad hlavou a priateľskí šoféri vám pomôžu naložiť normálnu batožinu. ', ' ', 3);
+INSERT INTO Vozidlo (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo)
+VALUES ('52', 'Naše služby v autobuse s FlixBusom Pri ceste FlixBusom máte zaručené najlepšie služby. Vo všetkých našich autobusoch nájdete bezplatnú Wi-fi, extra priestor na nohy, občerstvenie a nápoje za nízke ceny, mnoho zásuviek a dostatok priestoru na batožinu. Vďaka bezplatnej Wi-fi v našich autobusoch sa vyhnete nude – môžete stráviť cestu surfovaním po internete, online pokecom s priateľmi a prezeraním emailov, to všetko so 4G rýchlosťou! FlixBus vám garantuje tiež sedadlo s extra priestorom na nohy. Naše moderné autobusy sú vybavené pohodlnými sedadlami a množstvom priestoru. Všetky sedadlá majú nastaviteľné operadlá a sú pohodlné aj na dlhších cestách. Vo Flixbuse sa o vás vždy dobre postaráme: na palube niektorých autobusov si môžete kúpiť občerstvenie a nápoje za nízke ceny. Chcete surfovať po internete, pokecať si online s priateľmi alebo pracovať na notebooku, ale batéria je vybitá? Žiadny problém! Hľadajte symbol zásuvky alebo sa opýtajte našich priateľských šoférov, kde nájdete jednu z mnohých zásuviek v autobusoch FlixBus. Ešte bude chvíľu trvať, kým sa dostanete na svoju zástavku? Žiadny dôvod na nervozitu! Vo všetkých autobusoch FlixBus je toaleta. Naše FlixBus autobusy majú dostatok priestoru na batožinu. Uložte si príručnú batožinu do priehradiek nad hlavou a priateľskí šoféri vám pomôžu naložiť normálnu batožinu. ', ' ', 3);
+INSERT INTO Vozidlo (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo)
+VALUES ('52', 'Naše služby v autobuse s FlixBusom Pri ceste FlixBusom máte zaručené najlepšie služby. Vo všetkých našich autobusoch nájdete bezplatnú Wi-fi, extra priestor na nohy, občerstvenie a nápoje za nízke ceny, mnoho zásuviek a dostatok priestoru na batožinu. Vďaka bezplatnej Wi-fi v našich autobusoch sa vyhnete nude – môžete stráviť cestu surfovaním po internete, online pokecom s priateľmi a prezeraním emailov, to všetko so 4G rýchlosťou! FlixBus vám garantuje tiež sedadlo s extra priestorom na nohy. Naše moderné autobusy sú vybavené pohodlnými sedadlami a množstvom priestoru. Všetky sedadlá majú nastaviteľné operadlá a sú pohodlné aj na dlhších cestách. Vo Flixbuse sa o vás vždy dobre postaráme: na palube niektorých autobusov si môžete kúpiť občerstvenie a nápoje za nízke ceny. Chcete surfovať po internete, pokecať si online s priateľmi alebo pracovať na notebooku, ale batéria je vybitá? Žiadny problém! Hľadajte symbol zásuvky alebo sa opýtajte našich priateľských šoférov, kde nájdete jednu z mnohých zásuviek v autobusoch FlixBus. Ešte bude chvíľu trvať, kým sa dostanete na svoju zástavku? Žiadny dôvod na nervozitu! Vo všetkých autobusoch FlixBus je toaleta. Naše FlixBus autobusy majú dostatok priestoru na batožinu. Uložte si príručnú batožinu do priehradiek nad hlavou a priateľskí šoféri vám pomôžu naložiť normálnu batožinu. ', ' ', 3);
+INSERT INTO Vozidlo (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo)
+VALUES ('52', 'Naše služby v autobuse s FlixBusom Pri ceste FlixBusom máte zaručené najlepšie služby. Vo všetkých našich autobusoch nájdete bezplatnú Wi-fi, extra priestor na nohy, občerstvenie a nápoje za nízke ceny, mnoho zásuviek a dostatok priestoru na batožinu. Vďaka bezplatnej Wi-fi v našich autobusoch sa vyhnete nude – môžete stráviť cestu surfovaním po internete, online pokecom s priateľmi a prezeraním emailov, to všetko so 4G rýchlosťou! FlixBus vám garantuje tiež sedadlo s extra priestorom na nohy. Naše moderné autobusy sú vybavené pohodlnými sedadlami a množstvom priestoru. Všetky sedadlá majú nastaviteľné operadlá a sú pohodlné aj na dlhších cestách. Vo Flixbuse sa o vás vždy dobre postaráme: na palube niektorých autobusov si môžete kúpiť občerstvenie a nápoje za nízke ceny. Chcete surfovať po internete, pokecať si online s priateľmi alebo pracovať na notebooku, ale batéria je vybitá? Žiadny problém! Hľadajte symbol zásuvky alebo sa opýtajte našich priateľských šoférov, kde nájdete jednu z mnohých zásuviek v autobusoch FlixBus. Ešte bude chvíľu trvať, kým sa dostanete na svoju zástavku? Žiadny dôvod na nervozitu! Vo všetkých autobusoch FlixBus je toaleta. Naše FlixBus autobusy majú dostatok priestoru na batožinu. Uložte si príručnú batožinu do priehradiek nad hlavou a priateľskí šoféri vám pomôžu naložiť normálnu batožinu. ', ' ', 3);
 
 
 -- BRNO -> PRAHA, REGIOJET (id 1)
@@ -398,3 +423,251 @@ INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
 VALUES ('18', '5', '12:30'); -- Liberec
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('7', '18'); -- flix bus, Pardubice-Hradec Kralove-Liberec
+
+-- JIHLAVA -> KROMERIZ, FLIX BUS (id 3)
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('19', '3', '7:40'); -- Jihlava
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('19', '4', '11:17'); -- Kromeriz
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('8', '19'); -- flix bus, Jihlava-Kromeriz
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('20', '3', '15:30'); -- Jihlava
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('20', '4', '18:16'); -- Kromeriz
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('8', '20'); -- flix bus, Jihlava-Kromeriz
+
+-- KROMERIZ -> JIHLAVA, FLIX BUS (id 3)
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('21', '4', '12:10'); -- Kromeriz
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('21', '3', '15:20'); -- Jihlava
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('8', '21'); -- flix bus, Kromeriz-Jihlava
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('22', '4', '18:42'); -- Kromeriz
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('22', '3', '22:30'); -- Jihlava
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('8', '22'); -- flix bus, Kromeriz-Jihlava
+
+-- PRAHA -> PLZEN, FLIX BUS (id 3)
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('22', '10', '8:00'); -- Praha
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('22', '9', '9:00'); -- Plzen
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '22'); -- flix bus, Praha-Plzen
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('23', '10', '10:00'); -- Praha
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('23', '9', '11:00'); -- Plzen
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '23'); -- flix bus, Praha-Plzen
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('24', '10', '12:00'); -- Praha
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('24', '9', '13:00'); -- Plzen
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '24'); -- flix bus, Praha-Plzen
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('25', '10', '14:00'); -- Praha
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('25', '9', '15:00'); -- Plzen
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '25'); -- flix bus, Praha-Plzen
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('26', '10', '16:00'); -- Praha
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('26', '9', '17:00'); -- Plzen
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '26'); -- flix bus, Praha-Plzen
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('27', '10', '18:00'); -- Praha
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('27', '9', '19:00'); -- Plzen
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '27'); -- flix bus, Praha-Plzen
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('28', '10', '20:00'); -- Praha
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('28', '9', '21:00'); -- Plzen
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '28'); -- flix bus, Praha-Plzen
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('29', '10', '22:00'); -- Praha
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('29', '9', '23:00'); -- Plzen
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '29'); -- flix bus, Praha-Plzen
+
+-- PLZEN -> PRAHA, FLIX BUS (id 3)
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('30', '9', '7:00'); -- Plzen
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('30', '10', '8:00'); -- Praha
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '30'); -- flix bus, Plzen-Praha
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('31', '9', '9:00'); -- Plzen
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('31', '10', '10:00'); -- Praha
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '31'); -- flix bus, Plzen-Praha
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('32', '9', '12:00'); -- Plzen
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('32', '10', '13:00'); -- Praha
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '32'); -- flix bus, Plzen-Praha
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('33', '9', '11:00'); -- Plzen
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('33', '10', '12:00'); -- Praha
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '33'); -- flix bus, Plzen-Praha
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('34', '9', '13:00'); -- Plzen
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('34', '10', '14:00'); -- Praha
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '34'); -- flix bus, Plzen-Praha
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('35', '9', '15:00'); -- Plzen
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('35', '10', '16:00'); -- Praha
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '35'); -- flix bus, Plzen-Praha
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('36', '9', '17:00'); -- Plzen
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('36', '10', '18:00'); -- Praha
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '36'); -- flix bus, Plzen-Praha
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('37', '9', '19:00'); -- Plzen
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('37', '10', '20:00'); -- Praha
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '37'); -- flix bus, Plzen-Praha
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('38', '9', '21:00'); -- Plzen
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('38', '10', '22:00'); -- Praha
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '38'); -- flix bus, Plzen-Praha
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('39', '9', '23:00'); -- Plzen
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('39', '10', '00:00'); -- Praha
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('9', '39'); -- flix bus, Plzen-Praha
+
+-- BRNO -> ZLIN -> OSTRAVA, FLIX BUS (id 3)
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('40', '1', '9:00'); -- Brno
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('40', '11', '10:45'); -- Zlin
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('40', '7', '14:10'); -- Ostrava
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('10', '40'); -- flix bus, Brno-Zlin-Ostrava
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('41', '1', '15:15'); -- Brno
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('41', '11', '17:35'); -- Zlin
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('41', '7', '20:57'); -- Ostrava
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('11', '41'); -- flix bus, Brno-Zlin-Ostrava
+
+-- OSTRAVA -> ZLIN -> BRNO, FLIX BUS (id 3)
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('42', '7', '14:15'); -- Ostrava
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('42', '11', '17:45'); -- Zlin
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('42', '1', '20:00'); -- Brno
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('10', '42'); -- flix bus, Ostrava-Zlin-Brno
+
+INSERT INTO Spoj (id_dopravca_spoje)
+VALUES ('3');
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('43', '7', '9:40'); -- Ostrava
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('43', '11', '12:45'); -- Zlin
+INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
+VALUES ('43', '1', '14:05'); -- Brno
+INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
+VALUES ('11', '43'); -- flix bus, Ostrava-Zlin-Brno
