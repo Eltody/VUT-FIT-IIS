@@ -181,6 +181,13 @@ INSERT INTO Zastavky (nazov_zastavky)
 VALUES ('Zlín - aut.nádr.');
 
 
+INSERT INTO Dopravca (meno, priezvisko, email, heslo)
+VALUES ('Regio', 'Jet', 'regiojet@regiojet.com', 'studentAgency2011ToTheInfinityAndBeyond'); -- dopravca c.1
+INSERT INTO Dopravca (meno, priezvisko, email, heslo)
+VALUES ('leo', 'express', 'expressileo@leoexpress.com', 'Kah9-Cy.a55'); -- dopravca c.2
+INSERT INTO Dopravca (meno, priezvisko, email, heslo)
+VALUES ('Flix', 'BUS', 'flixmotors@flixbus.com', 'flexiBuZzes4596'); -- dopravca c.3
+
 INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
 VALUES ('Patrik', 'Jacola', 'patrikus@jacolus.sk', '2BitStudent', '1'); -- id_dopravca_personal (1: REGIOJET)
 INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
@@ -205,14 +212,6 @@ INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
 VALUES ('Markéta', 'Biernatová', 'biernatovam@seznam.cz', 'markBier2001', '3'); -- id_dopravca_personal (3: FLIXBUS)
 INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
 VALUES ('Mia', 'Bořecká', 'mia.borecka@seznam.cz', 'boreckaM2001', '3'); -- id_dopravca_personal (3: FLIXBUS)
-
-
-INSERT INTO Dopravca (meno, priezvisko, email, heslo)
-VALUES ('Regio', 'Jet', 'regiojet@regiojet.com', 'studentAgency2011ToTheInfinityAndBeyond'); -- dopravca c.1
-INSERT INTO Dopravca (meno, priezvisko, email, heslo)
-VALUES ('leo', 'express', 'expressileo@leoexpress.com', 'Kah9-Cy.a55'); -- dopravca c.2
-INSERT INTO Dopravca (meno, priezvisko, email, heslo)
-VALUES ('Flix', 'BUS', 'flixmotors@flixbus.com', 'flexiBuZzes4596'); -- dopravca c.3
 
 -- REGIOJET cisla vozidiel: 1-4
 INSERT INTO Vozidlo (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo)
