@@ -79,6 +79,12 @@
             }
         </script>
         <script>
+            var select = document.getElementById('toCity');
+            var items = select.getElementsByTagName('option');
+            var index = Math.floor(Math.random() * (items.length - 1) + 1);
+            select.selectedIndex = index;
+        </script>
+        <script>
             var now = new Date();
             var year = now.getFullYear();
             var month = ('0'+(now.getMonth()+1)).slice(-2);

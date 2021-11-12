@@ -66,15 +66,29 @@ def preSignIn():
 @app.route('/signIn', methods=['GET', 'POST'])
 def signIn():
     user_email = str(request.form['email'])
-    password1 = str(request.form['password'])
+    password = str(request.form['password'])
     # kontrola spravnosti prihlasovacich udajov z webu a DB
-    cursor = connection.cursor()
-    cursor.execute("SELECT meno, email, heslo FROM Cestujuci")
-    for (meno, email, heslo) in cursor:
-        if email == user_email and heslo == password1:
-            cursor.close()
+    cestujuci = connection.cursor()
+    administrator = connection.cursor()
+    personal = connection.cursor()
+    cestujuci.execute("SELECT meno, email, heslo FROM Cestujuci")
+    administrator.execute("SELECT meno, email, heslo FROM Administrator")
+    personal.execute("SELECT meno, email, heslo FROM Personal")
+    for (meno, email, heslo) in cestujuci:
+        if email == user_email and heslo == password:
+            cestujuci.close()
             return render_template('signInSuccess.html', data=meno)
-    cursor.close()
+    for (meno, email, heslo) in administrator:
+        if email == user_email and heslo == password:
+            administrator.close()
+            return render_template('signInSuccess.html', data=meno)
+    for (meno, email, heslo) in personal:
+        if email == user_email and heslo == password:
+            personal.close()
+            return render_template('signInSuccess.html', data=meno)
+    cestujuci.close()
+    administrator.close()
+    personal.close()
     return render_template('signIn.html')
 
 

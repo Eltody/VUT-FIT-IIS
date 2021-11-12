@@ -22,6 +22,14 @@ body {
     right: 0;
     background: rgba(0, 0, 0, 0.7);
 }
+.hidden {
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    display: none !important;
+}
 form label {
     font-weight: 600;
     font-size: 16px;
@@ -56,6 +64,7 @@ h1, h2, h3, h4, h5, h6, figure {
     clear: both;
     background: rgba(255, 255, 255, 0.8);
     border-radius: 0 0 10px 10px;
+    box-shadow: inset 1px 1px 15px #333;
     padding: 22px;
 }
 #header h1 {
@@ -195,6 +204,7 @@ h1, h2, h3, h4, h5, h6, figure {
     box-shadow: none;
     border: 2px solid rgba(0, 0, 0, 0.3);
     background: rgba(255, 255, 255, 0.5);
+    box-shadow: 1px 1px 7px #333;
     height: 36px;
     font-size: 16px;
     font-weight: 300;
@@ -204,8 +214,8 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 .search-select:active, .search-select:focus {
     outline: none;
-    box-shadow: none;
     border-color: #09C6AB;
+    box-shadow: 0 0 0;
 }
 .buttonSwap {
     width: 15%;
@@ -213,6 +223,7 @@ h1, h2, h3, h4, h5, h6, figure {
     cursor: pointer;
     background: rgba(9, 198, 171, 0.6);
     border: 2px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 1px 7px #333;
     font-size: 24px;
     padding: 6px 0 0 0;
     border-radius: 7px;
@@ -224,17 +235,32 @@ h1, h2, h3, h4, h5, h6, figure {
     cursor: pointer;
     background: rgba(9, 198, 171, 0.6);
     border: 2px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 1px 7px #333;
     font-size: 16px;
     padding: 10px 30px;
     border-radius: 7px;
     float: left;
 }
+.buttonRegister {
+    width: 20%;
+    height: 30px;
+    cursor: pointer;
+    background: rgba(9, 198, 171, 0.6);
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 1px 7px #333;
+    font-size: 14px;
+    padding: 3px 0 0 0;
+    border-radius: 7px;
+}
 .search-col button a {
     color: black;
     font-weight: 550;
 }
-.search-col button:hover, .search-col button:focus, .search-col button:active {
+.search-col button:hover {
     background: rgba(255, 255, 255, 0.5);
+}
+.search-col button:active {
+    box-shadow: 0 0 0;
 }
 .form-control {
     width: -webkit-fill-available;
@@ -242,6 +268,7 @@ h1, h2, h3, h4, h5, h6, figure {
     box-shadow: none;
     border: 2px solid rgba(0, 0, 0, 0.3);
     background: rgba(255, 255, 255, 0.5);
+    box-shadow: 1px 1px 7px #333;
     height: 36px;
     font-size: 16px;
     font-weight: 300;
@@ -253,6 +280,7 @@ h1, h2, h3, h4, h5, h6, figure {
     outline: none;
     box-shadow: none;
     border-color: #09C6AB;
+    box-shadow: 0 0 0;
 }
 @media screen and (min-width: 1600px) {
     #header h1 {

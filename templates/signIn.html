@@ -4,6 +4,8 @@
         <title>CP by (j)Elita</title>
         <meta charset=utf-8>
         <link rel="stylesheet" type="text/css" href="/static/style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
     </head>
     <body>
         <div id="page">
@@ -23,24 +25,51 @@
             </nav>
             <header id="header" class="background" role="banner" style="background-image: url(static/background.jpg);">
                 <div class="overlay"></div>
-                    <div class="signInForm">
-                        <div class="form-wrap">
-                            <div class="form-content">
-                                <h3>Prihláste sa:</h3>
-                                <form class="busConfig" action="/signIn" method="POST">
-                                    <div class="search-col" style="padding-bottom: 10px;">
-                                        <label for="email">Prihlasovací email:</label><br>
-                                        <input type="text" id="email" name="email">
-                                    </div>
-                                    <div class="search-col">
-                                        <label for="password">Heslo:</label><br>
-                                        <input type="password" id="password" name="password">
-                                    </div><br>
-                                    <div class="search-col" style="height: 40px;">
-                                        <button><a>Prihlásiť</a></button>
-                                    </div>
-                                </form>
-                            </div>
+                <div id="login" class="signInForm animate__animated animate__fadeIn">
+                    <div class="form-wrap">
+                        <div class="form-content">
+                            <h3>Prihláste sa:</h3>
+                            <form class="busConfig" action="/signIn" method="POST">
+                                <div class="search-col" style="padding-bottom: 10px;">
+                                    <label for="email">Prihlasovací email:</label><br>
+                                    <input class="search-select" type="text" id="email" name="email">
+                                </div>
+                                <div class="search-col">
+                                    <label for="password">Heslo:</label><br>
+                                    <input class="search-select" type="password" id="password" name="password">
+                                </div><br>
+                                <div class="search-col">
+                                    <button class="buttonSearch"><a>Prihlásiť</a></button>
+                                    <button type="button" class="buttonSwap" onclick="showPassword()"><ion-icon id="passIcon" name="eye-outline"></ion-icon></button>
+                                </div><br><br>
+                                <div class="search-col" style="height: 40px;">
+                                    <button type="button" class="buttonRegister" onclick="register()"><a>Vytvoriť účet</a></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div id="register" class="signInForm animate__animated animate__fadeIn hidden">
+                    <div class="form-wrap">
+                        <div class="form-content">
+                            <h3>Zaregistrujte sa:</h3>
+                            <form class="busConfig" action="/signIn" method="POST">
+                                <div class="search-col" style="padding-bottom: 10px;">
+                                    <label for="email">Prihlasovací email:</label><br>
+                                    <input class="search-select" type="text" id="email" name="email">
+                                </div>
+                                <div class="search-col">
+                                    <label for="password">Heslo:</label><br>
+                                    <input class="search-select" type="password" id="password" name="password">
+                                </div><br>
+                                <div class="search-col">
+                                    <button class="buttonSearch"><a>Prihlásiť</a></button>
+                                    <button type="button" class="buttonSwap" onclick="showPassword()"><ion-icon id="passIcon" name="eye-outline"></ion-icon></button>
+                                </div><br><br>
+                                <div class="search-col" style="height: 40px;">
+                                    <button type="button" class="buttonRegister" onclick="register()"><a>Vytvoriť účet</a></button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -49,5 +78,29 @@
                 <p>Sample text</p>
             </footer>
         </div>
+        <script>
+            function register(){
+                if (document.getElementById("login").classList[3] === 'hidden'){
+                    document.getElementById("register").classList.add("hidden");
+                    document.getElementById("login").classList.remove("hidden");
+                }
+                else {
+                    document.getElementById("register").classList.remove("hidden");
+                    document.getElementById("login").classList.add("hidden");
+                }
+            }
+        </script>
+        <script>
+            function showPassword(){
+                if (document.getElementById("password").type == 'password'){
+                    document.getElementById("password").type = 'text';
+                    document.getElementById("passIcon").setAttribute("name","eye-off-outline");
+                }
+                else {
+                    document.getElementById("password").type = 'password';
+                    document.getElementById("passIcon").setAttribute("name","eye-outline");
+                }
+            }
+        </script>
     </body>
 </html>
