@@ -35,7 +35,7 @@
                             <div class="form-wrap">
                                 <div class="form-content">
                                     <h3>Vyhľadajte spoj:</h3>
-                                    <form class="busConfig">
+                                    <form class="busConfig" action="/busConfig" method="POST">
                                         <div class="search-col" style="padding-bottom: 10px;">
                                             <label for="fromCity">Odkiaľ:</label><br>
                                             <SELECT name="fromCity" id="fromCity" class="search-select">
@@ -57,7 +57,7 @@
                                             <input type="datetime-local" id="date" class="form-control">
                                         </div><br>
                                         <div class="search-col" style="height: 40px;">
-                                            <button class="buttonSearch" action="/busConfig" method="POST"><a>Hľadať</a></button>
+                                            <button type="submit" class="buttonSearch"><a>Hľadať</a></button>
                                             <button type="button" class="buttonSwap" onclick="swap()"><ion-icon name="repeat-outline"></ion-icon></button>
                                         </div>
                                     </form>

@@ -352,9 +352,16 @@ h1, h2, h3, h4, h5, h6, figure {
         font-size: 18px;
     }
 }
-
 .signInForm {
     margin-top: 30vh;
+    width: 80%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+.regForm {
+    margin-top: 20vh;
     width: 80%;
     max-width: 900px;
     margin-left: auto;

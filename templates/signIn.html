@@ -31,16 +31,16 @@
                             <h3>Prihláste sa:</h3>
                             <form class="busConfig" action="/signIn" method="POST">
                                 <div class="search-col" style="padding-bottom: 10px;">
-                                    <label for="email">Prihlasovací email:</label><br>
-                                    <input class="search-select" type="text" id="email" name="email">
+                                    <label for="lEmail">Prihlasovací email:</label><br>
+                                    <input class="search-select" type="email" id="lEmail" name="lEmail" required>
                                 </div>
                                 <div class="search-col">
-                                    <label for="password">Heslo:</label><br>
-                                    <input class="search-select" type="password" id="password" name="password">
+                                    <label for="lPassword">Heslo:</label><br>
+                                    <input class="search-select" type="password" id="lPassword" name="lPassword" required>
                                 </div><br>
                                 <div class="search-col">
-                                    <button class="buttonSearch"><a>Prihlásiť</a></button>
-                                    <button type="button" class="buttonSwap" onclick="showPassword()"><ion-icon id="passIcon" name="eye-outline"></ion-icon></button>
+                                    <button type="submit" class="buttonSearch"><a>Prihlásiť</a></button>
+                                    <button type="button" class="buttonSwap" onmouseover="showPassword()" onmouseout="hidePassword()"><ion-icon id="passIcon" name="eye-outline"></ion-icon></button>
                                 </div><br><br>
                                 <div class="search-col" style="height: 40px;">
                                     <button type="button" class="buttonRegister" onclick="register()"><a>Vytvoriť účet</a></button>
@@ -49,25 +49,37 @@
                         </div>
                     </div>
                 </div>
-                <div id="register" class="signInForm animate__animated animate__fadeIn hidden">
+                <div id="register" class="regForm animate__animated animate__fadeIn hidden">
                     <div class="form-wrap">
                         <div class="form-content">
                             <h3>Zaregistrujte sa:</h3>
-                            <form class="busConfig" action="/signIn" method="POST">
+                            <form class="busConfig" action="/registration" method="POST">
                                 <div class="search-col" style="padding-bottom: 10px;">
-                                    <label for="email">Prihlasovací email:</label><br>
-                                    <input class="search-select" type="text" id="email" name="email">
+                                    <label for="fname">Meno:</label><br>
+                                    <input class="search-select" type="text" id="fname" name="fname" required>
+                                </div>
+                                <div class="search-col" style="padding-bottom: 10px;">
+                                    <label for="lname">Priezvisko:</label><br>
+                                    <input class="search-select" type="text" id="lname" name="lname" required>
+                                </div>
+                                <div class="search-col" style="padding-bottom: 10px;">
+                                    <label for="email">Email:</label><br>
+                                    <input class="search-select" type="email" id="email" name="email" required>
                                 </div>
                                 <div class="search-col">
                                     <label for="password">Heslo:</label><br>
-                                    <input class="search-select" type="password" id="password" name="password">
+                                    <input class="search-select" type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onkeyup="validatePassword()" required>
+                                </div>
+                                <div class="search-col">
+                                    <label for="passwordConfirm">Potvrďte heslo:</label><br>
+                                    <input class="search-select" type="password" id="passwordConfirm" name="passwordConfirm" onkeyup="validatePassword()" required>
                                 </div><br>
                                 <div class="search-col">
-                                    <button class="buttonSearch"><a>Prihlásiť</a></button>
-                                    <button type="button" class="buttonSwap" onclick="showPassword()"><ion-icon id="passIcon" name="eye-outline"></ion-icon></button>
+                                    <button id="submit" type="submit" class="buttonSearch"><a>Registrovať</a></button>
+                                    <button type="button" class="buttonSwap" onmouseover="showPassword()" onmouseout="hidePassword()"><ion-icon id="passIcon" name="eye-outline"></ion-icon></button>
                                 </div><br><br>
                                 <div class="search-col" style="height: 40px;">
-                                    <button type="button" class="buttonRegister" onclick="register()"><a>Vytvoriť účet</a></button>
+                                    <button type="button" class="buttonRegister" onclick="register()"><a>Prihlásenie</a></button>
                                 </div>
                             </form>
                         </div>
@@ -91,15 +103,28 @@
             }
         </script>
         <script>
+            function validatePassword() {
+                var password = document.getElementById("password");
+                var passwordConfirm = document.getElementById("passwordConfirm");
+                if (password.value == passwordConfirm.value) {
+                    passwordConfirm.setCustomValidity('');
+                } else {
+                    passwordConfirm.setCustomValidity("Heslá sa nezhodujú");
+                }
+            }
+        </script>
+        <script>
             function showPassword(){
-                if (document.getElementById("password").type == 'password'){
-                    document.getElementById("password").type = 'text';
-                    document.getElementById("passIcon").setAttribute("name","eye-off-outline");
-                }
-                else {
-                    document.getElementById("password").type = 'password';
-                    document.getElementById("passIcon").setAttribute("name","eye-outline");
-                }
+                document.getElementById("lPassword").type = 'text';
+                document.getElementById("password").type = 'text';
+                document.getElementById("passwordConfirm").type = 'text';
+                document.getElementById("passIcon").setAttribute("name","eye-off-outline");
+            }
+            function hidePassword(){
+                document.getElementById("lPassword").type = 'password';
+                document.getElementById("password").type = 'password';
+                document.getElementById("passwordConfirm").type = 'password';
+                document.getElementById("passIcon").setAttribute("name","eye-outline");
             }
         </script>
     </body>
