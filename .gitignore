@@ -2,3 +2,6 @@
 .venv/
 .idea\
 .templates\
+*.xml
+*.xml
+*.iml
