@@ -1,11 +1,9 @@
 from flask import Flask, render_template, request
-import czech_sort
 import pymysql
 import re
 
 app = Flask(__name__)
 connection = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
-
 
 #############################################
 @app.route('/')
@@ -13,10 +11,11 @@ def index():
     cursor = connection.cursor()
     cursor.execute("SELECT nazov_zastavky from Zastavky")
     tmp = cursor.fetchall()
+    cursor.close()
     cities = []
     for i in tmp:
         cities.append(''.join(i))
-    cities = tuple(zip(iter(sorted(cities, key=czech_sort.key))))
+    cities = sorted(cities)
     return render_template("index.html", cities=cities)
 
 @app.route('/registration', methods=['POST'])
@@ -54,8 +53,8 @@ def registration():
 def busConfig():
     fromCity = request.form['fromCity']
     toCity = request.form['toCity']
-    app.logger.info(fromCity)
-    app.logger.info(toCity)
+    print(fromCity)
+    print(toCity)
     return render_template('index.html')  # vyvolanie main page aby sme na nej pri vyhladavani spoju aj zostali
 
 

@@ -1,90 +1,92 @@
 <!doctype html>
-
-
-<head><title>Test</title>
-    <meta charset=utf-8>
-    <link rel="stylesheet" type="text/css" href="/static/style.css">
-    <style>
-        .regAndSignIn{
-            top:23%;
-            left:85%;
-            width:180px;
-            height:45px;
-            position: absolute;
-            background: white;
-            text-align: left;
-            font-family: Verdana;
-        }
-        .busConfig{
-            top:20%;
-            left:40%;
-            width:120px;
-            height:40px;
-            position: absolute;
-            background: white;
-            text-align: center;
-            font-family: Verdana;
-            font-size:40px
-        }
-        .optionBusConfig{
-            font-family: Verdana;
-            font-size:20px;
-        }
-        .buslogo{
-            width:15%;
-            height:200px;
-            position: absolute;
-            left:82%;
-            top:-3%;
-        }
-        .mainHeader{
-            font-family: Verdana;
-        }
-        .buttonSearch{
-            font-family: Verdana;
-            font-size:20px;
-        }
-    </style>
-</head>
-<body>
-<article>
-  <header>
-    <h1 class="mainHeader">Hromadná doprava: zadávanie, vyhľadávanie spojov a rezervácia lístkov</h1>
-  </header>
-</article>
-<form class="regAndSignIn" action="/registration" method="POST">
-    <label for="fname">Meno:</label><br>
-    <input type="text" id="fname" name="fname"><br><br>
-    <label for="lname">Priezvisko:</label><br>
-    <input type="text" id="lname" name="lname"><br><br>
-    <label for="email">Email:</label><br>
-    <input type="text" id="email" name="email"><br><br>
-    <label for="password">Heslo:</label><br>
-    <input type="password" id="password" name="password"><br><br>
-    <label for="passwordConfirm">Potvrďte heslo:</label><br>
-    <input type="password" id="passwordConfirm" name="passwordConfirm"><br><br>
-
-    <button><a>Zaregistrovať</a></button><br><br>
-    <p>Už máte účet?</p>
-    <button><a href='/preSignIn'>Prihlásiť sa</a></button>
-</form>
-
-<a href='/'><img src="/static/bus_logo.jpg" alt="bus" width="250" height="230" class="buslogo"></a>
-
-<form class="busConfig" action="/busConfig" method="POST">
-    <label for="fromCity">Odkiaľ:</label><br>
-    <SELECT name="fromCity" id="fromCity" class="optionBusConfig">
-        {% for i in cities %}
-            <OPTION value={{i[0]}}>{{i[0]}}</OPTION>
-        {% endfor %}
-    </SELECT><br><br>
-    <label for="toCity">Kam:</label><br>
-    <SELECT name="toCity" id="toCity" class="optionBusConfig">
-        {% for i in cities %}
-            <OPTION value={{i[0]}}>{{i[0]}}</OPTION>
-        {% endfor %}
-    </SELECT><br><br>
-    <button class="buttonSearch"><a>Hľadať</a></button><br><br>
-</form>
-
-</body>
+<html lang="sk">
+    <head>
+        <title>CP by (j)Elita</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/static/style.css">
+        <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+    </head>
+    <body>
+	    <div id="page">
+            <nav class="navbar" role="navigation">
+                <div class="container">
+                    <div id="logo">
+                        <a href='/'>CP <em>by (j)Elita</em></a>
+                    </div>
+                    <div id="menu">
+                        <ul>
+                            <li>
+                                <a href='/preSignIn'>Prihlásiť sa</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <header id="header" class="background" role="banner" style="background-image: url(static/background.jpg);">
+                <div class="overlay"></div>
+                <div class="container">
+                    <div class="spacer">
+                        <div class="col-full col1">
+                            <h1 id="test">Potrebujete nájsť autobus či&nbsp;vlak?</h1>
+                        </div>
+                        <div class="col-full col2">
+                            <div class="form-wrap">
+                                <div class="form-content">
+                                    <h3>Vyhľadajte spoj:</h3>
+                                    <form class="busConfig">
+                                        <div class="search-col" style="padding-bottom: 10px;">
+                                            <label for="fromCity">Odkiaľ:</label><br>
+                                            <SELECT name="fromCity" id="fromCity" class="search-select">
+                                                {% for i in cities %}
+                                                    	<OPTION value={{i}}>{{i}}</OPTION>  <!--i.decode('utf-8')-->
+                                                {% endfor %}
+                                            </SELECT>
+                                        </div>
+                                        <div class="search-col">
+                                            <label for="toCity">Kam:</label><br>
+						                    <SELECT name="toCity" id="toCity" class="search-select">
+                                                {% for i in cities %}
+                                                    	<OPTION value={{i}}>{{i}}</OPTION>  <!--i.decode('utf-8')-->
+                                                {% endfor %}
+                                            </SELECT>
+                                        </div><br>
+                                        <div class="search-col">
+                                            <label for="date">Dátum:</label><br>
+                                            <input type="datetime-local" id="date" class="form-control">
+                                        </div><br>
+                                        <div class="search-col" style="height: 40px;">
+                                            <button class="buttonSearch" action="/busConfig" method="POST"><a>Hľadať</a></button>
+                                            <button type="button" class="buttonSwap" onclick="swap()"><ion-icon name="repeat-outline"></ion-icon></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <footer id="footer">
+                <p>Sample text</p>
+            </footer>
+        </div>
+        <script>
+            function swap(){
+                var tmp = document.getElementById("fromCity").options.selectedIndex;
+                document.getElementById("fromCity").options.selectedIndex = document.getElementById("toCity").options.selectedIndex;
+                document.getElementById("toCity").options.selectedIndex = tmp;
+            }
+        </script>
+        <script>
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = ('0'+(now.getMonth()+1)).slice(-2);
+            var day = ('0'+now.getDate()).slice(-2);
+            var hour = ('0'+now.getHours()).slice(-2);
+            var minutes = ('0'+now.getMinutes()).slice(-2);
+            document.getElementById('date').setAttribute("min", year + "-01-01T00:00:00");
+            document.getElementById('date').setAttribute("max", year+1 + "-12-31T23:59:59");
+            document.getElementById('date').setAttribute("value", year + "-" + month + "-" + day + "T" + hour + ":" + minutes);
+        </script>
+    </body>
+</html>

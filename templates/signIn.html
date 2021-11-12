@@ -1,24 +1,53 @@
 <!doctype html>
-
-
-<head><title>Test</title>
-    <meta charset=utf-8>
-    <link rel="stylesheet" type="text/css" href="/static/style.css">
-</head>
-<body>
-<article>
-  <header>
-    <h1>Hromadná doprava: zadávání, vyhledávání spojů a rezervaci jízdenek</h1>
-  </header>
-</article>
-<form action="/signIn" method="POST">
-    <label for="email">Prihlasovací email:</label><br>
-    <input type="text" id="email" name="email"><br><br>
-    <label for="password">Heslo:</label><br>
-    <input type="password" id="password" name="password"><br><br>
-
-    <button><a>Prihlásiť</a></button><br>
-</form>
-<a href='/'><img src="/static/bus_logo.jpg" alt="bus" width="250" height="250"></a>
-
-</body>
+<html>
+    <head>
+        <title>CP by (j)Elita</title>
+        <meta charset=utf-8>
+        <link rel="stylesheet" type="text/css" href="/static/style.css">
+    </head>
+    <body>
+        <div id="page">
+            <nav class="navbar" role="navigation">
+                <div class="container">
+                    <div id="logo">
+                        <a href='/'>CP <em>by (j)Elita</em></a>
+                    </div>
+                    <div id="menu">
+                        <ul>
+                            <li>
+                                <a href='/preSignIn'>Prihlásiť sa</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <header id="header" class="background" role="banner" style="background-image: url(static/background.jpg);">
+                <div class="overlay"></div>
+                    <div class="signInForm">
+                        <div class="form-wrap">
+                            <div class="form-content">
+                                <h3>Prihláste sa:</h3>
+                                <form class="busConfig" action="/signIn" method="POST">
+                                    <div class="search-col" style="padding-bottom: 10px;">
+                                        <label for="email">Prihlasovací email:</label><br>
+                                        <input type="text" id="email" name="email">
+                                    </div>
+                                    <div class="search-col">
+                                        <label for="password">Heslo:</label><br>
+                                        <input type="password" id="password" name="password">
+                                    </div><br>
+                                    <div class="search-col" style="height: 40px;">
+                                        <button><a>Prihlásiť</a></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <footer id="footer">
+                <p>Sample text</p>
+            </footer>
+        </div>
+    </body>
+</html>
