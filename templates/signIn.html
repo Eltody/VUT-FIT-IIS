@@ -8,96 +8,107 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
         <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
     </head>
-    <body>
+    <body class="background" style="background-image: url(static/background.jpg);">
         <div id="page">
             <nav class="navbar" role="navigation">
                 <div class="container">
                     <div id="logo">
                         <a href='/'>CP <em>by (j)Elita</em></a>
                     </div>
-                    <div id="menu">
-                        <ul>
-                            <li>
-                                <a href='/preSignIn'>Prihlásiť sa</a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </nav>
-            <header id="header" class="background" role="banner" style="background-image: url(static/background.jpg);">
-                <div class="overlay"></div>
-                <div id="login" class="signInForm animate__animated animate__fadeIn">
-                    <div class="form-wrap">
-                        <div class="form-content">
-                            <h3>Prihláste sa:</h3>
-                            <form class="busConfig" action="/signIn" method="POST">
-                                <div class="search-col" style="padding-bottom: 10px;">
-                                    <label for="lEmail">Prihlasovací email:</label><br>
-                                    <input class="search-select" type="email" id="lEmail" name="lEmail" required>
-                                </div>
-                                <div class="search-col">
-                                    <label for="lPassword">Heslo:</label><br>
-                                    <input class="search-select" type="password" id="lPassword" name="lPassword" required>
-                                </div><br>
-                                <div class="search-col">
-                                    <button type="submit" class="buttonSearch"><a>Prihlásiť</a></button>
-                                    <button type="button" class="buttonSwap" onmouseover="showPassword()" onmouseout="hidePassword()"><ion-icon id="passIcon" name="eye-outline"></ion-icon></button>
-                                </div><br><br>
-                                <div class="search-col" style="height: 40px;">
-                                    <button type="button" class="buttonRegister" onclick="register()"><a>Vytvoriť účet</a></button>
-                                </div>
-                            </form>
+            <header id="header" role="banner">
+                <div class="signInFlex">
+                    <div id="login" class="signInForm animate__animated animate__fadeIn">
+                        <div class="form-wrap">
+                            <div class="form-content">
+                                <h3>Prihláste sa:</h3>
+                                <form action="/signIn" method="POST">
+                                    <div class="search-col">
+                                        <label for="lEmail">Prihlasovací email:</label><br>
+                                        <input class="search-select" type="email" id="lEmail" name="lEmail" required>
+                                    </div>
+                                    <div class="search-col">
+                                        <label for="lPassword">Heslo:</label><br>
+                                        <input class="search-select" type="password" id="lPassword" name="lPassword" required>
+                                    </div>
+                                    <p id="logError"></p>
+                                    <div class="search-col">
+                                        <button type="submit" class="buttonSearch"><a>Prihlásiť</a></button>
+                                        <button type="button" class="buttonSwap" onmouseover="showPassword()" onmouseout="hidePassword()"><ion-icon id="passIcon" name="eye-outline"></ion-icon></button>
+                                    </div><br><br>
+                                    <div class="search-col">
+                                        <button type="button" class="buttonRegister" onclick="register()"><a>Vytvoriť účet</a></button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div id="register" class="regForm animate__animated animate__fadeIn hidden">
-                    <div class="form-wrap">
-                        <div class="form-content">
-                            <h3>Zaregistrujte sa:</h3>
-                            <form class="busConfig" action="/registration" method="POST">
-                                <div class="search-col" style="padding-bottom: 10px;">
-                                    <label for="fname">Meno:</label><br>
-                                    <input class="search-select" type="text" id="fname" name="fname" required>
-                                </div>
-                                <div class="search-col" style="padding-bottom: 10px;">
-                                    <label for="lname">Priezvisko:</label><br>
-                                    <input class="search-select" type="text" id="lname" name="lname" required>
-                                </div>
-                                <div class="search-col" style="padding-bottom: 10px;">
-                                    <label for="email">Email:</label><br>
-                                    <input class="search-select" type="email" id="email" name="email" required>
-                                </div>
-                                <div class="search-col">
-                                    <label for="password">Heslo:</label><br>
-                                    <input class="search-select" type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onkeyup="validatePassword()" required>
-                                </div>
-                                <div class="search-col">
-                                    <label for="passwordConfirm">Potvrďte heslo:</label><br>
-                                    <input class="search-select" type="password" id="passwordConfirm" name="passwordConfirm" onkeyup="validatePassword()" required>
-                                </div><br>
-                                <div class="search-col">
-                                    <button id="submit" type="submit" class="buttonSearch"><a>Registrovať</a></button>
-                                    <button type="button" class="buttonSwap" onmouseover="showPassword()" onmouseout="hidePassword()"><ion-icon id="passIcon" name="eye-outline"></ion-icon></button>
-                                </div><br><br>
-                                <div class="search-col" style="height: 40px;">
-                                    <button type="button" class="buttonRegister" onclick="register()"><a>Prihlásenie</a></button>
-                                </div>
-                            </form>
+                    <div id="register" class="regForm animate__animated animate__fadeIn hidden">
+                        <div class="form-wrap">
+                            <div class="form-content">
+                                <h3>Zaregistrujte sa:</h3>
+                                <form action="/registration" method="POST">
+                                    <div class="search-col">
+                                        <label for="fname">Meno:</label><br>
+                                        <input class="search-select" type="text" id="fname" name="fname" required>
+                                    </div>
+                                    <div class="search-col">
+                                        <label for="lname">Priezvisko:</label><br>
+                                        <input class="search-select" type="text" id="lname" name="lname" required>
+                                    </div>
+                                    <div class="search-col">
+                                        <label for="email">Email:</label><br>
+                                        <input class="search-select" type="email" id="email" name="email" required>
+                                    </div>
+                                    <div class="search-col">
+                                        <label for="password">Heslo:</label><br>
+                                        <input class="search-select" type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onkeyup="validatePassword()" required>
+                                    </div>
+                                    <div class="search-col">
+                                        <label for="passwordConfirm">Potvrďte heslo:</label><br>
+                                        <input class="search-select" type="password" id="passwordConfirm" name="passwordConfirm" onkeyup="validatePassword()" required>
+                                    </div>
+                                    <p id="regError"></p>
+                                    <div class="search-col">
+                                        <button id="submit" type="submit" class="buttonSearch"><a>Registrovať</a></button>
+                                        <button type="button" class="buttonSwap" onmouseover="showPassword()" onmouseout="hidePassword()"><ion-icon id="passIcon" name="eye-outline"></ion-icon></button>
+                                    </div><br><br>
+                                    <div class="search-col">
+                                        <button type="button" class="buttonRegister" onclick="register()"><a>Prihlásenie</a></button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </header>
-            <footer id="footer">
-                <p>Sample text</p>
-            </footer>
         </div>
+        <footer id="footer">
+            <p>Sample text</p>
+        </footer>
+        <script>
+            var error = "{{data.error}}";
+            var email = "{{data.email}}";
+            if (error === 'reg') {
+                document.getElementById("register").classList.remove("animate__fadeIn")
+                document.getElementById("register").classList.remove("hidden");
+                document.getElementById("login").classList.add("hidden");
+                document.getElementById("regError").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
+            }
+            if (error === 'log') {
+                document.getElementById("login").classList.remove("animate__fadeIn")
+                document.getElementById("register").classList.add("hidden");
+                document.getElementById("login").classList.remove("hidden");
+                document.getElementById("logError").innerHTML = "Chybne zadaný email alebo heslo."
+            }
+        </script>
         <script>
             function register(){
-                if (document.getElementById("login").classList[3] === 'hidden'){
+                if (document.getElementById("login").classList[3] === 'hidden' || document.getElementById("login").classList[2] === 'hidden'){
                     document.getElementById("register").classList.add("hidden");
                     document.getElementById("login").classList.remove("hidden");
-                }
-                else {
+                } else {
                     document.getElementById("register").classList.remove("hidden");
                     document.getElementById("login").classList.add("hidden");
                 }

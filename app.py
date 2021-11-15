@@ -3,6 +3,8 @@ import pymysql
 
 app = Flask(__name__)
 connection = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
+emails = []
+
 
 #############################################
 @app.route('/')
@@ -15,44 +17,21 @@ def index():
     for i in tmp:
         cities.append(''.join(i))
     cities = sorted(cities)
-    return render_template("index.html", cities=cities)
-
-@app.route('/registration', methods=['POST'])
-def registration():
-    fname = request.form['fname']
-    lname = request.form['lname']
-    user_email = request.form['email']
-    password = request.form['password']
-
-    cursor = connection.cursor()
-    cursor.execute("SELECT email FROM Cestujuci")
-    for (email) in cursor:
-        email = ''.join(email)
-        if email == user_email:
-            cursor.close()
-            return render_template('index.html')
-    cursor.close()
-
-    cursor = connection.cursor()
-    cursor.execute("insert into `Cestujuci` (meno, priezvisko, email, heslo) VALUES (%s, %s, %s, %s)", (fname, lname, user_email, password))
-    connection.commit()
-    cursor.close()
-
-    return render_template('registrationSuccess.html', data=fname)
+    return render_template("index.html", cities=cities, data="")
 
 
 @app.route('/busConfig', methods=['GET', 'POST'])
 def busConfig():
     fromCity = request.form['fromCity']
     toCity = request.form['toCity']
-    print(fromCity)
-    print(toCity)
-    return render_template('index.html')  # vyvolanie main page aby sme na nej pri vyhladavani spoju aj zostali
+    #TODO connect to database, return list of connections
+    #TODO list connections
+    return render_template('busList.html')
 
 
 @app.route('/preSignIn', methods=['GET', 'POST'])
 def preSignIn():
-    return render_template('signIn.html')
+    return render_template('signIn.html', data="")
 
 
 @app.route('/signIn', methods=['GET', 'POST'])
@@ -69,19 +48,66 @@ def signIn():
     for (meno, email, heslo) in cestujuci:
         if email == user_email and heslo == password:
             cestujuci.close()
-            return render_template('signInSuccess.html', data=meno)
+            return render_template('index.html', data=meno)
     for (meno, email, heslo) in administrator:
         if email == user_email and heslo == password:
             administrator.close()
-            return render_template('signInSuccess.html', data=meno)
+            data = {'message': 'login', 'name': meno}
+            return render_template('index.html', data=meno)
     for (meno, email, heslo) in personal:
         if email == user_email and heslo == password:
             personal.close()
-            return render_template('signInSuccess.html', data=meno)
+            return render_template('index.html', data=meno)
     cestujuci.close()
     administrator.close()
     personal.close()
-    return render_template('signIn.html')
+
+#    if user_email == emails[0]:
+#        if user_email == emails[1]:
+#            if user_email == emails[2]:
+#                #TODO email sending
+#            elif emails[2] == '':
+#                emails.append(user_email)
+#            else:
+#                emails.clear()
+#                emails.append(user_email)
+#        elif emails[1] == '':
+#            emails.append(user_email)
+#        else:
+#            emails.clear()
+#            emails.append(user_email)
+#    elif emails[0] == '':
+#        emails.append(user_email)
+#    else:
+#        emails.clear()
+#        emails.append(user_email)
+    data = {'error': 'log', 'email': user_email}
+    return render_template('signIn.html', data=data)
+
+
+@app.route('/registration', methods=['POST'])
+def registration():
+    fname = request.form['fname']
+    lname = request.form['lname']
+    user_email = request.form['email']
+    password = request.form['password']
+
+    cursor = connection.cursor()
+    cursor.execute("SELECT email FROM Cestujuci")
+    for (email) in cursor:
+        email = ''.join(email)
+        if email == user_email:
+            cursor.close()
+            data = {'error': 'reg', 'email': user_email}
+            return render_template('signIn.html', data=data)
+    cursor.close()
+
+    cursor = connection.cursor()
+    cursor.execute("insert into `Cestujuci` (meno, priezvisko, email, heslo) VALUES (%s, %s, %s, %s)", (fname, lname, user_email, password))
+    connection.commit()
+    cursor.close()
+
+    return render_template('registrationSuccess.html', data=fname)
 
 
 if __name__ == '__main__':

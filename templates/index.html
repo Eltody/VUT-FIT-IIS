@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
         <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
     </head>
-    <body>
+    <body class="background" style="background-image: url(static/background.jpg);">
 	    <div id="page">
             <nav class="navbar" role="navigation">
                 <div class="container">
@@ -24,18 +24,18 @@
                     </div>
                 </div>
             </nav>
-            <header id="header" class="background" role="banner" style="background-image: url(static/background.jpg);">
-                <div class="overlay"></div>
+            <header id="header"role="banner">
                 <div class="container">
-                    <div class="spacer">
-                        <div class="col-full col1">
-                            <h1 class="animate__animated animate__fadeInUp" id="test">Potrebujete nájsť autobus či&nbsp;vlak?</h1>
+                    <div class="flex">
+                        <div class="col-full">
+                            <h1 class="animate__animated animate__fadeIn animate__slow" id="test">Potrebujete nájsť autobus či&nbsp;vlak?</h1>
                         </div>
-                        <div class="col-full col2 animate__animated animate__fadeInUp animate__delay-1s">
+                        <div class="spacer"></div>
+                        <div class="col-full animate__animated animate__fadeIn animate__slow animate__delay-1s">
                             <div class="form-wrap">
                                 <div class="form-content">
                                     <h3>Vyhľadajte spoj:</h3>
-                                    <form class="busConfig" action="/busConfig" method="POST">
+                                    <form action="/busConfig" method="POST">
                                         <div class="search-col" style="padding-bottom: 10px;">
                                             <label for="fromCity">Odkiaľ:</label><br>
                                             <SELECT name="fromCity" id="fromCity" class="search-select">
@@ -51,11 +51,11 @@
                                                     	<OPTION value={{i}}>{{i}}</OPTION>  <!--i.decode('utf-8')-->
                                                 {% endfor %}
                                             </SELECT>
-                                        </div><br>
+                                        </div>
                                         <div class="search-col">
                                             <label for="date">Dátum:</label><br>
-                                            <input type="datetime-local" id="date" class="form-control">
-                                        </div><br>
+                                            <input type="datetime-local" id="date" class="search-select">
+                                        </div>
                                         <div class="search-col" style="height: 40px;">
                                             <button type="submit" class="buttonSearch"><a>Hľadať</a></button>
                                             <button type="button" class="buttonSwap" onclick="swap()"><ion-icon name="repeat-outline"></ion-icon></button>
@@ -71,6 +71,16 @@
                 <p>Sample text</p>
             </footer>
         </div>
+        <script>
+            var name = "{{data.data}}";
+            console.log(data);
+            if (data !== '') {
+                document.getElementById("register").classList.remove("animate__fadeIn")
+                document.getElementById("register").classList.remove("hidden");
+                document.getElementById("login").classList.add("hidden");
+                document.getElementById("regError").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
+            }
+        </script>
         <script>
             function swap(){
                 var tmp = document.getElementById("fromCity").options.selectedIndex;
