@@ -17,6 +17,7 @@ def index():
     for i in tmp:
         cities.append(''.join(i))
     cities = sorted(cities)
+    print(cities)
     return render_template("index.html", cities=cities, data="")
 
 
@@ -26,6 +27,7 @@ def busConfig():
     toCity = request.form['toCity']
     #TODO connect to database, return list of connections
     #TODO list connections
+    print(fromCity)
     return render_template('busList.html')
 
 
