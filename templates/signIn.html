@@ -8,7 +8,7 @@
         <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" type="text/css" href="/static/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-        <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+        <script src="https://kit.fontawesome.com/6079958bc1.js" crossorigin="anonymous"></script>
     </head>
     <!-- Main body -->
     <body class="background" style="background-image: url(static/background.jpg);">
@@ -41,7 +41,7 @@
                                     <p id="logError"></p>
                                     <div class="search-col">
                                         <button type="submit" class="buttonSearch"><a>Prihlásiť</a></button>
-                                        <button type="button" class="buttonSwap" onmouseover="showPassword()" onmouseout="hidePassword()"><ion-icon id="passIcon" name="eye-outline"></ion-icon></button>
+                                        <button type="button" class="buttonSwap" onmouseover="showPassword()" onmouseout="hidePassword()"><i name="passIcon" class="far fa-eye"></i></button>
                                     </div><br><br>
                                     <div class="search-col">
                                         <button type="button" class="buttonRegister" onclick="register()"><a>Vytvoriť účet</a></button>
@@ -79,7 +79,7 @@
                                     <p id="regError"></p>
                                     <div class="search-col">
                                         <button id="submit" type="submit" class="buttonSearch"><a>Registrovať</a></button>
-                                        <button type="button" class="buttonSwap" onmouseover="showPassword()" onmouseout="hidePassword()"><ion-icon id="passIcon" name="eye-outline"></ion-icon></button>
+                                        <button type="button" class="buttonSwap" onmouseover="showPassword()" onmouseout="hidePassword()"><i name="passIcon" class="far fa-eye"></i></button>
                                     </div><br><br>
                                     <div class="search-col">
                                         <button type="button" class="buttonRegister" onclick="register()"><a>Prihlásenie</a></button>
@@ -139,13 +139,19 @@
                 document.getElementById("lPassword").type = 'text';
                 document.getElementById("password").type = 'text';
                 document.getElementById("passwordConfirm").type = 'text';
-                document.getElementById("passIcon").setAttribute("name","eye-off-outline");
+                document.getElementsByName("passIcon")[0].classList.remove("fa-eye");
+                document.getElementsByName("passIcon")[0].classList.add("fa-eye-slash");
+                document.getElementsByName("passIcon")[1].classList.remove("fa-eye");
+                document.getElementsByName("passIcon")[1].classList.add("fa-eye-slash");
             }
             function hidePassword(){
                 document.getElementById("lPassword").type = 'password';
                 document.getElementById("password").type = 'password';
                 document.getElementById("passwordConfirm").type = 'password';
-                document.getElementById("passIcon").setAttribute("name","eye-outline");
+                document.getElementsByName("passIcon")[0].classList.add("fa-eye");
+                document.getElementsByName("passIcon")[0].classList.remove("fa-eye-slash");
+                document.getElementsByName("passIcon")[1].classList.add("fa-eye");
+                document.getElementsByName("passIcon")[1].classList.remove("fa-eye-slash");
             }
         </script>
     </body>

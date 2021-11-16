@@ -236,8 +236,8 @@ h1, h2, h3, h4, h5, h6, figure {
     background: rgba(128, 128, 128, 0.6);
     border: 2px solid rgba(0, 0, 0, 0.3);
     box-shadow: 1px 1px 7px #333;
-    font-size: 24px;
-    padding: 6px 0 0 0;
+    font-size: 18px;
+    padding: 3px 0 0 0;
     border-radius: 7px;
     float: right;
 }
@@ -360,7 +360,7 @@ h1, h2, h3, h4, h5, h6, figure {
         font-size: 12px;
     }
     .buttonSwap {
-        font-size: 18px;
+        font-size: 14px;
     }
     .buttonSearch {
         font-size: 16px;
@@ -408,7 +408,7 @@ h1, h2, h3, h4, h5, h6, figure {
         font-size: 10px;
     }
     .buttonSwap {
-        font-size: 14px;
+        font-size: 10px;
     }
     .buttonSearch {
         font-size: 14px;
@@ -431,4 +431,103 @@ h1, h2, h3, h4, h5, h6, figure {
     .regForm label {
         font-size: 14px;
     }
+}
+
+.resultWrap {
+    border-top: 10px solid rgba(128, 128, 128, 0.8);
+    border-radius: 10px 10px 0 0;
+    text-align: center;
+    position: relative;
+    min-width: 310px;
+    width: 80vw;
+}
+.resultContent {
+    z-index: 10;
+    position: relative;
+    clear: both;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 0 0 10px 10px;
+    box-shadow: inset 1px 1px 15px #333;
+    padding: 15px 35px 15px 35px;
+}
+.resultCon {
+    border: none;
+    width: -webkit-fill-available;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 1px 1px 15px #333;
+    margin-bottom: 15px;
+    padding: 0;
+}
+.resultCon:hover {
+    rgba(255, 255, 255, 0.5);
+}
+.resultCon a {
+    color: black;
+    font-size: 26px;
+    font-weight: bold;
+    text-decoration: none;
+    float: left;
+}
+.resultCon span {
+    color: black;
+    font-size: 16px;
+    padding-left: 10px;
+}
+.resultCon p {
+    padding: 0;
+    color: black;
+    float: right;
+    font-size: 16px;
+}
+.resultCol {
+
+}
+.resultCol p {
+    color: black;
+    width: 100%;
+}
+.resultConHead {
+    display: flex;
+    padding: 0 25px;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 0, 0, 0.4);
+}
+.resultConDetails {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 25px;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.resultConDetails p {
+    padding: 0 15px;
+    color: black;
+    font-size: 16px;
+}
+.resultConDetails div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.resultConFooter {
+    display: flex;
+    align-items: center;
+    padding: 6px 25px;
+    flex-direction: row;
+    justify-content: flex-end;
+    background: rgba(0, 0, 0, 0.4);
+}
+.resultConFooter a {
+    margin-left: 15px;
+    padding: 1px 15px;
+    color: black;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: inset 1px 1px 10px #333;
+    background: rgba(255, 255, 255, 0.5);
+}
+.resultConFooter a:hover {
+    box-shadow: 0;
 }

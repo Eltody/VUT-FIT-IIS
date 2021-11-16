@@ -7,7 +7,7 @@
         <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" type="text/css" href="/static/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-        <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+        <script src="https://kit.fontawesome.com/6079958bc1.js" crossorigin="anonymous"></script>
     </head>
     <body class="background" style="background-image: url(static/background.jpg);">
 	    <div id="page">
@@ -24,7 +24,7 @@
                                 <div class="dropdown-content">
                                     <a href="#">Lístky</a>
                                     <a href="#">Profil</a>
-                                    <a href='/signOut'>Odhlásiť sa</a>
+                                    <a onclick="signOut()" href="/">Odhlásiť sa</a>
                                 </div>
                             </div>
                         </ul>
@@ -34,40 +34,36 @@
             <header id="header"role="banner">
                 <div class="container">
                     <div class="flex">
-                        <div class="col-full">
-                            <h1 class="animate__animated animate__fadeIn animate__slow" id="test">Potrebujete nájsť autobus či&nbsp;vlak?</h1>
-                        </div>
-                        <div class="spacer"></div>
-                        <div class="col-full animate__animated animate__fadeIn animate__slow animate__delay-1s">
-                            <div class="form-wrap">
-                                <div class="form-content">
-                                    <h3>Vyhľadajte spoj:</h3>
-                                    <form action="/busConfig" method="POST">
-                                        <div class="search-col" style="padding-bottom: 10px;">
-                                            <label for="fromCity">Odkiaľ:</label><br>
-                                            <SELECT name="fromCity" id="fromCity" class="search-select">
-                                                {% for i in cities %}
-                                                    	<OPTION value="{{i}}">{{i}}</OPTION>  <!--i.decode('utf-8')-->
-                                                {% endfor %}
-                                            </SELECT>
+                        <div class="animate__animated animate__fadeIn animate__faster">
+                            <div class="resultWrap">
+                                <div class="resultContent">
+                                    <h3 id="notFound" class="hidden" style="color: red; margin: 0;">Žiadny spoj nebol nájdený</h3>
+                                    <h3 id="Found">Nájdené spoje:</h3>
+                                    {% for i in data %}
+                                        <div class="resultCon">
+                                            <div class="resultConHead">
+                                                <a>{{i[2]}}<span>{{i[7]}}</span></a>
+                                                <p>Celkový čas <strong>{{i[8]}}</strong></p>
+                                            </div>
+                                            <div class="resultConDetails">
+                                                <div>
+                                                    <p><i class="fas fa-bus"></i></p>
+                                                    <p>{{i[2]}}</p>
+                                                    <p>{{i[4]}}</p>
+                                                </div>
+                                                <br>
+                                                <div>
+                                                    <p>{{i[0]}}&emsp;<strong>{{i[5]}}</strong></p>
+                                                    <p>{{i[1]}}</p>
+                                                    <p>{{i[3]}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="resultConFooter">
+                                                <p>Cena <strong>6,58€</strong> </p>
+                                                <a href="/buy">Do košíka <i class="fas fa-shopping-basket"></i></a>
+                                            </div>
                                         </div>
-                                        <div class="search-col">
-                                            <label for="toCity">Kam:</label><br>
-						                    <SELECT name="toCity" id="toCity" class="search-select">
-                                                {% for i in cities %}
-                                                    	<OPTION value="{{i}}">{{i}}</OPTION>  <!--i.decode('utf-8')-->
-                                                {% endfor %}
-                                            </SELECT>
-                                        </div>
-                                        <div class="search-col">
-                                            <label for="date">Dátum:</label><br>
-                                            <input type="datetime-local" id="date" class="search-select">
-                                        </div>
-                                        <div class="search-col" style="height: 40px;">
-                                            <button type="submit" class="buttonSearch"><a>Hľadať</a></button>
-                                            <button type="button" class="buttonSwap" onclick="swap()"><ion-icon name="repeat-outline"></ion-icon></button>
-                                        </div>
-                                    </form>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -78,6 +74,24 @@
                 <p>Copyright © reserved, Website by <a href="mailto:martin.rakus1@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
             </footer>
         </div>
+        <!-- Scripts -->
+        <script>
+            var cookies = document.cookie.split('; ');
+            var c = [];
+            for (var i = 0; i < cookies.length; i++) {
+                c.push(cookies[i].split('='));
+            }
+            if (c[0][0] === "name") {
+                document.getElementById("user").classList.remove("hidden");
+                document.getElementById("login").classList.add("hidden");
+                document.getElementById("user").innerHTML = c[0][1];
+            }
+            function signOut() {
+                document.cookie = "name=; Max-Age=0";
+                document.cookie = "email=; Max-Age=0";
+                location.reload();
+            }
+        </script>
         <script>
             var message = "{{data.message}}";
             var name = "{{data.name}}";
@@ -88,28 +102,11 @@
             }
         </script>
         <script>
-            function swap(){
-                var tmp = document.getElementById("fromCity").options.selectedIndex;
-                document.getElementById("fromCity").options.selectedIndex = document.getElementById("toCity").options.selectedIndex;
-                document.getElementById("toCity").options.selectedIndex = tmp;
+            var data = "{{data}}";
+            if (data === "[]") {
+                document.getElementById("notFound").classList.remove("hidden");
+                document.getElementById("Found").classList.add("hidden");
             }
-        </script>
-        <script>
-            var select = document.getElementById('toCity');
-            var items = select.getElementsByTagName('option');
-            var index = Math.floor(Math.random() * (items.length - 1) + 1);
-            select.selectedIndex = index;
-        </script>
-        <script>
-            var now = new Date();
-            var year = now.getFullYear();
-            var month = ('0'+(now.getMonth()+1)).slice(-2);
-            var day = ('0'+now.getDate()).slice(-2);
-            var hour = ('0'+now.getHours()).slice(-2);
-            var minutes = ('0'+now.getMinutes()).slice(-2);
-            document.getElementById('date').setAttribute("min", year + "-01-01T00:00:00");
-            document.getElementById('date').setAttribute("max", year+1 + "-12-31T23:59:59");
-            document.getElementById('date').setAttribute("value", year + "-" + month + "-" + day + "T" + hour + ":" + minutes);
         </script>
     </body>
 </html>

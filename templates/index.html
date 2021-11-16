@@ -8,7 +8,7 @@
         <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" type="text/css" href="/static/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-        <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
+        <script src="https://kit.fontawesome.com/6079958bc1.js" crossorigin="anonymous"></script>
     </head>
     <!-- Main body -->
     <body class="background" style="background-image: url(static/background.jpg);">
@@ -30,7 +30,7 @@
                                 <div class="dropdown-content">
                                     <a href="#">Lístky</a>
                                     <a href="#">Profil</a>
-                                    <a href='/signOut'>Odhlásiť sa</a>
+                                    <a onclick="signOut()" href="/">Odhlásiť sa</a>
                                 </div>
                             </div>
                         </ul>
@@ -74,7 +74,7 @@
                                         </div>
                                         <div class="search-col" style="height: 40px;">
                                             <button type="submit" class="buttonSearch"><a>Hľadať</a></button>
-                                            <button type="button" class="buttonSwap" onclick="swap()"><ion-icon name="repeat-outline"></ion-icon></button>
+                                            <button type="button" class="buttonSwap" onclick="swap()"><i class="fas fa-retweet"></i></button>
                                         </div>
                                     </form>
                                 </div>
@@ -90,9 +90,29 @@
         </div>
         <!-- Scripts -->
         <script>
+            var cookies = document.cookie.split('; ');
+            var c = [];
+            for (var i = 0; i < cookies.length; i++) {
+                c.push(cookies[i].split('='));
+            }
+            if (c[0][0] === "name") {
+                document.getElementById("user").classList.remove("hidden");
+                document.getElementById("login").classList.add("hidden");
+                document.getElementById("user").innerHTML = c[0][1];
+            }
+            function signOut() {
+                document.cookie = "name=; Max-Age=0";
+                document.cookie = "email=; Max-Age=0";
+                location.reload();
+            }
+        </script>
+        <script>
             var message = "{{data.message}}";
+            var email = "{{data.email}}";
             var name = "{{data.name}}";
             if (message !== '') {
+                document.cookie = "name="+name;
+                document.cookie = "email="+email;
                 document.getElementById("user").classList.remove("hidden");
                 document.getElementById("login").classList.add("hidden");
                 document.getElementById("user").innerHTML = name;

@@ -16,7 +16,9 @@ def index():
     for i in tmp:
         cities.append(''.join(i))
     cities = sorted(cities)
-    return render_template("index.html", cities=cities, data=loginData)
+    data = loginData.copy()
+    loginData.clear()
+    return render_template("index.html", cities=cities, data=data)
 
 @app.route('/busConfig', methods=['GET', 'POST'])
 def busConfig():
@@ -137,17 +139,17 @@ def signIn():
     for (meno, email, heslo) in cestujuci:
         if email == user_email and heslo == password:
             cestujuci.close()
-            loginData = {'message': 'login', 'name': meno}
+            loginData = {'message': 'login', 'email': user_email, 'name': meno}
             return index()
     for (meno, email, heslo) in administrator:
         if email == user_email and heslo == password:
             administrator.close()
-            loginData = {'message': 'login', 'name': meno}
+            loginData = {'message': 'login', 'email': user_email, 'name': meno}
             return index()
     for (meno, email, heslo) in personal:
         if email == user_email and heslo == password:
             personal.close()
-            loginData = {'message': 'login', 'name': meno}
+            loginData = {'message': 'login', 'email': user_email, 'name': meno}
             return index()
     cestujuci.close()
     administrator.close()
@@ -199,12 +201,7 @@ def registration():
     connection.commit()
     cursor.close()
 
-    loginData = {'message': 'login', 'name': fname}
-    return index()
-
-@app.route('/signOut')
-def signOut():
-    loginData.clear()
+    loginData = {'message': 'login', 'email': user_email, 'name': fname}
     return index()
 
 if __name__ == '__main__':
