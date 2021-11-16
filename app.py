@@ -108,7 +108,7 @@ def busConfig():
                     tmp_HoursSecsToCity = int(tmp_secsTimeToCity[0]) * 3600  # hodiny v sekudach
                     tmp_MinutesSecsToCity = int(tmp_secsTimeToCity[1]) * 60  # minuty v sekudach
                     connectionTimeMinutes = ((tmp_HoursSecsToCity + tmp_MinutesSecsToCity) - (tmp_HoursSecsFromCity + tmp_MinutesSecsFromCity)) / 60 # dlzka trvania spoju v minutach
-
+                    connectionTimeMinutes = int(connectionTimeMinutes)
                     if tmp_timeFromCity > timeFromDate: # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
                         possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateOfConnection, connectionTimeMinutes])
     print(possibleBusConnections)
