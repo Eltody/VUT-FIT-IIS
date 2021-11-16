@@ -100,7 +100,7 @@ def busConfig():
     print(possibleBusConnections)
     # possibleBusConnections - vo formate: cislo_spoju, fromCity, cas_prejazdu(fromCity), toCity, cas_prejazdu(toCity), dopravca, pocet volnych miest
 
-    return render_template('connections.html')
+    return render_template('connections.html', data=possibleBusConnections)
 
 
 @app.route('/preSignIn', methods=['GET', 'POST'])
