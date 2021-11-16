@@ -48,16 +48,18 @@ def signIn():
     for (meno, email, heslo) in cestujuci:
         if email == user_email and heslo == password:
             cestujuci.close()
-            return render_template('index.html', data=meno)
+            data = {'message': 'login', 'name': meno}
+            return render_template('index.html', data=data)
     for (meno, email, heslo) in administrator:
         if email == user_email and heslo == password:
             administrator.close()
             data = {'message': 'login', 'name': meno}
-            return render_template('index.html', data=meno)
+            return render_template('index.html', data=data)
     for (meno, email, heslo) in personal:
         if email == user_email and heslo == password:
             personal.close()
-            return render_template('index.html', data=meno)
+            data = {'message': 'login', 'name': meno}
+            return render_template('index.html', data=data)
     cestujuci.close()
     administrator.close()
     personal.close()
