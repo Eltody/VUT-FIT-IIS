@@ -417,7 +417,7 @@ VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
 VALUES ('18', '8', '9:21'); -- Pardubice
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('18', '2', '13:25'); -- Hradec Kralove
+VALUES ('18', '2', '10:25'); -- Hradec Kralove
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
 VALUES ('18', '5', '12:30'); -- Liberec
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
@@ -451,15 +451,6 @@ INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
 VALUES ('21', '3', '15:20'); -- Jihlava
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('8', '21'); -- flix bus, Kromeriz-Jihlava
-
-INSERT INTO Spoj (id_dopravca_spoje)
-VALUES ('3');
-INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('22', '4', '18:42'); -- Kromeriz
-INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('22', '3', '22:30'); -- Jihlava
-INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
-VALUES ('8', '22'); -- flix bus, Kromeriz-Jihlava
 
 -- PRAHA -> PLZEN, FLIX BUS (id 3)
 INSERT INTO Spoj (id_dopravca_spoje)
