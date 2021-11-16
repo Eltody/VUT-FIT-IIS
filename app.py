@@ -74,18 +74,31 @@ def busConfig():
                     cursor1.execute("SELECT id_dopravca_spoje FROM Spoj WHERE id='%s';" % row1[1])
                     id_dopravca = cursor1.fetchone()    # ziskanie id_dopravcu_spoje
                     cursor1.close()
+
                     cursor1 = connection.cursor()
                     cursor1.execute("SELECT meno, priezvisko FROM Dopravca WHERE id='%s';" % id_dopravca)
                     carrier_name = cursor1.fetchone()  # ziskanie id_dopravcu_spoje
                     cursor1.close()
+
+                    # ziskanie poctu volnych dostupnych miest v danom spoji dan0ho vozidla
+                    cursor1 = connection.cursor()
+                    cursor1.execute("SELECT id_vozidla FROM Vozidlo_Spoj WHERE id_spoju='%s';" % row1[1])
+                    id_vozidla = cursor1.fetchone()
+                    cursor1.close()
+                    cursor1 = connection.cursor()
+                    cursor1.execute("SELECT pocet_miest FROM Vozidlo WHERE id='%s';" % id_vozidla)
+                    availableSeats = cursor1.fetchone()
+                    cursor1.close()
+
                     fromCityTime = row1[0]
                     toCityTime = row2[0]
                     connectionNumber = row1[1]
+                    availableSeats = availableSeats[0] # array to string
                     carrier_name = carrier_name[0] + carrier_name[1]  # spojenie meno a priezvisko do jedneho
                     if tmp_timeFromCity > timeFromDate: # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
-                        possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name])
+                        possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats])
     print(possibleBusConnections)
-    # possibleBusConnections - vo formate: cislo_spoju, fromCity, cas_prejazdu(fromCity), toCity, cas_prejazdu(toCity), dopravca
+    # possibleBusConnections - vo formate: cislo_spoju, fromCity, cas_prejazdu(fromCity), toCity, cas_prejazdu(toCity), dopravca, pocet volnych miest
 
     return render_template('connections.html')
 
