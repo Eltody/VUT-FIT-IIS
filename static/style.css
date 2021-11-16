@@ -125,6 +125,7 @@ h1, h2, h3, h4, h5, h6, figure {
     text-align: right;
     padding-left: 15px;
     padding-right: 15px;
+    position: relative;
     float: left;
     width: 50%;
 }
@@ -135,13 +136,39 @@ h1, h2, h3, h4, h5, h6, figure {
 .navbar #menu a:hover, .navbar #menu a:focus, .navbar #menu a:active {
     rgba(255, 255, 255, 0.5);
 }
-
 .navbar ul {
     padding: 0;
     margin: 5px 0 0 0;
 }
 .navbar ul li {
     display: inline;
+}
+.dropdown {
+    float: right;
+    text-align: right;
+}
+.dropdown-content {
+    width: auto;
+    display: none;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 10px 10px 10px 10px;
+    z-index: 1;
+    right: 0;
+}
+.dropdown-content a {
+    padding: 0 15px;
+    text-decoration: none;
+    display: block;
+    color: black !important;
+}
+.dropdown-content a:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px 10px 10px 10px;
+}
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 .container {
     padding-left: 5%;

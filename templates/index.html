@@ -10,25 +10,22 @@
     </head>
     <body class="background" style="background-image: url(static/background.jpg);">
 	    <div id="page">
-            <nav class="navbar" role="navigation">
+            <nav class="navbar">
                 <div class="container">
                     <div id="logo">
                         <a href='/'>CP <em>by (j)Elita</em></a>
                     </div>
                     <div id="menu">
                         <ul>
-                            <li>
-                                <a href='/preSignIn'>Prihlásiť sa</a>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#">Travel</a>
-                                <ul class="dropdown-content">
-                                    <li><a href="#">Europe</a></li>
-                                    <li><a href="#">Asia</a></li>
-                                    <li><a href="#">America</a></li>
-                                    <li><a href="#">Canada</a></li>
-                                </ul>
-                            </li>
+                            <a href='/preSignIn' id="login">Prihlásiť sa</a>
+                            <div class="dropdown">
+                                <a href="#" class="hidden" id="user"></a>
+                                <div class="dropdown-content">
+                                    <a href="#">Lístky</a>
+                                    <a href="#">Profil</a>
+                                    <a href='/signOut'>Odhlásiť sa</a>
+                                </div>
+                            </div>
                         </ul>
                     </div>
                 </div>
@@ -81,13 +78,12 @@
             </footer>
         </div>
         <script>
-            var name = "{{data.data}}";
-            console.log(data);
-            if (data !== '') {
-                document.getElementById("register").classList.remove("animate__fadeIn")
-                document.getElementById("register").classList.remove("hidden");
+            var message = "{{data.message}}";
+            var name = "{{data.name}}";
+            if (message !== '') {
+                document.getElementById("user").classList.remove("hidden");
                 document.getElementById("login").classList.add("hidden");
-                document.getElementById("regError").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
+                document.getElementById("user").innerHTML = name;
             }
         </script>
         <script>

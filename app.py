@@ -4,8 +4,7 @@ import pymysql
 app = Flask(__name__)
 connection = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
 emails = []
-
-
+loginData = {}
 #############################################
 @app.route('/')
 def index():
@@ -17,8 +16,7 @@ def index():
     for i in tmp:
         cities.append(''.join(i))
     cities = sorted(cities)
-    return render_template("index.html", cities=cities, data="")
-
+    return render_template("index.html", cities=cities, data=loginData)
 
 @app.route('/busConfig', methods=['GET', 'POST'])
 def busConfig():
@@ -36,6 +34,7 @@ def preSignIn():
 
 @app.route('/signIn', methods=['GET', 'POST'])
 def signIn():
+    global loginData
     user_email = str(request.form['lEmail'])
     password = str(request.form['lPassword'])
     # kontrola spravnosti prihlasovacich udajov z webu a DB
@@ -48,18 +47,18 @@ def signIn():
     for (meno, email, heslo) in cestujuci:
         if email == user_email and heslo == password:
             cestujuci.close()
-            data = {'message': 'login', 'name': meno}
-            return render_template('index.html', data=data)
+            loginData = {'message': 'login', 'name': meno}
+            return index()
     for (meno, email, heslo) in administrator:
         if email == user_email and heslo == password:
             administrator.close()
-            data = {'message': 'login', 'name': meno}
-            return render_template('index.html', data=data)
+            loginData = {'message': 'login', 'name': meno}
+            return index()
     for (meno, email, heslo) in personal:
         if email == user_email and heslo == password:
             personal.close()
-            data = {'message': 'login', 'name': meno}
-            return render_template('index.html', data=data)
+            loginData = {'message': 'login', 'name': meno}
+            return index()
     cestujuci.close()
     administrator.close()
     personal.close()
@@ -89,6 +88,7 @@ def signIn():
 
 @app.route('/registration', methods=['POST'])
 def registration():
+    global loginData
     fname = request.form['fname']
     lname = request.form['lname']
     user_email = request.form['email']
@@ -109,8 +109,13 @@ def registration():
     connection.commit()
     cursor.close()
 
-    return render_template('registrationSuccess.html', data=fname)
+    loginData = {'message': 'login', 'name': fname}
+    return index()
 
+@app.route('/signOut')
+def signOut():
+    loginData.clear()
+    return index()
 
 if __name__ == '__main__':
     app.run(debug=True)
