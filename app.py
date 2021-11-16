@@ -63,9 +63,11 @@ def busConfig():
     possibleBusConnections = []
     for row1 in possibilities_fromCity:
         for row2 in possibilities_toCity:
-            if row1[1] == row2[1]:  # rovnanie cisla spojov v jednotlivych casoch prejazdov
+            if row1[1] == row2[1]:  # rovnanie cisla spojov v jednotlivych casoch prejazdov pre vyber z DB
                 tmp_timeFromCity = str(row1[0]) # array to string
                 tmp_timeToCity = str(row2[0])
+                tmp_secsTimeFromCity = str(row1[0]) # premenna pre prevod casu na sekundy kvoli vypoctu trvania cesty
+                tmp_secsTimeToCity = str(row2[0])   # premenna pre prevod casu na sekundy kvoli vypoctu trvania cesty
                 tmp_timeFromCity = tmp_timeFromCity.replace(":", "")    # odstranenie ':' pre porovnanie casov
                 tmp_timeToCity = tmp_timeToCity.replace(":", "")
                 tmp_timeFromCity = int(tmp_timeFromCity)    # string to int
@@ -96,8 +98,19 @@ def busConfig():
                     connectionNumber = row1[1]
                     availableSeats = availableSeats[0] # array to string
                     carrier_name = carrier_name[0] + carrier_name[1]  # spojenie meno a priezvisko do jedneho
+
+                    tmp_secsTimeFromCity = tmp_secsTimeFromCity.rsplit(':', 1)  # splitnutie na hodiny [0] a minuty [1]
+                    tmp_secsTimeToCity = tmp_secsTimeToCity.rsplit(':', 1)  # splitnutie na hodiny [0] a minuty [1]
+
+                    tmp_HoursSecsFromCity = int(tmp_secsTimeFromCity[0]) * 3600  # hodiny v sekudach
+                    tmp_MinutesSecsFromCity = int(tmp_secsTimeFromCity[1]) * 60  # minuty v sekudach
+
+                    tmp_HoursSecsToCity = int(tmp_secsTimeToCity[0]) * 3600  # hodiny v sekudach
+                    tmp_MinutesSecsToCity = int(tmp_secsTimeToCity[1]) * 60  # minuty v sekudach
+                    connectionTimeMinutes = ((tmp_HoursSecsToCity + tmp_MinutesSecsToCity) - (tmp_HoursSecsFromCity + tmp_MinutesSecsFromCity)) / 60 # dlzka trvania spoju v minutach
+
                     if tmp_timeFromCity > timeFromDate: # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
-                        possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateOfConnection])
+                        possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateOfConnection, connectionTimeMinutes])
     print(possibleBusConnections)
     # possibleBusConnections - vo formate: cislo_spoju, fromCity, cas_prejazdu(fromCity), toCity, cas_prejazdu(toCity), dopravca, pocet volnych miest
 
