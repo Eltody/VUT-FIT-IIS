@@ -60,7 +60,7 @@
                                             </div>
                                             <div class="resultConFooter">
                                                 <p>Cena <strong>6,58€</strong> </p>
-                                                <a href="/buy">Do košíka <i class="fas fa-shopping-basket"></i></a>
+                                                <a onclick="buy()" href="#">Do košíka <i class="fas fa-shopping-basket"></i></a>
                                             </div>
                                         </div>
                                     {% endfor %}
@@ -106,6 +106,20 @@
             if (data === "[]") {
                 document.getElementById("notFound").classList.remove("hidden");
                 document.getElementById("Found").classList.add("hidden");
+            }
+        </script>
+        <script>
+            function buy(){
+                var cookies = document.cookie.split('; ');
+                var c = [];
+                for (var i = 0; i < cookies.length; i++) {
+                    c.push(cookies[i].split('='));
+                }
+                if (c[0][0] === "name") {
+                    location.href = "/buy";
+                } else {
+                    location.href = "/preSignIn";
+                }
             }
         </script>
     </body>
