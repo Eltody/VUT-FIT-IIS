@@ -1,23 +1,29 @@
 <!doctype html>
 <html>
+    <!-- Head -->
     <head>
         <title>CP by (j)Elita</title>
         <meta charset=utf-8>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" type="text/css" href="/static/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
         <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
     </head>
+    <!-- Main body -->
     <body class="background" style="background-image: url(static/background.jpg);">
         <div id="page">
+            <!-- Navigation bar -->
             <nav class="navbar" role="navigation">
                 <div class="container">
+                    <!-- Logo -->
                     <div id="logo">
                         <a href='/'>CP <em>by (j)Elita</em></a>
                     </div>
                 </div>
             </nav>
             <header id="header" role="banner">
+                <!-- Sign in form -->
                 <div class="signInFlex">
                     <div id="login" class="signInForm animate__animated animate__fadeIn">
                         <div class="form-wrap">
@@ -44,6 +50,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Registration form -->
                     <div id="register" class="regForm animate__animated animate__fadeIn hidden">
                         <div class="form-wrap">
                             <div class="form-content">
@@ -84,9 +91,11 @@
                 </div>
             </header>
         </div>
+        <!-- Footer -->
         <footer id="footer">
             <p>Copyright © reserved, Website by <a href="mailto:martin.rakus1@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
         </footer>
+        <!-- Scripts -->
         <script>
             var error = "{{data.error}}";
             var email = "{{data.email}}";

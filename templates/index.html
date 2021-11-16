@@ -1,23 +1,30 @@
 <!doctype html>
 <html lang="sk">
+    <!-- Head -->
     <head>
         <title>CP by (j)Elita</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" type="text/css" href="/static/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
         <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
     </head>
+    <!-- Main body -->
     <body class="background" style="background-image: url(static/background.jpg);">
 	    <div id="page">
+            <!-- Navigation bar -->
             <nav class="navbar">
                 <div class="container">
+                    <!-- Logo -->
                     <div id="logo">
                         <a href='/'>CP <em>by (j)Elita</em></a>
                     </div>
+                    <!-- Menu -->
                     <div id="menu">
                         <ul>
                             <a href='/preSignIn' id="login">Prihlásiť sa</a>
+                            <!-- Logged in dropdown -->
                             <div class="dropdown">
                                 <a href="#" class="hidden" id="user"></a>
                                 <div class="dropdown-content">
@@ -30,13 +37,16 @@
                     </div>
                 </div>
             </nav>
+            <!-- Header -->
             <header id="header"role="banner">
                 <div class="container">
                     <div class="flex">
+                        <!-- Slogan -->
                         <div class="col-full">
                             <h1 class="animate__animated animate__fadeIn animate__slow" id="test">Potrebujete nájsť autobus či&nbsp;vlak?</h1>
                         </div>
                         <div class="spacer"></div>
+                        <!-- Search window -->
                         <div class="col-full animate__animated animate__fadeIn animate__slow animate__delay-1s">
                             <div class="form-wrap">
                                 <div class="form-content">
@@ -59,8 +69,8 @@
                                             </SELECT>
                                         </div>
                                         <div class="search-col">
-                                            <label for="date">Dátum:</label><br>
-                                            <input type="datetime-local" id="date" class="search-select">
+                                            <label for="datum">Dátum:</label><br>
+                                            <input type="datetime-local" id="datum" class="search-select">
                                         </div>
                                         <div class="search-col" style="height: 40px;">
                                             <button type="submit" class="buttonSearch"><a>Hľadať</a></button>
@@ -73,10 +83,12 @@
                     </div>
                 </div>
             </header>
+            <!-- Footer -->
             <footer id="footer">
                 <p>Copyright © reserved, Website by <a href="mailto:martin.rakus1@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
             </footer>
         </div>
+        <!-- Scripts -->
         <script>
             var message = "{{data.message}}";
             var name = "{{data.name}}";
