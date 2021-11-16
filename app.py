@@ -48,6 +48,7 @@ def busConfig():
 
     # ziskanie konkretneho casu pre vyhladanie najblizsich spojeni
     timeFromDate = timeFromDate.rsplit('T', 1)         # splitnutie na datum [0] a cas [1]
+    dateOfConnection = timeFromDate[0]  # datum daneho spoju
     timeFromDate = timeFromDate[1].replace(":", "")    # odstranenie ':' pre prevod na int
     timeFromDate = int(timeFromDate)    # string to int pre porovanie casov
 
@@ -96,7 +97,7 @@ def busConfig():
                     availableSeats = availableSeats[0] # array to string
                     carrier_name = carrier_name[0] + carrier_name[1]  # spojenie meno a priezvisko do jedneho
                     if tmp_timeFromCity > timeFromDate: # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
-                        possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats])
+                        possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateOfConnection])
     print(possibleBusConnections)
     # possibleBusConnections - vo formate: cislo_spoju, fromCity, cas_prejazdu(fromCity), toCity, cas_prejazdu(toCity), dopravca, pocet volnych miest
 
