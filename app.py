@@ -151,11 +151,13 @@ def busConfig():
                             dayOfConnection = 'so'
                         elif dayOfConnection == 'Sunday':
                             dayOfConnection = 'ne'
-                        # dokopy den, mesiac a konkretny den
+
+                        # ak uz prebieha hlavny for po 2.krat (druhy priebeh databazy - pre ostatne dni, nie len najblizsie spoje) tak sa zvysi datum o 1 vyssie
                         if nextDay:
                             tmp2_dateOfConnection[1] = int(tmp2_dateOfConnection[1])
                             tmp2_dateOfConnection[1] += x
                             tmp2_dateOfConnection[1] = str(tmp2_dateOfConnection[1])
+                        # dokopy den, mesiac a konkretny den
                         dateAndDayOfConnection = tmp2_dateOfConnection[1] + '.' + tmp_yearAndMonth[1] + '. ' + dayOfConnection
 
                         # vypocitanie ceny na zaklade doby trvania spoju v minutach a ceny za jednu minutu
