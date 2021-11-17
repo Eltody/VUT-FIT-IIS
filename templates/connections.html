@@ -94,7 +94,7 @@
                     var data = [];
                     data = {{data|tojson}};
                     var length = data.length;
-                    $.getJSON('/loadMore/' + data[length - 1], { }, function(data) { });
+                    $.getJSON('/loadMore/[' + data[length - 1] + ']', { }, function(data) { });
                     return false;
                 });
             });
