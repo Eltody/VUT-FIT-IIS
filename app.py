@@ -64,108 +64,122 @@ def busConfig():
 
     # ziskanie len vyhovujucich spojov - rovnake id_spoju pre fromCity a toCity
     possibleBusConnections = []
-    for row1 in possibilities_fromCity:
-        for row2 in possibilities_toCity:
-            if row1[1] == row2[1]:  # rovnanie cisla spojov v jednotlivych casoch prejazdov pre vyber z DB
-                tmp_timeFromCity = str(row1[0]) # array to string
-                tmp_timeToCity = str(row2[0])
-                tmp_secsTimeFromCity = str(row1[0]) # premenna pre prevod casu na sekundy kvoli vypoctu trvania cesty
-                tmp_secsTimeToCity = str(row2[0])   # premenna pre prevod casu na sekundy kvoli vypoctu trvania cesty
-                tmp_timeFromCity = tmp_timeFromCity.replace(":", "")    # odstranenie ':' pre porovnanie casov
-                tmp_timeToCity = tmp_timeToCity.replace(":", "")
-                tmp_timeFromCity = int(tmp_timeFromCity)    # string to int
-                tmp_timeToCity = int(tmp_timeToCity)
-                if tmp_timeFromCity < tmp_timeToCity:
-                    cursor1 = connection.cursor()
-                    cursor1.execute("SELECT id_dopravca_spoje FROM Spoj WHERE id='%s';" % row1[1])
-                    id_dopravca = cursor1.fetchone()    # ziskanie id_dopravcu_spoje
-                    cursor1.close()
+    laterPossibleBusConnections = []
+    nextDay = False # priznak pre opatovne vykovanie celeho cyklu, ale pre dalsi den spojeni
+    counterOfConnections = 0 # counter pre pocet spojov zobrazenych sa jednu stranku
+    for x in range(2):
+        if x == 1:
+            nextDay = True
+            print('som tu')
+        for row1 in possibilities_fromCity:
+            for row2 in possibilities_toCity:
+                if row1[1] == row2[1]:  # rovnanie cisla spojov v jednotlivych casoch prejazdov pre vyber z DB
+                    tmp_timeFromCity = str(row1[0]) # array to string
+                    tmp_timeToCity = str(row2[0])
+                    tmp_secsTimeFromCity = str(row1[0]) # premenna pre prevod casu na sekundy kvoli vypoctu trvania cesty
+                    tmp_secsTimeToCity = str(row2[0])   # premenna pre prevod casu na sekundy kvoli vypoctu trvania cesty
+                    tmp_timeFromCity = tmp_timeFromCity.replace(":", "")    # odstranenie ':' pre porovnanie casov
+                    tmp_timeToCity = tmp_timeToCity.replace(":", "")
+                    tmp_timeFromCity = int(tmp_timeFromCity)    # string to int
+                    tmp_timeToCity = int(tmp_timeToCity)
+                    if tmp_timeFromCity < tmp_timeToCity:
+                        cursor1 = connection.cursor()
+                        cursor1.execute("SELECT id_dopravca_spoje FROM Spoj WHERE id='%s';" % row1[1])
+                        id_dopravca = cursor1.fetchone()    # ziskanie id_dopravcu_spoje
+                        cursor1.close()
 
-                    cursor1 = connection.cursor()
-                    cursor1.execute("SELECT meno, priezvisko FROM Dopravca WHERE id='%s';" % id_dopravca)
-                    carrier_name = cursor1.fetchone()  # ziskanie id_dopravcu_spoje
-                    cursor1.close()
+                        cursor1 = connection.cursor()
+                        cursor1.execute("SELECT meno, priezvisko FROM Dopravca WHERE id='%s';" % id_dopravca)
+                        carrier_name = cursor1.fetchone()  # ziskanie id_dopravcu_spoje
+                        cursor1.close()
 
-                    # ziskanie poctu volnych dostupnych miest v danom spoji dan0ho vozidla
-                    cursor1 = connection.cursor()
-                    cursor1.execute("SELECT id_vozidla FROM Vozidlo_Spoj WHERE id_spoju='%s';" % row1[1])
-                    id_vozidla = cursor1.fetchone()
-                    cursor1.close()
-                    cursor1 = connection.cursor()
-                    cursor1.execute("SELECT pocet_miest FROM Vozidlo WHERE id='%s';" % id_vozidla)
-                    availableSeats = cursor1.fetchone()
-                    cursor1.close()
+                        # ziskanie poctu volnych dostupnych miest v danom spoji dan0ho vozidla
+                        cursor1 = connection.cursor()
+                        cursor1.execute("SELECT id_vozidla FROM Vozidlo_Spoj WHERE id_spoju='%s';" % row1[1])
+                        id_vozidla = cursor1.fetchone()
+                        cursor1.close()
+                        cursor1 = connection.cursor()
+                        cursor1.execute("SELECT pocet_miest FROM Vozidlo WHERE id='%s';" % id_vozidla)
+                        availableSeats = cursor1.fetchone()
+                        cursor1.close()
 
-                    fromCityTime = row1[0]
-                    toCityTime = row2[0]
-                    connectionNumber = row1[1]
-                    availableSeats = availableSeats[0] # array to string
-                    carrier_name = carrier_name[0] + carrier_name[1]  # spojenie meno a priezvisko do jedneho
+                        fromCityTime = row1[0]
+                        toCityTime = row2[0]
+                        connectionNumber = row1[1]
+                        availableSeats = availableSeats[0] # array to string
+                        carrier_name = carrier_name[0] + carrier_name[1]  # spojenie meno a priezvisko do jedneho
 
-                    tmp_secsTimeFromCity = tmp_secsTimeFromCity.rsplit(':', 1)  # splitnutie na hodiny [0] a minuty [1]
-                    tmp_secsTimeToCity = tmp_secsTimeToCity.rsplit(':', 1)  # splitnutie na hodiny [0] a minuty [1]
+                        tmp_secsTimeFromCity = tmp_secsTimeFromCity.rsplit(':', 1)  # splitnutie na hodiny [0] a minuty [1]
+                        tmp_secsTimeToCity = tmp_secsTimeToCity.rsplit(':', 1)  # splitnutie na hodiny [0] a minuty [1]
 
-                    tmp_HoursSecsFromCity = int(tmp_secsTimeFromCity[0]) * 3600  # hodiny v sekudach
-                    tmp_MinutesSecsFromCity = int(tmp_secsTimeFromCity[1]) * 60  # minuty v sekudach
+                        tmp_HoursSecsFromCity = int(tmp_secsTimeFromCity[0]) * 3600  # hodiny v sekudach
+                        tmp_MinutesSecsFromCity = int(tmp_secsTimeFromCity[1]) * 60  # minuty v sekudach
 
-                    tmp_HoursSecsToCity = int(tmp_secsTimeToCity[0]) * 3600  # hodiny v sekudach
-                    tmp_MinutesSecsToCity = int(tmp_secsTimeToCity[1]) * 60  # minuty v sekudach
-                    connectionTimeHours = ((tmp_HoursSecsToCity + tmp_MinutesSecsToCity) - (tmp_HoursSecsFromCity + tmp_MinutesSecsFromCity)) / 3600 # dlzka trvania spoju v hodinach
-                    connectionTimeMinutes = ((tmp_HoursSecsToCity + tmp_MinutesSecsToCity) - (tmp_HoursSecsFromCity + tmp_MinutesSecsFromCity)) / 60  # dlzka trvania spoju v minutach
-                    connectionTimeHours = float(connectionTimeHours)
+                        tmp_HoursSecsToCity = int(tmp_secsTimeToCity[0]) * 3600  # hodiny v sekudach
+                        tmp_MinutesSecsToCity = int(tmp_secsTimeToCity[1]) * 60  # minuty v sekudach
+                        connectionTimeHours = ((tmp_HoursSecsToCity + tmp_MinutesSecsToCity) - (tmp_HoursSecsFromCity + tmp_MinutesSecsFromCity)) / 3600 # dlzka trvania spoju v hodinach
+                        connectionTimeMinutes = ((tmp_HoursSecsToCity + tmp_MinutesSecsToCity) - (tmp_HoursSecsFromCity + tmp_MinutesSecsFromCity)) / 60  # dlzka trvania spoju v minutach
+                        connectionTimeHours = float(connectionTimeHours)
 
-                    # prevod hodin na hodiny a minuty
-                    hours = connectionTimeHours
-                    mins = (connectionTimeHours * 60) % 60
-                    hours = int(hours)
-                    hours = str(hours)
-                    mins = int(mins)
-                    mins = str(mins)
-                    connectionTimeHours = hours + 'hod ' + mins + 'min'
+                        # prevod hodin na hodiny a minuty
+                        hours = connectionTimeHours
+                        mins = (connectionTimeHours * 60) % 60
+                        hours = int(hours)
+                        hours = str(hours)
+                        mins = int(mins)
+                        mins = str(mins)
+                        connectionTimeHours = hours + 'hod ' + mins + 'min'
 
-                    # ziskanie konkretneho dna z datumu
-                    tmp2_dateOfConnection = str(tmp_dateOfConnection)
-                    tmp2_dateOfConnection = tmp2_dateOfConnection.rsplit('-', 1)  # splitnutie na rok a mesiac [0] a den [1]
-                    tmp_unsplittedYearAndMonth = str(tmp2_dateOfConnection[0])
-                    tmp_yearAndMonth = tmp_unsplittedYearAndMonth.rsplit('-', 1)  # splitnutie na rok [0] mesiac [1]
-                    ans = datetime.date(int(tmp_yearAndMonth[0]), int(tmp_yearAndMonth[1]), int(tmp2_dateOfConnection[1]))
-                    dayOfConnection = ans.strftime("%A")
-                    if dayOfConnection == 'Monday':
-                        dayOfConnection = 'po'
-                    elif dayOfConnection == 'Tuesday':
-                        dayOfConnection = 'ut'
-                    elif dayOfConnection == 'Wednesday':
-                        dayOfConnection = 'st'
-                    elif dayOfConnection == 'Thursday':
-                        dayOfConnection = 'št'
-                    elif dayOfConnection == 'Friday':
-                        dayOfConnection = 'pi'
-                    elif dayOfConnection == 'Saturday':
-                        dayOfConnection = 'so'
-                    elif dayOfConnection == 'Sunday':
-                        dayOfConnection = 'ne'
-                    dateAndDayOfConnection = tmp2_dateOfConnection[1] + '.' + tmp_yearAndMonth[1] + '. ' + dayOfConnection
+                        # ziskanie konkretneho dna z datumu
+                        tmp2_dateOfConnection = str(tmp_dateOfConnection)
+                        tmp2_dateOfConnection = tmp2_dateOfConnection.rsplit('-', 1)  # splitnutie na rok a mesiac [0] a den [1]
+                        tmp_unsplittedYearAndMonth = str(tmp2_dateOfConnection[0])
+                        tmp_yearAndMonth = tmp_unsplittedYearAndMonth.rsplit('-', 1)  # splitnutie na rok [0] mesiac [1]
+                        ans = datetime.date(int(tmp_yearAndMonth[0]), int(tmp_yearAndMonth[1]), int(tmp2_dateOfConnection[1]))
+                        dayOfConnection = ans.strftime("%A")
+                        if dayOfConnection == 'Monday':
+                            dayOfConnection = 'po'
+                        elif dayOfConnection == 'Tuesday':
+                            dayOfConnection = 'ut'
+                        elif dayOfConnection == 'Wednesday':
+                            dayOfConnection = 'st'
+                        elif dayOfConnection == 'Thursday':
+                            dayOfConnection = 'št'
+                        elif dayOfConnection == 'Friday':
+                            dayOfConnection = 'pi'
+                        elif dayOfConnection == 'Saturday':
+                            dayOfConnection = 'so'
+                        elif dayOfConnection == 'Sunday':
+                            dayOfConnection = 'ne'
+                        # dokopy den, mesiac a konkretny den
+                        if nextDay:
+                            tmp2_dateOfConnection[1] = int(tmp2_dateOfConnection[1])
+                            tmp2_dateOfConnection[1] += x
+                            tmp2_dateOfConnection[1] = str(tmp2_dateOfConnection[1])
+                        dateAndDayOfConnection = tmp2_dateOfConnection[1] + '.' + tmp_yearAndMonth[1] + '. ' + dayOfConnection
 
-                    # vypocitanie ceny na zaklade doby trvania spoju v minutach a ceny za jednu minutu
-                    int(connectionTimeMinutes)
-                    priceOfConnection = connectionTimeMinutes * 0.08
-                    priceOfConnection = str(round(priceOfConnection, 2))
-                    priceOfConnection = priceOfConnection + '€'
+                        # vypocitanie ceny na zaklade doby trvania spoju v minutach a ceny za jednu minutu
+                        int(connectionTimeMinutes)
+                        priceOfConnection = connectionTimeMinutes * 0.08
+                        priceOfConnection = str(round(priceOfConnection, 2))
+                        priceOfConnection = priceOfConnection + '€'
 
-                    # formatovanie casu
-                    if tmp_timeFromCity < 959:
-                        fromCityTime = ' ' + fromCityTime
-                    if tmp_timeToCity < 959:
-                        toCityTime = ' ' + toCityTime
+                        # formatovanie casu
+                        if tmp_timeFromCity < 959:
+                            fromCityTime = ' ' + fromCityTime
+                        if tmp_timeToCity < 959:
+                            toCityTime = ' ' + toCityTime
 
-                    if tmp_timeFromCity > timeFromDate: # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
-                        possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection])
-                        print(possibleBusConnections)
+                        if tmp_timeFromCity > timeFromDate and not nextDay: # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
+                            possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection])
+                            counterOfConnections += 1
+                        if nextDay:    # pre dalsie spoje, na dalsi den - rovnake spoje, len datum o cislo vyssi a od zaciatku dna 00:00 vsetky, nie len najblizsie v dany den
+                            laterPossibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection])
+                            counterOfConnections += 1
+
+    possibleBusConnections = possibleBusConnections + laterPossibleBusConnections # spojenie najblizsich vyhovujucich spojov a spojov pre dalsi den napr
+    print(possibleBusConnections)
                         # possibleBusConnections - vo formate: cislo_spoju, fromCity, cas_prejazdu(fromCity), toCity, cas_prejazdu(toCity), dopravca, pocet volnych miest, datum spoju, doba trvania spoju
-
-                    if tmp_timeFromCity > timeFromDate: # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
-                        possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection])
-                        print(possibleBusConnections)
 
     return render_template('connections.html', data=possibleBusConnections)
 
