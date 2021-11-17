@@ -119,7 +119,7 @@ def busConfig():
                     hours = str(hours)
                     mins = int(mins)
                     mins = str(mins)
-                    connectionTimeHours = hours + 'h ' + mins + 'min'
+                    connectionTimeHours = hours + 'hod ' + mins + 'min'
 
                     if tmp_timeFromCity > timeFromDate: # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
                         possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateOfConnection, connectionTimeHours])
