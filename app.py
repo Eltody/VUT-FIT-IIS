@@ -109,10 +109,20 @@ def busConfig():
 
                     tmp_HoursSecsToCity = int(tmp_secsTimeToCity[0]) * 3600  # hodiny v sekudach
                     tmp_MinutesSecsToCity = int(tmp_secsTimeToCity[1]) * 60  # minuty v sekudach
-                    connectionTimeMinutes = ((tmp_HoursSecsToCity + tmp_MinutesSecsToCity) - (tmp_HoursSecsFromCity + tmp_MinutesSecsFromCity)) / 60 # dlzka trvania spoju v minutach
-                    connectionTimeMinutes = int(connectionTimeMinutes)
+                    connectionTimeHours = ((tmp_HoursSecsToCity + tmp_MinutesSecsToCity) - (tmp_HoursSecsFromCity + tmp_MinutesSecsFromCity)) / 3600 # dlzka trvania spoju v minutach
+                    connectionTimeHours = float(connectionTimeHours)
+
+                    # prevod hodin na hodiny a minuty
+                    hours = connectionTimeHours
+                    mins = (connectionTimeHours * 60) % 60
+                    hours = int(hours)
+                    hours = str(hours)
+                    mins = int(mins)
+                    mins = str(mins)
+                    connectionTimeHours = hours + 'h ' + mins + 'min'
+
                     if tmp_timeFromCity > timeFromDate: # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
-                        possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateOfConnection, connectionTimeMinutes])
+                        possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateOfConnection, connectionTimeHours])
     print(possibleBusConnections)
     # possibleBusConnections - vo formate: cislo_spoju, fromCity, cas_prejazdu(fromCity), toCity, cas_prejazdu(toCity), dopravca, pocet volnych miest
 
