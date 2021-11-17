@@ -184,7 +184,7 @@ VALUES ('Zlín - aut.nádr.');
 INSERT INTO Dopravca (meno, priezvisko, email, heslo)
 VALUES ('Regio', 'Jet', 'regiojet@regiojet.com', 'studentAgency2011ToTheInfinityAndBeyond'); -- dopravca c.1
 INSERT INTO Dopravca (meno, priezvisko, email, heslo)
-VALUES ('leo', 'express', 'expressileo@leoexpress.com', 'Kah9-Cy.a55'); -- dopravca c.2
+VALUES ('Leo', 'Express', 'expressileo@leoexpress.com', 'Kah9-Cy.a55'); -- dopravca c.2
 INSERT INTO Dopravca (meno, priezvisko, email, heslo)
 VALUES ('Flix', 'BUS', 'flixmotors@flixbus.com', 'flexiBuZzes4596'); -- dopravca c.3
 

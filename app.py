@@ -146,10 +146,10 @@ def busConfig():
                         dayOfConnection = 'ne'
                     dateAndDayOfConnection = tmp2_dateOfConnection[1] + '.' + tmp_yearAndMonth[1] + '. ' + dayOfConnection
 
-                    #Vypocitanie ceny na zaklade doby trvania spoju v minutach a ceny za jednu minutu
+                    # vypocitanie ceny na zaklade doby trvania spoju v minutach a ceny za jednu minutu
                     int(connectionTimeMinutes)
                     priceOfConnection = connectionTimeMinutes * 0.08
-                    priceOfConnection = str(priceOfConnection)
+                    priceOfConnection = str(round(priceOfConnection, 2))
                     priceOfConnection = priceOfConnection + '€'
 
                     # formatovanie casu
@@ -160,8 +160,12 @@ def busConfig():
 
                     if tmp_timeFromCity > timeFromDate: # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
                         possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection])
-    print(possibleBusConnections)
-    # possibleBusConnections - vo formate: cislo_spoju, fromCity, cas_prejazdu(fromCity), toCity, cas_prejazdu(toCity), dopravca, pocet volnych miest, datum spoju, doba trvania spoju
+                        print(possibleBusConnections)
+                        # possibleBusConnections - vo formate: cislo_spoju, fromCity, cas_prejazdu(fromCity), toCity, cas_prejazdu(toCity), dopravca, pocet volnych miest, datum spoju, doba trvania spoju
+
+                    if tmp_timeFromCity > timeFromDate: # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
+                        possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection])
+                        print(possibleBusConnections)
 
     return render_template('connections.html', data=possibleBusConnections)
 
