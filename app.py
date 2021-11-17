@@ -152,6 +152,12 @@ def busConfig():
                     priceOfConnection = str(priceOfConnection)
                     priceOfConnection = priceOfConnection + '€'
 
+                    # formatovanie casu
+                    if tmp_timeFromCity < 959:
+                        fromCityTime = ' ' + fromCityTime
+                    if tmp_timeToCity < 959:
+                        toCityTime = ' ' + toCityTime
+
                     if tmp_timeFromCity > timeFromDate: # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
                         possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection])
     print(possibleBusConnections)
