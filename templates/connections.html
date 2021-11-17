@@ -75,7 +75,7 @@
                                             </div>
                                         </div>
                                     {% endfor %}
-                                    <button type="button" class="buttonSearch" id="mybutton"><i class="fas fa-retweet"></i></button>
+                                    <input type="button" id="loadMore" class="buttonSearch" value="Načítať ďalšie spoje"/>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +87,15 @@
             </footer>
         </div>
         <!-- Scripts -->
-
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"> </script>
+        <script type=text/javascript>
+            $(function() {
+                $("#loadMore").click(function (event) {
+                    $.getJSON('/loadMore', { }, function(data) { });
+                    return false;
+                });
+            });
+        </script>
         <script>
             var cookies = document.cookie.split('; ');
             var c = [];

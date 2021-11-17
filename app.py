@@ -189,6 +189,10 @@ def busConfig():
 
     return render_template('connections.html', data=possibleBusConnections)
 
+@app.route('/loadMore')
+def loadMore():
+    print('loadMore')
+    return "done"
 
 @app.route('/preSignIn', methods=['GET', 'POST'])
 def preSignIn():
