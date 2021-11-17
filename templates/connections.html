@@ -91,7 +91,10 @@
         <script type=text/javascript>
             $(function() {
                 $("#loadMore").click(function (event) {
-                    $.getJSON('/loadMore/{{data[4][2]}}', { }, function(data) { });
+                    var data = [];
+                    data = {{data|tojson}};
+                    var length = data.length;
+                    $.getJSON('/loadMore/' + data[length - 1], { }, function(data) { });
                     return false;
                 });
             });
