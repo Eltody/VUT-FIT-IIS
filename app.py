@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import pymysql
+import datetime
 
 app = Flask(__name__)
 connection = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
@@ -50,7 +51,7 @@ def busConfig():
 
     # ziskanie konkretneho casu pre vyhladanie najblizsich spojeni
     timeFromDate = timeFromDate.rsplit('T', 1)         # splitnutie na datum [0] a cas [1]
-    dateOfConnection = timeFromDate[0]  # datum daneho spoju
+    tmp_dateOfConnection = timeFromDate[0]  # datum daneho spoju
     timeFromDate = timeFromDate[1].replace(":", "")    # odstranenie ':' pre prevod na int
     timeFromDate = int(timeFromDate)    # string to int pre porovanie casov
 
@@ -121,10 +122,33 @@ def busConfig():
                     mins = str(mins)
                     connectionTimeHours = hours + 'hod ' + mins + 'min'
 
+                    # ziskanie konkretneho dna z datumu
+                    tmp2_dateOfConnection = str(tmp_dateOfConnection)
+                    tmp2_dateOfConnection = tmp2_dateOfConnection.rsplit('-', 1)  # splitnutie na rok a mesiac [0] a den [1]
+                    tmp_unsplittedYearAndMonth = str(tmp2_dateOfConnection[0])
+                    tmp_yearAndMonth = tmp_unsplittedYearAndMonth.rsplit('-', 1)  # splitnutie na rok [0] mesiac [1]
+                    ans = datetime.date(int(tmp_yearAndMonth[0]), int(tmp_yearAndMonth[1]), int(tmp2_dateOfConnection[1]))
+                    dayOfConnection = ans.strftime("%A")
+                    if dayOfConnection == 'Monday':
+                        dayOfConnection = 'po'
+                    elif dayOfConnection == 'Tuesday':
+                        dayOfConnection = 'ut'
+                    elif dayOfConnection == 'Wednesday':
+                        dayOfConnection = 'st'
+                    elif dayOfConnection == 'Thursday':
+                        dayOfConnection = 'št'
+                    elif dayOfConnection == 'Friday':
+                        dayOfConnection = 'pi'
+                    elif dayOfConnection == 'Saturday':
+                        dayOfConnection = 'so'
+                    elif dayOfConnection == 'Sunday':
+                        dayOfConnection = 'ne'
+                    dateAndDayOfConnection = tmp2_dateOfConnection[1] + '.' + tmp_yearAndMonth[1] + '. ' + dayOfConnection
+
                     if tmp_timeFromCity > timeFromDate: # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
-                        possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateOfConnection, connectionTimeHours])
+                        possibleBusConnections.append([connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name, availableSeats, dateAndDayOfConnection, connectionTimeHours])
     print(possibleBusConnections)
-    # possibleBusConnections - vo formate: cislo_spoju, fromCity, cas_prejazdu(fromCity), toCity, cas_prejazdu(toCity), dopravca, pocet volnych miest
+    # possibleBusConnections - vo formate: cislo_spoju, fromCity, cas_prejazdu(fromCity), toCity, cas_prejazdu(toCity), dopravca, pocet volnych miest, datum spoju, doba trvania spoju
 
     return render_template('connections.html', data=possibleBusConnections)
 
