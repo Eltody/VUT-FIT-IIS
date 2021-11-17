@@ -33,7 +33,7 @@
             </nav>
             <header id="header"role="banner">
                 <div class="container">
-                    <div class="flex">
+                    <div class="resultFlex">
                         <div class="animate__animated animate__fadeIn animate__faster">
                             <div class="resultWrap">
                                 <div class="resultContent">
@@ -48,19 +48,30 @@
                                             <div class="resultConDetails">
                                                 <div>
                                                     <p><i class="fas fa-bus"></i></p>
-                                                    <p>{{i[2]}}</p>
-                                                    <p>{{i[4]}}</p>
+                                                    <p style="transform: scale(2, 2); padding: 10px 0 0 13px;"><i class="fas fa-ellipsis-v"></i></p>
                                                 </div>
                                                 <br>
                                                 <div>
-                                                    <p>{{i[0]}}&emsp;<strong>{{i[5]}}</strong></p>
+                                                    <div class="connectionInfo">
+                                                        <p>{{i[0]}}</p>
+                                                        <p><strong>{{i[5]}}</strong></p>
+                                                    </div>
+                                                    <pre>{{i[2]}}</pre>
+                                                    <pre>{{i[4]}}</pre>
+                                                </div>
+                                                <br>
+                                                <div>
+                                                    <p>&zwnj;</p>
                                                     <p>{{i[1]}}</p>
                                                     <p>{{i[3]}}</p>
                                                 </div>
                                             </div>
                                             <div class="resultConFooter">
-                                                <p>Cena <strong>6,58€</strong> </p>
-                                                <a onclick="buy()" href="#">Do košíka <i class="fas fa-shopping-basket"></i></a>
+                                                <p><i class="fas fa-user"></i><strong>&ensp;{{i[6]}}&nbsp;</strong>voľných miest</p>
+                                                <div style="display: inherit; align-items: center;">
+                                                    <p>Cena <strong>{{i[9]}}</strong> </p>
+                                                    <a onclick="buy()" href="#">Do košíka <i class="fas fa-shopping-basket"></i></a>
+                                                </div>
                                             </div>
                                         </div>
                                     {% endfor %}
