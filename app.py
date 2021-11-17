@@ -68,9 +68,8 @@ def busConfig():
     nextDay = False # priznak pre opatovne vykovanie celeho cyklu, ale pre dalsi den spojeni
     counterOfConnections = 0 # counter pre pocet spojov zobrazenych sa jednu stranku
     for x in range(2):
-        if x == 1:
+        if x == 1:      # druhe vykonanie for cyklu - druhe hladanie v databazi - rovnake, len datum sa zvysi o 1
             nextDay = True
-            print('som tu')
         for row1 in possibilities_fromCity:
             for row2 in possibilities_toCity:
                 if row1[1] == row2[1]:  # rovnanie cisla spojov v jednotlivych casoch prejazdov pre vyber z DB

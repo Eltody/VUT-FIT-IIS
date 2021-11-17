@@ -1,3 +1,4 @@
+DROP TABLE Symboly;
 DROP TABLE Personal_Spoj;
 DROP TABLE Vozidlo_Spoj;
 DROP TABLE Spoj_Zastavka;
@@ -150,6 +151,18 @@ CREATE TABLE Personal_Spoj(
 		FOREIGN KEY (id_spoju) REFERENCES Spoj (id)
 		ON DELETE CASCADE
 );
+
+CREATE TABLE Symboly(
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (id),
+    symbol VARCHAR(10)
+);
+
+INSERT INTO Symboly(symbol)
+VALUES('š');
+
+INSERT INTO Symboly(symbol)
+VALUES('€');
 
 INSERT INTO Administrator (meno, priezvisko, email, heslo)
 VALUES ('Admin', 'Admin', 'admin@admin.com', 'password');
