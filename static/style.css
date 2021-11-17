@@ -206,6 +206,7 @@ h1, h2, h3, h4, h5, h6, figure {
     border: 2px solid rgba(0, 0, 0, 0.3);
     background: rgba(255, 255, 255, 0.5);
     box-shadow: 1px 1px 7px #333;
+    color: black;
     height: 36px;
     font-size: 16px;
     font-weight: 300;
@@ -242,6 +243,7 @@ h1, h2, h3, h4, h5, h6, figure {
     padding: 3px 0 0 0;
     border-radius: 7px;
     float: right;
+    color: black;
 }
 .buttonSearch {
     width: 80%;
@@ -254,6 +256,7 @@ h1, h2, h3, h4, h5, h6, figure {
     padding: 10px 30px;
     border-radius: 7px;
     float: left;
+    color: black;
 }
 .buttonRegister {
     height: 20px;
@@ -264,6 +267,7 @@ h1, h2, h3, h4, h5, h6, figure {
     font-size: 12px;
     padding: 0 5px;
     border-radius: 7px;
+    color: black;
 }
 .signInFlex {
     min-height: 100vh;
@@ -281,158 +285,6 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 .regForm {
     text-align: center;
-}
-
-@media screen and (min-width: 1300px) {
-    #header h1 {
-        font-size: 59px;
-        line-height: 1.5;
-    }
-    form label {
-        font-size: 18px;
-    }
-    .search-select {
-        font-size: 18px;
-    }
-    #header .form-wrap {
-        margin-right: 5vw;
-    }
-}
-@media screen and (min-width: 971px) and (max-width: 1299px) {
-    #header h1 {
-        font-size: 59px;
-        line-height: 1.5;
-    }
-    #header .form-wrap {
-        margin-right: 5vw;
-    }
-}
-@media screen and (min-width: 771px) and (max-width: 970px) {
-    #header h1 {
-        font-size: 40px;
-        line-height: 1.2;
-    }
-}
-
-@media screen and (min-width: 421px) and (max-width: 770px) {
-    #header h1 {
-        font-size: 40px;
-        line-height: 1.2;
-        margin-bottom: 1em;
-    }
-    .flex {
-        flex-direction: column;
-        justify-content: center;
-    }
-    .regForm .search-col {
-        padding-bottom: 0;
-    }
-    .regForm .search-select {
-        height: 24px;
-        font-size: 12px;
-    }
-    .regForm h3 {
-        font-size: 18px;
-        margin: 0 0 10px 0;
-    }
-    .regForm label {
-        font-size: 14px;
-    }
-}
-@media screen and (min-width: 291px) and (max-width: 420px) {
-    #header h1 {
-        font-size: 22px;
-        line-height: 1.2;
-        margin-bottom: 1em;
-    }
-    .flex {
-        flex-direction: column;
-        justify-content: center;
-        align-items: stretch;
-    }
-    .navbar #logo, .navbar #menu{
-        padding-left: 0;
-        padding-right: 0;
-    }
-    #header .form-wrap {
-        min-width: 0;
-        width: 100%;
-    }
-    .search-select {
-        font-size: 12px;
-    }
-    .buttonSwap {
-        font-size: 14px;
-    }
-    .buttonSearch {
-        font-size: 16px;
-    }
-    .buttonRegister {
-        font-size: 12px;
-    }
-    .regForm .search-col {
-        padding-bottom: 0;
-    }
-    .regForm .search-select {
-        height: 24px;
-        font-size: 12px;
-    }
-    .regForm h3 {
-        font-size: 18px;
-        margin: 0 0 10px 0;
-    }
-    .regForm label {
-        font-size: 14px;
-    }
-}
-@media screen and (max-width: 290px) {
-    #header h1 {
-        font-size: 22px;
-        line-height: 1.2;
-        margin-bottom: 1em;
-    }
-    #header .form-wrap {
-        min-width: 0;
-        width: 100%
-    }
-    .flex {
-        flex-direction: column;
-        justify-content: center;
-        align-items: stretch;
-    }
-    .navbar #logo {
-        width: 66.66%;
-    }
-    .navbar #menu {
-        display: none;
-    }
-    .search-select {
-        font-size: 10px;
-    }
-    .buttonSwap {
-        font-size: 10px;
-    }
-    .buttonSearch {
-        font-size: 14px;
-        padding: 5px 15px;
-    }
-    .buttonRegister {
-        font-size: 10px;
-    }
-    .regForm .search-col {
-        padding-bottom: 0;
-    }
-    .regForm .search-select {
-        height: 24px;
-        font-size: 12px;
-    }
-    .regForm h3 {
-        font-size: 18px;
-        margin: 0 0 10px 0;
-    }
-    .regForm label {
-        font-size: 14px;
-    }
 }
 
 .resultFlex {
@@ -494,9 +346,6 @@ h1, h2, h3, h4, h5, h6, figure {
     float: right;
     font-size: 16px;
 }
-.resultCol {
-
-}
 .resultCol p {
     color: black;
     width: 100%;
@@ -536,6 +385,10 @@ h1, h2, h3, h4, h5, h6, figure {
 .connectionInfo p {
     padding: 0 10px 0 0;
 }
+.dots {
+    transform: scale(2, 2);
+    padding: 10px 0 0 13px !important;
+}
 .resultConFooter {
     display: flex;
     align-items: center;
@@ -556,4 +409,216 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 .resultConFooter a:hover {
     box-shadow: 0;
+}
+
+@media screen and (min-width: 1300px) {
+    #header h1 {
+        font-size: 59px;
+        line-height: 1.5;
+    }
+    form label {
+        font-size: 18px;
+    }
+    .search-select {
+        font-size: 18px;
+    }
+    #header .form-wrap {
+        margin-right: 5vw;
+    }
+}
+@media screen and (min-width: 971px) and (max-width: 1299px) {
+    #header h1 {
+        font-size: 59px;
+        line-height: 1.5;
+    }
+    #header .form-wrap {
+        margin-right: 5vw;
+    }
+}
+@media screen and (min-width: 771px) and (max-width: 970px) {
+    #header h1 {
+        font-size: 40px;
+        line-height: 1.2;
+    }
+}
+
+@media screen and (min-width: 421px) and (max-width: 770px) {
+    #header h1 {
+        font-size: 40px;
+        line-height: 1.2;
+        margin-bottom: 1em;
+    }
+    .flex {
+        flex-direction: column;
+        justify-content: center;
+    }
+    .regForm .search-col {
+        padding-bottom: 0;
+    }
+    .regForm .search-select {
+        height: 24px;
+        font-size: 12px;
+    }
+    .regForm h3 {
+        font-size: 18px;
+        margin: 0 0 10px 0;
+    }
+    .regForm label {
+        font-size: 14px;
+    }
+
+    .resultCon a {
+        font-size: 22px;
+    }
+    .resultCon span {
+        font-size: 14px;
+    }
+    .resultCon p {
+        font-size: 14px;
+    }
+    .resultConDetails p, .resultConDetails pre {
+        font-size: 14px;
+    }
+    .resultConFooter a {
+        font-size: 16px;
+    }
+    .dots {
+        transform: scale(1.7, 1.7);
+        padding: 10px 0 0 15px !important;
+    }
+}
+@media screen and (min-width: 291px) and (max-width: 420px) {
+    #header h1 {
+        font-size: 22px;
+        line-height: 1.2;
+        margin-bottom: 1em;
+    }
+    .flex {
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+    }
+    .navbar #logo, .navbar #menu{
+        padding-left: 0;
+        padding-right: 0;
+    }
+    #header .form-wrap {
+        min-width: 0;
+        width: 100%;
+    }
+    .search-select {
+        font-size: 12px;
+    }
+    .buttonSwap {
+        font-size: 14px;
+    }
+    .buttonSearch {
+        font-size: 16px;
+    }
+    .buttonRegister {
+        font-size: 12px;
+    }
+    .regForm .search-col {
+        padding-bottom: 0;
+    }
+    .regForm .search-select {
+        height: 24px;
+        font-size: 12px;
+    }
+    .regForm h3 {
+        font-size: 18px;
+        margin: 0 0 10px 0;
+    }
+    .regForm label {
+        font-size: 14px;
+    }
+
+    .resultCon a {
+        font-size: 20px;
+    }
+    .resultCon span {
+        font-size: 10px;
+    }
+    .resultCon p {
+        font-size: 10px;
+    }
+    .resultConDetails p, .resultConDetails pre {
+        font-size: 10px;
+    }
+    .resultConFooter a {
+        font-size: 12px;
+    }
+    .dots {
+        transform: scale(1.6, 1.6);
+        padding: 7px 0 0 14px !important;
+    }
+}
+@media screen and (max-width: 290px) {
+    #header h1 {
+        font-size: 22px;
+        line-height: 1.2;
+        margin-bottom: 1em;
+    }
+    #header .form-wrap {
+        min-width: 0;
+        width: 100%
+    }
+    .flex {
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+    }
+    .navbar #logo {
+        width: 66.66%;
+    }
+    .navbar #menu {
+        display: none;
+    }
+    .search-select {
+        font-size: 10px;
+    }
+    .buttonSwap {
+        font-size: 10px;
+    }
+    .buttonSearch {
+        font-size: 14px;
+        padding: 5px 15px;
+    }
+    .buttonRegister {
+        font-size: 10px;
+    }
+    .regForm .search-col {
+        padding-bottom: 0;
+    }
+    .regForm .search-select {
+        height: 24px;
+        font-size: 12px;
+    }
+    .regForm h3 {
+        font-size: 18px;
+        margin: 0 0 10px 0;
+    }
+    .regForm label {
+        font-size: 14px;
+    }
+
+    .resultCon a {
+        font-size: 20px;
+    }
+    .resultCon span {
+        font-size: 10px;
+    }
+    .resultCon p {
+        font-size: 10px;
+    }
+    .resultConDetails p, .resultConDetails pre {
+        font-size: 10px;
+    }
+    .resultConFooter a {
+        font-size: 12px;
+    }
+    .dots {
+        transform: scale(1.6, 1.6);
+        padding: 7px 0 0 14px !important;
+    }
 }

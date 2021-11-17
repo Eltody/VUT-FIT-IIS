@@ -64,7 +64,7 @@
                                             <label for="toCity">Kam:</label><br>
 						                    <SELECT name="toCity" id="toCity" class="search-select">
                                                 {% for i in cities %}
-                                                    	<OPTION value="{{i}}">{{i}}</OPTION>  <!--i.decode('utf-8')-->
+                                                    	<OPTION value="{{i}}">{{i}}</OPTION> <!--i.decode('utf-8')-->
                                                 {% endfor %}
                                             </SELECT>
                                         </div>
@@ -111,8 +111,10 @@
             var email = "{{data.email}}";
             var name = "{{data.name}}";
             if (message !== '') {
-                document.cookie = "name="+name;
-                document.cookie = "email="+email;
+                expiry = new Date();
+                expiry.setTime(expiry.getTime()+(3600*1000));
+                document.cookie = "name="+name+"; expires=" + expiry.toGMTString();
+                document.cookie = "email="+email+"; expires=" + expiry.toGMTString();
                 document.getElementById("user").classList.remove("hidden");
                 document.getElementById("login").classList.add("hidden");
                 document.getElementById("user").innerHTML = name;

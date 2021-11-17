@@ -129,6 +129,11 @@ def busConfig():
                         mins = str(mins)
                         connectionTimeHours = hours + 'hod ' + mins + 'min'
 
+                        cursor = connection.cursor()
+                        cursor.execute("SELECT symbol from Symboly")
+                        symbols = cursor.fetchall()
+                        cursor.close()
+
                         # ziskanie konkretneho dna z datumu
                         tmp2_dateOfConnection = str(tmp_dateOfConnection)
                         tmp2_dateOfConnection = tmp2_dateOfConnection.rsplit('-', 1)  # splitnutie na rok a mesiac [0] a den [1]
@@ -143,7 +148,7 @@ def busConfig():
                         elif dayOfConnection == 'Wednesday':
                             dayOfConnection = 'st'
                         elif dayOfConnection == 'Thursday':
-                            dayOfConnection = 'št'
+                            dayOfConnection = ''.join(symbols[0]) + 't'
                         elif dayOfConnection == 'Friday':
                             dayOfConnection = 'pi'
                         elif dayOfConnection == 'Saturday':
@@ -163,7 +168,7 @@ def busConfig():
                         int(connectionTimeMinutes)
                         priceOfConnection = connectionTimeMinutes * 0.08
                         priceOfConnection = str(round(priceOfConnection, 2))
-                        priceOfConnection = priceOfConnection + '€'
+                        priceOfConnection = priceOfConnection + ''.join(symbols[1])
 
                         # formatovanie casu
                         if tmp_timeFromCity < 959:

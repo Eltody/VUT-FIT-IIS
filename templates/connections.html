@@ -42,13 +42,13 @@
                                     {% for i in data %}
                                         <div class="resultCon">
                                             <div class="resultConHead">
-                                                <a>{{i[2]}}<span>{{i[7]}}</span></a>
+                                                <a>{{i[2]}}<span>{{i[7]}}</span></a>    <!--i.decode('utf-8')-->
                                                 <p>Celkový čas <strong>{{i[8]}}</strong></p>
                                             </div>
                                             <div class="resultConDetails">
                                                 <div>
                                                     <p><i class="fas fa-bus"></i></p>
-                                                    <p style="transform: scale(2, 2); padding: 10px 0 0 13px;"><i class="fas fa-ellipsis-v"></i></p>
+                                                    <p class="dots"><i class="fas fa-ellipsis-v"></i></p>
                                                 </div>
                                                 <br>
                                                 <div>
@@ -69,12 +69,13 @@
                                             <div class="resultConFooter">
                                                 <p><i class="fas fa-user"></i><strong>&ensp;{{i[6]}}&nbsp;</strong>voľných miest</p>
                                                 <div style="display: inherit; align-items: center;">
-                                                    <p>Cena <strong>{{i[9]}}</strong> </p>
+                                                    <p>Cena <strong>{{i[9]}}</strong> </p>  <!--i.decode('utf-8')-->
                                                     <a onclick="buy()" href="#">Do košíka <i class="fas fa-shopping-basket"></i></a>
                                                 </div>
                                             </div>
                                         </div>
                                     {% endfor %}
+                                    <button type="button" class="buttonSearch" id="mybutton"><i class="fas fa-retweet"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -86,6 +87,7 @@
             </footer>
         </div>
         <!-- Scripts -->
+
         <script>
             var cookies = document.cookie.split('; ');
             var c = [];
