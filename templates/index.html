@@ -54,19 +54,11 @@
                                     <form action="/busConfig/False/0" method="POST">
                                         <div class="search-col" style="padding-bottom: 10px;">
                                             <label for="fromCity">Odkiaľ:</label><br>
-                                            <SELECT name="fromCity" id="fromCity" class="search-select">
-                                                {% for i in cities %}
-                                                    	<OPTION value="{{i}}">{{i}}</OPTION>  <!--i.decode('utf-8')-->
-                                                {% endfor %}
-                                            </SELECT>
+                                            <select name="fromCity" id="fromCity" class="search-select"></select>
                                         </div>
                                         <div class="search-col">
                                             <label for="toCity">Kam:</label><br>
-						                    <SELECT name="toCity" id="toCity" class="search-select">
-                                                {% for i in cities %}
-                                                    	<OPTION value="{{i}}">{{i}}</OPTION> <!--i.decode('utf-8')-->
-                                                {% endfor %}
-                                            </SELECT>
+						                    <select name="toCity" id="toCity" class="search-select"></select>
                                         </div>
                                         <div class="search-col">
                                             <label for="date">Dátum:</label><br>
@@ -89,6 +81,24 @@
             </footer>
         </div>
         <!-- Scripts -->
+        <script>
+            var cities = {{cities|tojson}};
+            cities = cities.sort(Intl.Collator().compare);
+            var fromCity = document.getElementById('fromCity');
+            var toCity = document.getElementById('toCity');
+            for (var i in cities) {
+                var option = document.createElement('option');
+                option.value = cities[i];
+                option.innerHTML = cities[i];
+                fromCity.add(option);
+            }
+            for (var i in cities) {
+                var option = document.createElement('option');
+                option.value = cities[i];
+                option.innerHTML = cities[i];
+                toCity.add(option);
+            }
+        </script>
         <script>
             var cookies = document.cookie.split('; ');
             var c = [];

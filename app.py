@@ -18,7 +18,6 @@ def index():
     cities = []
     for i in tmp:
         cities.append(''.join(i))
-    cities = sorted(cities)
     data = loginData.copy()
     loginData.clear()
     return render_template("index.html", cities=cities, data=data)
