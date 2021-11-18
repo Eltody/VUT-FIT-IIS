@@ -1,10 +1,18 @@
 from flask import Flask, render_template, request
+import time
 import json
-import pymysql
-import datetime
+import pymysql  # pip install pymysql
+import datetime  # pip install datetime
+import requests # pip install requests
+import threading
 
 app = Flask(__name__)
-connection = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
+try:
+    connection = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
+except pymysql.Error as error:
+    webhookUrl = 'https://maker.ifttt.com/trigger/error/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
+    requests.post(webhookUrl, headers={'Content-Type': 'application/json'})
+    print("Cannot connect to database. Error: " + error)
 emails = []
 loginData = {}
 
@@ -332,5 +340,19 @@ def registration():
     return index()
 
 
+class databaseCheck(threading.Thread):
+    def run(self, *args, **kwargs):
+        while True:
+            try:
+                pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
+            except pymysql.Error as error:
+                webhookUrl = 'https://maker.ifttt.com/trigger/error/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
+                requests.post(webhookUrl, headers={'Content-Type': 'application/json'})
+                print("Cannot connect to database. Error: " + error)
+            time.sleep(1800)
+
+
 if __name__ == '__main__':
+    databaseCheck = databaseCheck()
+    databaseCheck.start()
     app.run(debug=True)
