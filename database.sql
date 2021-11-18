@@ -192,6 +192,8 @@ INSERT INTO Zastavky (nazov_zastavky)
 VALUES ('Praha - Hlavní nádraží');
 INSERT INTO Zastavky (nazov_zastavky)
 VALUES ('Zlín - aut.nádr.');
+INSERT INTO Zastavky (nazov_zastavky)
+VALUES ('Český Krumlov');
 
 
 INSERT INTO Dopravca (meno, priezvisko, email, heslo)
