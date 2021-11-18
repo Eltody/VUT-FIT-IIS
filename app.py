@@ -29,7 +29,7 @@ def search(boolLoadMore, lastConnectionOnWeb):
         fromCity = request.form['fromCity']
         toCity = request.form['toCity']
         timeFromDate = request.form['date']
-    elif boolLoadMore == True:    # z funkcie LoadMore: nacitanie dalsich spojov, lastConnectionOnWeb je posledny zobrazeny prvok na stranke
+    elif boolLoadMore == True:  # z funkcie LoadMore: nacitanie dalsich spojov, lastConnectionOnWeb je posledny zobrazeny prvok na stranke
         lastConnectionOnWeb = lastConnectionOnWeb[1:-1]
         lastConnectionOnWeb = lastConnectionOnWeb.split(',')
         fromCity = lastConnectionOnWeb[1]
@@ -65,7 +65,7 @@ def search(boolLoadMore, lastConnectionOnWeb):
         timeFromDate = timeFromDate[1].replace(":", "")  # odstranenie ':' pre prevod na int
     else:
         timeFromDate = timeFromDate.replace(":", "")  # odstranenie ':' pre prevod na int
-        splittedDate = lastConnectionOnWeb[7].split('.')    # den [0], mesiac [1], konkretny den v tyzdni [2]
+        splittedDate = lastConnectionOnWeb[7].split('.')  # den [0], mesiac [1], konkretny den v tyzdni [2]
         tmp_dateOfConnection = '2021-' + splittedDate[1] + '-' + splittedDate[0]
     timeFromDate = int(timeFromDate)  # string to int pre porovanie casov
 
@@ -137,9 +137,9 @@ def search(boolLoadMore, lastConnectionOnWeb):
                         tmp_HoursSecsToCity = int(tmp_secsTimeToCity[0]) * 3600  # hodiny v sekudach
                         tmp_MinutesSecsToCity = int(tmp_secsTimeToCity[1]) * 60  # minuty v sekudach
                         connectionTimeHours = ((tmp_HoursSecsToCity + tmp_MinutesSecsToCity) - (
-                                    tmp_HoursSecsFromCity + tmp_MinutesSecsFromCity)) / 3600  # dlzka trvania spoju v hodinach
+                                tmp_HoursSecsFromCity + tmp_MinutesSecsFromCity)) / 3600  # dlzka trvania spoju v hodinach
                         connectionTimeMinutes = ((tmp_HoursSecsToCity + tmp_MinutesSecsToCity) - (
-                                    tmp_HoursSecsFromCity + tmp_MinutesSecsFromCity)) / 60  # dlzka trvania spoju v minutach
+                                tmp_HoursSecsFromCity + tmp_MinutesSecsFromCity)) / 60  # dlzka trvania spoju v minutach
                         connectionTimeHours = float(connectionTimeHours)
 
                         # prevod hodin na hodiny a minuty
@@ -228,6 +228,8 @@ def search(boolLoadMore, lastConnectionOnWeb):
 
     possibleBusConnections = possibleBusConnections + laterPossibleBusConnections  # spojenie najblizsich vyhovujucich spojov a spojov pre dalsi den napr
     print(possibleBusConnections)
+    if boolLoadMore != 'connections':
+        return possibleBusConnections
     # possibleBusConnections - vo formate: cislo_spoju, fromCity, cas_prejazdu(fromCity), toCity, cas_prejazdu(toCity), dopravca, pocet volnych miest, datum spoju, doba trvania spoju
 
     return render_template('connections.html', data=possibleBusConnections)
@@ -236,8 +238,8 @@ def search(boolLoadMore, lastConnectionOnWeb):
 @app.route('/loadMore/<x>')
 def loadMore(x):
     boolLoadMore = True
-    search(boolLoadMore, x)
-    return "done"
+    nextConnections = search(boolLoadMore, x)
+    return {"data": nextConnections}
 
 
 @app.route('/preSignIn', methods=['GET', 'POST'])
