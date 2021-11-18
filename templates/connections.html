@@ -53,7 +53,7 @@
             </footer>
         </div>
         <!-- Scripts -->
-        <script type=text/javascript>
+        <script>
             $(function() {
                 $("#loadMore").click(function (event) {
                     data = oldData;
@@ -165,14 +165,17 @@
                                     p10.innerHTML = " ";
                                 divFooter.appendChild(p10);
                                     var a2 = document.createElement("a");
-                                    a2.innerHTML = "Do košíka ";
                                     a2.setAttribute("onclick", "buy(this); return false;");
                                     a2.setAttribute("href", "#");
                                     a2.setAttribute("id", "button" + data[i][2] + data[i][7]);
-                                        var i4 = document.createElement("i");
-                                            i4.classList.add("fas");
-                                            i4.classList.add("fa-shopping-basket");
+                                    var i4 = document.createElement("i");
+                                        i4.classList.add("fas");
+                                        i4.classList.add("fa-credit-card");
                                     a2.appendChild(i4);
+                                    var p12 = document.createElement("p");
+                                        p12.innerHTML = " Kúpiť";
+                                        p12.style.paddingLeft = "5px";
+                                    a2.appendChild(p12);
                                 divFooter.appendChild(a2);
                         div3.appendChild(divFooter);
                     divMain.appendChild(div3);
@@ -230,7 +233,7 @@
                         buy = document.getElementById(buy2.parentNode.id);
                         buy2 = buy2.parentNode.id;
                         var divBuy = document.createElement("div");
-                            divBuy.classList.add("resultConHead");
+                            divBuy.classList.add("resultConDetails");
                             divBuy.setAttribute("id", "divBuy" + buy2);
                             var a11 = document.createElement("a");
                             a11.innerHTML = data[i][2];
