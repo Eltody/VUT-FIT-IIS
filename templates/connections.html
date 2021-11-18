@@ -40,42 +40,7 @@
                                 <div class="resultContent">
                                     <h3 id="notFound" class="hidden" style="color: red; margin: 0;">Žiadny spoj nebol nájdený</h3>
                                     <h3 id="Found">Nájdené spoje:</h3>
-                                    {% for i in data %}
-                                        <div class="resultCon">
-                                            <div class="resultConHead">
-                                                <a>{{i[2]}}<span>{{i[7]}}</span></a>    <!--i.decode('utf-8')-->
-                                                <p>Celkový čas <strong>{{i[8]}}</strong></p>
-                                            </div>
-                                            <div class="resultConDetails">
-                                                <div>
-                                                    <p><i class="fas fa-bus"></i></p>
-                                                    <p class="dots"><i class="fas fa-ellipsis-v"></i></p>
-                                                </div>
-                                                <br>
-                                                <div>
-                                                    <div class="connectionInfo">
-                                                        <p>{{i[0]}}</p>
-                                                        <p><strong>{{i[5]}}</strong></p>
-                                                    </div>
-                                                    <pre>{{i[2]}}</pre>
-                                                    <pre>{{i[4]}}</pre>
-                                                </div>
-                                                <br>
-                                                <div>
-                                                    <p>&zwnj;</p>
-                                                    <p>{{i[1]}}</p>
-                                                    <p>{{i[3]}}</p>
-                                                </div>
-                                            </div>
-                                            <div class="resultConFooter">
-                                                <p><i class="fas fa-user"></i><strong>&ensp;{{i[6]}}&nbsp;</strong>voľných miest</p>
-                                                <div style="display: inherit; align-items: center;">
-                                                    <p>Cena <strong>{{i[9]}}</strong> </p>  <!--i.decode('utf-8')-->
-                                                    <a onclick="buy()" href="#">Do košíka <i class="fas fa-shopping-basket"></i></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
+                                    <div id="results" style="display: contents;"></div>
                                     <input type="button" id="loadMore" class="buttonSearch" value="Načítať ďalšie spoje"/>
                                 </div>
                             </div>
@@ -91,13 +56,125 @@
         <script type=text/javascript>
             $(function() {
                 $("#loadMore").click(function (event) {
-                    var data = [];
-                    data = {{data|tojson}};
+                    data = oldData;
                     var length = data.length;
-                    $.getJSON('/loadMore/[' + data[length - 1] + ']', { }, function(data) { });
-                    return false;
+                    $.getJSON('/loadMore/[' + data[length - 1] + ']')
+                    .done(function(data) {
+                        oldData = data;
+                        result(data);
+                    });
                 });
             });
+
+            function result(data) {
+                var results = document.getElementById('results');
+                for (i in data) {
+                    var divMain = document.createElement("div");
+                    divMain.classList.add("resultCon");
+                        var div1 = document.createElement("div");
+                        div1.classList.add("resultConHead");
+                            var a1 = document.createElement("a");
+                            a1.innerHTML = data[i][2];
+                                var span1 = document.createElement("span");
+                                    span1.innerHTML = data[i][7];
+                                a1.appendChild(span1);
+                            div1.appendChild(a1);
+                            var p1 = document.createElement("p");
+                            p1.innerHTML = "Celkový čas ";
+                                var strong1 = document.createElement("strong");
+                                    strong1.innerHTML = data[i][8];
+                                p1.appendChild(strong1);
+                            div1.appendChild(p1);
+                        divMain.appendChild(div1);
+                        var div2 = document.createElement("div");
+                        div2.classList.add("resultConDetails");
+                            var divBus = document.createElement("div");
+                                var p2 = document.createElement("p");
+                                    var i1 = document.createElement("i");
+                                        i1.classList.add("fas");
+                                        i1.classList.add("fa-bus");
+                                p2.appendChild(i1);
+                            divBus.appendChild(p2);
+                                var p3 = document.createElement("p");
+                                    p3.classList.add("dots");
+                                    var i2 = document.createElement("i");
+                                        i2.classList.add("fas");
+                                        i2.classList.add("fa-ellipsis-v");
+                                p3.appendChild(i2);
+                            divBus.appendChild(p3);
+                            div2.appendChild(divBus);
+                            var br = document.createElement("br");
+                            div2.appendChild(br);
+                            var divInfo1 = document.createElement("div");
+                                var divInfo2 = document.createElement("div");
+                                divInfo2.classList.add("connectionInfo");
+                                    var p3 = document.createElement("p");
+                                        p3.innerHTML = data[i][0];
+                                divInfo2.appendChild(p3);
+                                    var p4 = document.createElement("p");
+                                        var strong2 = document.createElement("strong");
+                                            strong2.innerHTML = data[i][5];
+                                    p4.appendChild(strong2);
+                                divInfo2.appendChild(p4);
+                            divInfo1.appendChild(divInfo2);
+                                var pre1 = document.createElement("pre");
+                                    pre1.innerHTML = data[i][2];
+                                divInfo1.appendChild(pre1);
+                                    var pre2 = document.createElement("pre");
+                                        pre2.innerHTML = data[i][4];
+                                divInfo1.appendChild(pre2);
+                            div2.appendChild(divInfo1);
+                            div2.appendChild(br);
+                            var divInfo3 = document.createElement("div");
+                                var p5 = document.createElement("p");
+                                    p5.innerHTML = "&zwnj;";
+                                divInfo3.appendChild(p5);
+                                var p6 = document.createElement("p");
+                                    p6.innerHTML = data[i][1];
+                                divInfo3.appendChild(p6);
+                                var p7 = document.createElement("p");
+                                    p7.innerHTML = data[i][3];
+                                divInfo3.appendChild(p7);
+                            div2.appendChild(divInfo3);
+                        divMain.appendChild(div2);
+                        var div3 = document.createElement("div");
+                        div3.classList.add("resultConFooter");
+                            var p8 = document.createElement("p");
+                                var i3 = document.createElement("i");
+                                    i3.classList.add("fas");
+                                    i3.classList.add("fa-user");
+                                p8.appendChild(i3);
+                                var strong3 = document.createElement("strong");
+                                    strong3.innerHTML = "&ensp;" + data[i][6] + "&ensp;";
+                                p8.appendChild(strong3);
+                                var p9 = document.createElement("p");
+                                    p9.innerHTML = "voľných miest";
+                                p8.appendChild(p9);
+                            div3.append(p8);
+                            var divFooter = document.createElement("div");
+                                divFooter.style.display = "inherit";
+                                divFooter.style.alignItems = "center";
+                                var p10 = document.createElement("p");
+                                    p10.innerHTML = "Cena ";
+                                    var strong4 = document.createElement("strong");
+                                        strong4.innerHTML = data[i][9];
+                                    p10.appendChild(strong4);
+                                    p10.innerHTML = " ";
+                                divFooter.appendChild(p10);
+                                    var a2 = document.createElement("a");
+                                    a2.innerHTML = "Do košíka ";
+                                    a2.setAttribute("onclick", "buy()");
+                                    a2.setAttribute("href", "#");
+                                        var i4 = document.createElement("i");
+                                            i4.classList.add("fas");
+                                            i4.classList.add("fa-shopping-basket");
+                                    a2.appendChild(i4);
+                                divFooter.appendChild(a2);
+                        div3.appendChild(divFooter);
+                    divMain.appendChild(div3);
+                    results.appendChild(divMain);
+                };
+            };
         </script>
         <script>
             var cookies = document.cookie.split('; ');
@@ -126,7 +203,9 @@
             }
         </script>
         <script>
-            var data = "{{data}}";
+            let data = {{data|tojson}};
+            let oldData = data;
+            result(data);
             if (data === "[]") {
                 document.getElementById("notFound").classList.remove("hidden");
                 document.getElementById("Found").classList.add("hidden");

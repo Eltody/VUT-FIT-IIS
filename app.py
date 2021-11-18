@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import json
 import pymysql
 import datetime
 
@@ -239,7 +240,9 @@ def search(boolLoadMore, lastConnectionOnWeb):
 def loadMore(x):
     boolLoadMore = True
     nextConnections = search(boolLoadMore, x)
-    return {"data": nextConnections}
+    nextConnections = json.dumps(nextConnections)
+    # return {"data": nextConnections}
+    return nextConnections
 
 
 @app.route('/preSignIn', methods=['GET', 'POST'])
