@@ -71,8 +71,9 @@
                 for (i in data) {
                     var divMain = document.createElement("div");
                     divMain.classList.add("resultCon");
+                    divMain.setAttribute("id", data[i][2] + data[i][7]);
                         var div1 = document.createElement("div");
-                        div1.classList.add("resultConHead");
+                            div1.classList.add("resultConHead");
                             var a1 = document.createElement("a");
                             a1.innerHTML = data[i][2];
                                 var span1 = document.createElement("span");
@@ -139,6 +140,7 @@
                         divMain.appendChild(div2);
                         var div3 = document.createElement("div");
                         div3.classList.add("resultConFooter");
+                        div3.setAttribute("id", "div2" + data[i][2] + data[i][7]);
                             var p8 = document.createElement("p");
                                 var i3 = document.createElement("i");
                                     i3.classList.add("fas");
@@ -154,6 +156,7 @@
                             var divFooter = document.createElement("div");
                                 divFooter.style.display = "inherit";
                                 divFooter.style.alignItems = "center";
+                                divFooter.setAttribute("id", "div1" + data[i][2] + data[i][7]);
                                 var p10 = document.createElement("p");
                                     p10.innerHTML = "Cena ";
                                     var strong4 = document.createElement("strong");
@@ -163,8 +166,9 @@
                                 divFooter.appendChild(p10);
                                     var a2 = document.createElement("a");
                                     a2.innerHTML = "Do košíka ";
-                                    a2.setAttribute("onclick", "buy()");
+                                    a2.setAttribute("onclick", "buy(this); return false;");
                                     a2.setAttribute("href", "#");
+                                    a2.setAttribute("id", "button" + data[i][2] + data[i][7]);
                                         var i4 = document.createElement("i");
                                             i4.classList.add("fas");
                                             i4.classList.add("fa-shopping-basket");
@@ -203,6 +207,7 @@
             }
         </script>
         <script>
+            let buy2 = null;
             let data = {{data|tojson}};
             let oldData = data;
             result(data);
@@ -212,14 +217,68 @@
             }
         </script>
         <script>
-            function buy(){
+            function buy(elem){
                 var cookies = document.cookie.split('; ');
                 var c = [];
                 for (var i = 0; i < cookies.length; i++) {
                     c.push(cookies[i].split('='));
                 }
                 if (c[0][0] === "name") {
-                    location.href = "/buy";
+                    if (typeof document.getElementById("divBuy" + buy2) === 'undefined' || document.getElementById("divBuy" + buy2) === null) {
+                        var buy = document.getElementById(elem.parentNode.id);
+                        buy2 = document.getElementById(buy.parentNode.id);
+                        buy = document.getElementById(buy2.parentNode.id);
+                        buy2 = buy2.parentNode.id;
+                        var divBuy = document.createElement("div");
+                            divBuy.classList.add("resultConHead");
+                            divBuy.setAttribute("id", "divBuy" + buy2);
+                            var a11 = document.createElement("a");
+                            a11.innerHTML = data[i][2];
+                                var span11 = document.createElement("span");
+                                    span11.innerHTML = data[i][7];
+                                a11.appendChild(span11);
+                            divBuy.appendChild(a11);
+                            var p11 = document.createElement("p");
+                            p11.innerHTML = "Celkový čas ";
+                                var strong11 = document.createElement("strong");
+                                    strong11.innerHTML = data[i][8];
+                                p11.appendChild(strong11);
+                            divBuy.appendChild(p11);
+                        buy.appendChild(divBuy);
+                    } else {
+                        var tmp = document.getElementById(elem.parentNode.id);
+                        tmp = document.getElementById(tmp.parentNode.id);
+                        tmp = tmp.parentNode.id;
+                        var isSet = false;
+                        if (buy2 != tmp) {
+                            isSet = true;
+                        };
+                        var remove = document.getElementById("divBuy" + buy2);
+                        remove.remove();
+                        buy2 = null;
+                        if (isSet == true) {
+                            var buy = document.getElementById(elem.parentNode.id);
+                            buy2 = document.getElementById(buy.parentNode.id);
+                            buy = document.getElementById(buy2.parentNode.id);
+                            buy2 = buy2.parentNode.id;
+                            var divBuy = document.createElement("div");
+                                divBuy.classList.add("resultConHead");
+                                divBuy.setAttribute("id", "divBuy" + buy2);
+                                var a11 = document.createElement("a");
+                                a11.innerHTML = data[i][2];
+                                    var span11 = document.createElement("span");
+                                        span11.innerHTML = data[i][7];
+                                    a11.appendChild(span11);
+                                divBuy.appendChild(a11);
+                                var p11 = document.createElement("p");
+                                p11.innerHTML = "Celkový čas ";
+                                    var strong11 = document.createElement("strong");
+                                        strong11.innerHTML = data[i][8];
+                                    p11.appendChild(strong11);
+                                divBuy.appendChild(p11);
+                            buy.appendChild(divBuy);
+                        };
+                    };
                 } else {
                     location.href = "/preSignIn";
                 }
