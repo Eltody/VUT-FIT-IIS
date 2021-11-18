@@ -23,9 +23,9 @@ def index():
     return render_template("index.html", cities=cities, data=data)
 
 
-@app.route('/busConfig/<boolLoadMore>/<lastConnectionOnWeb>', methods=['GET', 'POST'])
-def busConfig(boolLoadMore, lastConnectionOnWeb):
-    if boolLoadMore == 'False':
+@app.route('/search/<boolLoadMore>/<lastConnectionOnWeb>', methods=['GET', 'POST'])
+def search(boolLoadMore, lastConnectionOnWeb):
+    if boolLoadMore == 'connections':
         fromCity = request.form['fromCity']
         toCity = request.form['toCity']
         timeFromDate = request.form['date']
@@ -59,7 +59,7 @@ def busConfig(boolLoadMore, lastConnectionOnWeb):
     cursor2.close()
 
     # ziskanie konkretneho casu pre vyhladanie najblizsich spojeni
-    if boolLoadMore == 'False':
+    if boolLoadMore == 'connections':
         timeFromDate = timeFromDate.rsplit('T', 1)  # splitnutie na datum [0] a cas [1]
         tmp_dateOfConnection = timeFromDate[0]  # datum daneho spoju
         timeFromDate = timeFromDate[1].replace(":", "")  # odstranenie ':' pre prevod na int
@@ -236,7 +236,7 @@ def busConfig(boolLoadMore, lastConnectionOnWeb):
 @app.route('/loadMore/<x>')
 def loadMore(x):
     boolLoadMore = True
-    busConfig(boolLoadMore, x)
+    search(boolLoadMore, x)
     return "done"
 
 
