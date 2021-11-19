@@ -252,11 +252,15 @@ def search(boolLoadMore, lastConnectionOnWeb):
                             timeOfDeparture = timeOfDeparture[0].replace(":", "")  # odstranenie ':' pre prevod na int
                             timeOfDeparture = int(timeOfDeparture)  # string to int pre porovanie casov
                             if tmp_timeFromCity <= timeOfDeparture:
-                                allCitiesOfConnection.append([cityNameConnection[0], timeOfDeparture])
+                                modifiedTimeOfDeparture = str(timeOfDeparture)
+                                modifiedTimeOfDeparture = list(modifiedTimeOfDeparture)
+                                modifiedTimeOfDeparture.insert(-2, ':')
+                                tmp_str = ""
+                                modifiedTimeOfDeparture = tmp_str.join(modifiedTimeOfDeparture)
+                                allCitiesOfConnection.append([cityNameConnection[0], timeOfDeparture, modifiedTimeOfDeparture])
 
-                        # sortovanie casov od najvacsieho po najmensi
+                        # sortovanie casov od najvacsieho po najmensi - ale ako medzispoje sa na stranke zobrazuju od najmensieho po najvacsie
                         allCitiesOfConnection.sort(key=lambda y: y[1], reverse=True)
-
 
                         allCitiesOfConnection = allCitiesOfConnection[1:-1] #posielanie len medzizastavok - vymazanie prveho a posledneho prvku - zaciatok cesty a ciel
 
@@ -443,6 +447,7 @@ def addPersonal(carrier_name):
     cursor1.close()
 
     # TODO EDIT A MAZANIE UZIVALELSKYCH UCTOV PERSONALU DANEHO DOPRAVCU
+    # https://swcarpentry.github.io/sql-novice-survey/09-create/index.html
 
 # DOPRAVCA
 @app.route('/carrier/showMyVehicles/<carrier_name>', methods=['GET', 'POST'])
@@ -469,7 +474,7 @@ def showMyVehicles(carrier_name):
     print(allVehicles)
 
     # TODO EDITOVANIE A MAZANIE VOZIDIEL Z DB
-
+    # https://swcarpentry.github.io/sql-novice-survey/09-create/index.html
 
 # ADMIN
 @app.route('/admin/editUsers/', methods=['GET', 'POST'])
