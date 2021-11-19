@@ -34,12 +34,12 @@ def index():
 
 @app.route('/search/<boolLoadMore>/<lastConnectionOnWeb>', methods=['GET', 'POST'])
 def search(boolLoadMore, lastConnectionOnWeb):
-    if boolLoadMore == 'connections':
+    if boolLoadMore == 'connections':   # bezne volanie funkcie search - prve volanie tejto funkcie (connections len preto aby dobre vyzerala URL)
         fromCity = request.form['fromCity']
         toCity = request.form['toCity']
         timeFromDate = request.form['date']
-    elif boolLoadMore == True:  # z funkcie LoadMore: nacitanie dalsich spojov, lastConnectionOnWeb je posledny zobrazeny prvok na stranke
-        lastConnectionOnWeb = lastConnectionOnWeb[1:-1]
+    else:  # z funkcie LoadMore: nacitanie dalsich spojov, lastConnectionOnWeb je posledny zobrazeny prvok na stranke
+        lastConnectionOnWeb = lastConnectionOnWeb[1:-1]     # KEBY NIECO NEFUNGOVALO TAK ZMENIT ELSE: NA ELIF BOOLLOADMORE == True:
         lastConnectionOnWeb = lastConnectionOnWeb.split(',')
         fromCity = lastConnectionOnWeb[1]
         toCity = lastConnectionOnWeb[3]
@@ -132,7 +132,7 @@ def search(boolLoadMore, lastConnectionOnWeb):
 
                         fromCityTime = row1[0]
                         toCityTime = row2[0]
-                        connectionNumber = row1[1]
+                        connectionNumber = row1[1]  # cislo spoju
                         availableSeats = availableSeats[0]  # array to string
                         carrier_name = carrier_name[0] + carrier_name[1]  # spojenie meno a priezvisko do jedneho
 
@@ -224,15 +224,29 @@ def search(boolLoadMore, lastConnectionOnWeb):
                         if tmp_timeToCity < 959:
                             toCityTime = ' ' + toCityTime
 
+                        # ziskanie vsetkych miest, cey ktore spoj prechadza pre informaciu pre cestujucich pri listku
+                        cursor1 = connection.cursor()
+                        cursor1.execute("SELECT id_zastavky FROM Spoj_Zastavka WHERE id_spoju='%s';" % connectionNumber)
+                        idAllCitiesOfConnection = cursor1.fetchall()
+                        cursor1.close()
+                        allCitiesOfConnection = []
+                        for i in idAllCitiesOfConnection:
+                            cursor1 = connection.cursor()
+                            cursor1.execute("SELECT nazov_zastavky FROM Zastavky WHERE id='%s';" % i)
+                            cityNameConnection = cursor1.fetchone()
+                            cursor1.close()
+                            allCitiesOfConnection.append(cityNameConnection[0])
+
+                        # zaverecne appendovanie dat do zoznamov
                         if tmp_timeFromCity > timeFromDate and not nextDay and counterOfConnections < 5:  # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
                             possibleBusConnections.append(
                                 [connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name,
-                                 availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection])
+                                 availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection, allCitiesOfConnection])
                             counterOfConnections += 1
                         if nextDay and counterOfConnections < 5:  # pre dalsie spoje, na dalsi den - rovnake spoje, len datum o cislo vyssi a od zaciatku dna 00:00 vsetky, nie len najblizsie v dany den
                             laterPossibleBusConnections.append(
                                 [connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name,
-                                 availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection])
+                                 availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection, allCitiesOfConnection])
                             counterOfConnections += 1
 
     possibleBusConnections = possibleBusConnections + laterPossibleBusConnections  # spojenie najblizsich vyhovujucich spojov a spojov pre dalsi den napr
