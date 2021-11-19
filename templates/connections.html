@@ -119,6 +119,7 @@
                             var br = document.createElement("br");
                             div2.appendChild(br);
                             var divInfo1 = document.createElement("div");
+                            divInfo1.setAttribute("id", i);
                                 var divInfo2 = document.createElement("div");
                                 divInfo2.classList.add("connectionInfo");
                                     var p3 = document.createElement("p");
@@ -177,9 +178,9 @@
                                 divInfo3.appendChild(p7);
                             div2.appendChild(divInfo3);
                         divMain.appendChild(div2);
-                        var div3 = document.createElement("div");
-                        div3.classList.add("resultConFooter");
-                        div3.setAttribute("id", "div2" + data[i][2] + data[i][7]);
+                        var divFooter = document.createElement("div");
+                        divFooter.classList.add("resultConFooter");
+                        divFooter.setAttribute("id", "div2" + data[i][2] + data[i][7]);
                             var p8 = document.createElement("p");
                                 var i3 = document.createElement("i");
                                     i3.classList.add("fas");
@@ -191,18 +192,20 @@
                                 var p9 = document.createElement("p");
                                     p9.innerHTML = "voľných miest";
                                 p8.appendChild(p9);
-                            div3.append(p8);
-                            var divFooter = document.createElement("div");
-                                divFooter.style.display = "inherit";
-                                divFooter.style.alignItems = "center";
-                                divFooter.setAttribute("id", "div1" + data[i][2] + data[i][7]);
+                            divFooter.append(p8);
+                            var div3 = document.createElement("div");
+                                div3.style.display = "inherit";
+                                div3.style.alignItems = "center";
+                                div3.setAttribute("id", "div1" + data[i][2] + data[i][7]);
                                 var p10 = document.createElement("p");
                                     p10.innerHTML = "Cena ";
                                     var strong4 = document.createElement("strong");
                                         strong4.innerHTML = data[i][9];
                                     p10.appendChild(strong4);
-                                    p10.innerHTML = " ";
-                                divFooter.appendChild(p10);
+                                        var p10a = document.createElement("p");
+                                            p10a.innerHTML = "&nbsp;za osobu ";
+                                    p10.appendChild(p10a);
+                                div3.appendChild(p10);
                                     var a2 = document.createElement("a");
                                     a2.setAttribute("onclick", "buy(this); return false;");
                                     a2.setAttribute("href", "#");
@@ -215,9 +218,9 @@
                                         p12.innerHTML = " Kúpiť";
                                         p12.style.paddingLeft = "5px";
                                     a2.appendChild(p12);
-                                divFooter.appendChild(a2);
-                        div3.appendChild(divFooter);
-                    divMain.appendChild(div3);
+                                div3.appendChild(a2);
+                        divFooter.appendChild(div3);
+                    divMain.appendChild(divFooter);
                     results.appendChild(divMain);
                 };
                 document.getElementById("loader").classList.remove("animate__fadeIn");
@@ -235,7 +238,7 @@
                 for (x in list) {
                     list[x].innerHTML = "";
                 }
-                for (x in data[0][10]) {
+                for (x in data[elem.parentNode.id][10]) {
                     var stops = elem.parentNode.parentNode;
                     var element = stops.childNodes[0];
                     var times = element.childNodes[1];
@@ -246,19 +249,16 @@
 
                     element = stops.childNodes[1];
                     times = element.childNodes[1];
-                    var p2 = document.createElement("p");
-                        p2.setAttribute("name", "more");
-                        var i = document.createElement("i");
-                            i.classList.add("fas");
-                            i.classList.add("fa-ellipsis-v");
-                        p2.appendChild(i);
-                    element.insertBefore(p2, times.nextSibling);
+                    var pre = document.createElement("pre");
+                        pre.setAttribute("name", "more");
+                        pre.innerHTML = data[0][10][x][1];
+                    element.insertBefore(pre, times.nextSibling);
 
                     element = stops.childNodes[3];
                     times = element.childNodes[1];
                     var p = document.createElement("p");
                         p.setAttribute("name", "more");
-                        p.innerHTML = data[0][10][x];
+                        p.innerHTML = data[0][10][x][0];
                     element.insertBefore(p, times.nextSibling);
                 };
             };
@@ -314,14 +314,49 @@
                 for (var i = 0; i < cookies.length; i++) {
                     c.push(cookies[i].split('='));
                 }
-                if (c[0][0] === "name") {
-                    if (typeof document.getElementById("divBuy" + buy2) === 'undefined' || document.getElementById("divBuy" + buy2) === null) {
+                if (typeof document.getElementById("divBuy" + buy2) === 'undefined' || document.getElementById("divBuy" + buy2) === null) {
+                    var buy = document.getElementById(elem.parentNode.id);
+                    buy2 = document.getElementById(buy.parentNode.id);
+                    buy = document.getElementById(buy2.parentNode.id);
+                    buy2 = buy2.parentNode.id;
+                    var divBuy = document.createElement("div");
+                        divBuy.classList.add("purchaseDiv");
+                        divBuy.setAttribute("id", "divBuy" + buy2);
+                        var a11 = document.createElement("a");
+                        a11.innerHTML = data[i][2];
+                            var span11 = document.createElement("span");
+                                span11.innerHTML = data[i][7];
+                            a11.appendChild(span11);
+                        divBuy.appendChild(a11);
+                        var buttonRegister = document.createElement("p");
+                        var buttonOneTime = document.createElement("p");
+
+
+                        var buttonBuy = document.createElement("p");
+                        p11.innerHTML = "Celkový čas ";
+                            var strong11 = document.createElement("strong");
+                                strong11.innerHTML = data[i][8];
+                            p11.appendChild(strong11);
+                        divBuy.appendChild(buttonBuy);
+                    buy.appendChild(divBuy);
+                } else {
+                    var tmp = document.getElementById(elem.parentNode.id);
+                    tmp = document.getElementById(tmp.parentNode.id);
+                    tmp = tmp.parentNode.id;
+                    var isSet = false;
+                    if (buy2 != tmp) {
+                        isSet = true;
+                    };
+                    var remove = document.getElementById("divBuy" + buy2);
+                    remove.remove();
+                    buy2 = null;
+                    if (isSet == true) {
                         var buy = document.getElementById(elem.parentNode.id);
                         buy2 = document.getElementById(buy.parentNode.id);
                         buy = document.getElementById(buy2.parentNode.id);
                         buy2 = buy2.parentNode.id;
                         var divBuy = document.createElement("div");
-                            divBuy.classList.add("resultConDetails");
+                            divBuy.classList.add("resultConHead");
                             divBuy.setAttribute("id", "divBuy" + buy2);
                             var a11 = document.createElement("a");
                             a11.innerHTML = data[i][2];
@@ -336,44 +371,12 @@
                                 p11.appendChild(strong11);
                             divBuy.appendChild(p11);
                         buy.appendChild(divBuy);
-                    } else {
-                        var tmp = document.getElementById(elem.parentNode.id);
-                        tmp = document.getElementById(tmp.parentNode.id);
-                        tmp = tmp.parentNode.id;
-                        var isSet = false;
-                        if (buy2 != tmp) {
-                            isSet = true;
-                        };
-                        var remove = document.getElementById("divBuy" + buy2);
-                        remove.remove();
-                        buy2 = null;
-                        if (isSet == true) {
-                            var buy = document.getElementById(elem.parentNode.id);
-                            buy2 = document.getElementById(buy.parentNode.id);
-                            buy = document.getElementById(buy2.parentNode.id);
-                            buy2 = buy2.parentNode.id;
-                            var divBuy = document.createElement("div");
-                                divBuy.classList.add("resultConHead");
-                                divBuy.setAttribute("id", "divBuy" + buy2);
-                                var a11 = document.createElement("a");
-                                a11.innerHTML = data[i][2];
-                                    var span11 = document.createElement("span");
-                                        span11.innerHTML = data[i][7];
-                                    a11.appendChild(span11);
-                                divBuy.appendChild(a11);
-                                var p11 = document.createElement("p");
-                                p11.innerHTML = "Celkový čas ";
-                                    var strong11 = document.createElement("strong");
-                                        strong11.innerHTML = data[i][8];
-                                    p11.appendChild(strong11);
-                                divBuy.appendChild(p11);
-                            buy.appendChild(divBuy);
-                        };
                     };
+                };
+                if (c[0][0] === "name") {
                 } else {
-                    location.href = "/preSignIn";
-                }
-            }
+                };
+            };
         </script>
     </body>
 </html>
