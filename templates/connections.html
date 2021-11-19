@@ -95,13 +95,24 @@
                                         i1.classList.add("fa-bus");
                                 p2.appendChild(i1);
                             divBus.appendChild(p2);
-                                var p3 = document.createElement("p");
-                                    p3.classList.add("dots");
+                                var arrowUp = document.createElement("p");
                                     var i2 = document.createElement("i");
                                         i2.classList.add("fas");
-                                        i2.classList.add("fa-ellipsis-v");
-                                p3.appendChild(i2);
-                            divBus.appendChild(p3);
+                                        i2.classList.add("fa-arrow-up");
+                                arrowUp.appendChild(i2);
+                            divBus.appendChild(arrowUp);
+                                if (data[0][10].length != 0) {
+                                    var middle1 = document.createElement("p");
+                                        middle1.setAttribute("name", "more" + data[i][2] + data[i][7]);
+                                        middle1.innerHTML = "&zwnj;";
+                                    divBus.appendChild(middle1);
+                                };
+                                var arrowDown = document.createElement("p");
+                                    var i2 = document.createElement("i");
+                                        i2.classList.add("fas");
+                                        i2.classList.add("fa-arrow-down");
+                                arrowDown.appendChild(i2);
+                            divBus.appendChild(arrowDown);
                             div2.appendChild(divBus);
                             var br = document.createElement("br");
                             div2.appendChild(br);
@@ -119,10 +130,31 @@
                             divInfo1.appendChild(divInfo2);
                                 var pre1 = document.createElement("pre");
                                     pre1.innerHTML = data[i][2];
-                                divInfo1.appendChild(pre1);
-                                    var pre2 = document.createElement("pre");
-                                        pre2.innerHTML = data[i][4];
-                                divInfo1.appendChild(pre2);
+                            divInfo1.appendChild(pre1);
+                                if (data[0][10].length != 0) {
+                                    var middle2 = document.createElement("div");
+                                    middle2.setAttribute("onclick", "showMore(this); return false;");
+                                    middle2.setAttribute("id", "more" + data[i][2] + data[i][7]);
+                                    middle2.style.cursor = "pointer";
+                                    middle2.style.zIndex = "1001";
+                                    middle2.style.color = "gray";
+                                    middle2.classList.add("connectionInfo");
+                                    middle2.setAttribute("name", "more" + data[i][2] + data[i][7]);
+                                        var middleArrow = document.createElement("i");
+                                            middleArrow.setAttribute("onclick", "showMore(this); return false;");
+                                            middleArrow.style.cursor = "pointer";
+                                            middleArrow.classList.add("fas");
+                                            middleArrow.classList.add("fa-chevron-down");
+                                    middle2.appendChild(middleArrow);
+                                        var middleText = document.createElement("p");
+                                            middleText.style.textDecoration = "underline";
+                                            middleText.innerHTML = "Zobraziť&nbsp;viac";
+                                    middle2.appendChild(middleText);
+                                    divInfo1.appendChild(middle2);
+                                };
+                                var pre2 = document.createElement("pre");
+                                    pre2.innerHTML = data[i][4];
+                            divInfo1.appendChild(pre2);
                             div2.appendChild(divInfo1);
                             div2.appendChild(br);
                             var divInfo3 = document.createElement("div");
@@ -132,8 +164,14 @@
                                 var p6 = document.createElement("p");
                                     p6.innerHTML = data[i][1];
                                 divInfo3.appendChild(p6);
-                                var p7 = document.createElement("p");
-                                    p7.innerHTML = data[i][3];
+                                    if (data[0][10].length != 0) {
+                                        var middle3 = document.createElement("p");
+                                            middle3.setAttribute("name", "more" + data[i][2] + data[i][7]);
+                                            middle3.innerHTML = "&zwnj;";
+                                        divInfo3.appendChild(middle3);
+                                    };
+                                    var p7 = document.createElement("p");
+                                        p7.innerHTML = data[i][3];
                                 divInfo3.appendChild(p7);
                             div2.appendChild(divInfo3);
                         divMain.appendChild(div2);
@@ -187,6 +225,40 @@
                     input.setAttribute("value", "Načítať ďalšie spoje");
                 results = document.getElementById(results.parentNode.id);
                 results.appendChild(input);
+            };
+        </script>
+        <script>
+            function showMore(elem) {
+                var list = document.getElementsByName(elem.id);
+                for (x in list) {
+                    list[x].innerHTML = "";
+                }
+                for (x in data[0][10]) {
+                    var stops = elem.parentNode.parentNode;
+                    var element = stops.childNodes[0];
+                    var times = element.childNodes[1];
+                    var p1 = document.createElement("p");
+                        p1.setAttribute("name", "more");
+                        p1.innerHTML = "&zwnj;";
+                    element.insertBefore(p1, times.nextSibling);
+
+                    element = stops.childNodes[1];
+                    times = element.childNodes[1];
+                    var p2 = document.createElement("p");
+                        p2.setAttribute("name", "more");
+                        var i = document.createElement("i");
+                            i.classList.add("fas");
+                            i.classList.add("fa-ellipsis-v");
+                        p2.appendChild(i);
+                    element.insertBefore(p2, times.nextSibling);
+
+                    element = stops.childNodes[3];
+                    times = element.childNodes[1];
+                    var p = document.createElement("p");
+                        p.setAttribute("name", "more");
+                        p.innerHTML = data[0][10][x];
+                    element.insertBefore(p, times.nextSibling);
+                };
             };
         </script>
         <script>

@@ -385,9 +385,8 @@ h1, h2, h3, h4, h5, h6, figure {
 .connectionInfo p {
     padding: 0 10px 0 0;
 }
-.dots {
-    transform: scale(2, 2);
-    padding: 10px 0 0 13px !important;
+.connectionInfo i {
+    padding: 0 10px 0 0;
 }
 .resultConFooter {
     display: flex;
