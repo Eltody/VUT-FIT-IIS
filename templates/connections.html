@@ -237,7 +237,7 @@
                 var list = document.getElementsByName(elem.id);
                 for (x in list) {
                     list[x].innerHTML = "";
-                }
+                };
                 for (x in data[elem.parentNode.id][10]) {
                     var stops = elem.parentNode.parentNode;
                     var element = stops.childNodes[0];
@@ -251,14 +251,14 @@
                     times = element.childNodes[1];
                     var pre = document.createElement("pre");
                         pre.setAttribute("name", "more");
-                        pre.innerHTML = data[0][10][x][1];
+                        pre.innerHTML = data[elem.parentNode.id][10][x][1];
                     element.insertBefore(pre, times.nextSibling);
 
                     element = stops.childNodes[3];
                     times = element.childNodes[1];
                     var p = document.createElement("p");
                         p.setAttribute("name", "more");
-                        p.innerHTML = data[0][10][x][0];
+                        p.innerHTML = data[elem.parentNode.id][10][x][0];
                     element.insertBefore(p, times.nextSibling);
                 };
             };
