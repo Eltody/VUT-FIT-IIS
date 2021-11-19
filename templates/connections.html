@@ -33,6 +33,7 @@
                 </div>
             </nav>
             <header id="header"role="banner">
+                <div id="loader" class="loader animate__animated animate__fadeIn"><div></div></div>
                 <div class="container">
                     <div class="resultFlex">
                         <div class="animate__animated animate__fadeIn animate__faster">
@@ -55,6 +56,7 @@
         <script>
             $(function() {
                 $("#loadMore").click(function (event) {
+                    document.getElementById("loader").classList.remove("hidden");
                     data = oldData;
                     var length = data.length;
                     $.getJSON('/loadMore/[' + data[length - 1] + ']')
@@ -66,7 +68,7 @@
             });
 
             function result(data) {
-                var results = document.getElementById('results');
+                var results = document.getElementById("results");
                 for (i in data) {
                     var divMain = document.createElement("div");
                     divMain.classList.add("resultCon");
@@ -218,13 +220,13 @@
                     divMain.appendChild(div3);
                     results.appendChild(divMain);
                 };
-                var input = document.createElement("input");
-                    input.setAttribute("type", "button");
-                    input.setAttribute("id", "loadMore");
-                    input.classList.add("buttonSearch");
-                    input.setAttribute("value", "Načítať ďalšie spoje");
-                results = document.getElementById(results.parentNode.id);
-                results.appendChild(input);
+                document.getElementById("loader").classList.remove("animate__fadeIn");
+                document.getElementById("loader").classList.add("animate__fadeOut");
+                setTimeout(function() {
+                    document.getElementById("loader").classList.add("hidden");
+                    document.getElementById("loader").classList.add("animate__fadeIn");
+                    document.getElementById("loader").classList.remove("animate__fadeOut");
+                }, 500);
             };
         </script>
         <script>
@@ -295,6 +297,13 @@
                 document.getElementById("notFound").classList.remove("hidden");
                 document.getElementById("Found").classList.add("hidden");
             } else {
+                var input = document.createElement("input");
+                    input.setAttribute("type", "button");
+                    input.setAttribute("id", "loadMore");
+                    input.classList.add("buttonSearch");
+                    input.setAttribute("value", "Načítať ďalšie spoje");
+                results = document.getElementById(results.parentNode.id);
+                results.appendChild(input);
                 result(data);
             };
         </script>
