@@ -236,6 +236,7 @@ def search(boolLoadMore, lastConnectionOnWeb):
                             cityNameConnection = cursor1.fetchone()
                             cursor1.close()
                             allCitiesOfConnection.append(cityNameConnection[0])
+                        allCitiesOfConnection = allCitiesOfConnection[1:-1] #posielanie len medzizastavok - vymazanie prveho a posledneho prvku - zaciatok cesty a ciel
 
                         # zaverecne appendovanie dat do zoznamov
                         if tmp_timeFromCity > timeFromDate and not nextDay and counterOfConnections < 5:  # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
