@@ -273,17 +273,17 @@ def signIn():
     for (meno, email, heslo) in cestujuci:
         if email == user_email and heslo == password:
             cestujuci.close()
-            loginData = {'message': 'login', 'email': user_email, 'name': meno}
+            loginData = {'message': 'login', 'email': user_email, 'name': meno, 'status': 'cestujuci'}
             return index()
     for (meno, email, heslo) in administrator:
         if email == user_email and heslo == password:
             administrator.close()
-            loginData = {'message': 'login', 'email': user_email, 'name': meno}
+            loginData = {'message': 'login', 'email': user_email, 'name': meno, 'status': 'administrator'}
             return index()
     for (meno, email, heslo) in personal:
         if email == user_email and heslo == password:
             personal.close()
-            loginData = {'message': 'login', 'email': user_email, 'name': meno}
+            loginData = {'message': 'login', 'email': user_email, 'name': meno, 'status': 'personal'}
             return index()
     cestujuci.close()
     administrator.close()
@@ -336,7 +336,7 @@ def registration():
     connection.commit()
     cursor.close()
 
-    loginData = {'message': 'login', 'email': user_email, 'name': fname}
+    loginData = {'message': 'login', 'email': user_email, 'name': fname, 'status': 'cestujuci'}
     return index()
 
 

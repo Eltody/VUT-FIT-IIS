@@ -113,6 +113,7 @@
             function signOut() {
                 document.cookie = "name=; Max-Age=0";
                 document.cookie = "email=; Max-Age=0";
+                document.cookie = "status=; Max-Age=0";
                 location.reload();
             }
         </script>
@@ -120,11 +121,13 @@
             var message = "{{data.message}}";
             var email = "{{data.email}}";
             var name = "{{data.name}}";
+            var status = "{{data.status}}";
             if (message !== '') {
                 expiry = new Date();
                 expiry.setTime(expiry.getTime()+(3600*1000));
                 document.cookie = "name="+name+"; expires=" + expiry.toGMTString();
                 document.cookie = "email="+email+"; expires=" + expiry.toGMTString();
+                document.cookie = "status="+status+"; expires=" + expiry.toGMTString();
                 document.getElementById("user").classList.remove("hidden");
                 document.getElementById("login").classList.add("hidden");
                 document.getElementById("user").innerHTML = name;
