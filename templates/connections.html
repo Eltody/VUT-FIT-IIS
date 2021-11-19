@@ -37,11 +37,10 @@
                     <div class="resultFlex">
                         <div class="animate__animated animate__fadeIn animate__faster">
                             <div class="resultWrap">
-                                <div class="resultContent">
+                                <div class="resultContent" id="content">
                                     <h3 id="notFound" class="hidden" style="color: red; margin: 0;">Žiadny spoj nebol nájdený</h3>
                                     <h3 id="Found">Nájdené spoje:</h3>
                                     <div id="results" style="display: contents;"></div>
-                                    <input type="button" id="loadMore" class="buttonSearch" value="Načítať ďalšie spoje"/>
                                 </div>
                             </div>
                         </div>
@@ -181,6 +180,13 @@
                     divMain.appendChild(div3);
                     results.appendChild(divMain);
                 };
+                var input = document.createElement("input");
+                    input.setAttribute("type", "button");
+                    input.setAttribute("id", "loadMore");
+                    input.classList.add("buttonSearch");
+                    input.setAttribute("value", "Načítať ďalšie spoje");
+                results = document.getElementById(results.parentNode.id);
+                results.appendChild(input);
             };
         </script>
         <script>
@@ -213,11 +219,12 @@
             let buy2 = null;
             let data = {{data|tojson}};
             let oldData = data;
-            result(data);
-            if (data === "[]") {
+            if (data.length === 0) {
                 document.getElementById("notFound").classList.remove("hidden");
                 document.getElementById("Found").classList.add("hidden");
-            }
+            } else {
+                result(data);
+            };
         </script>
         <script>
             function buy(elem){
