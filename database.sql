@@ -168,12 +168,20 @@ INSERT INTO Administrator (meno, priezvisko, email, heslo)
 VALUES ('Admin', 'Admin', 'admin@admin.com', 'password');
 
 INSERT INTO Cestujuci (meno, priezvisko, email, heslo)
-VALUES ('Ko', 'Kotko', 'debilko@dement.dementor', 'pstrosS5');
+VALUES ('Roman', 'Holota', 'romco22@gmail.com', 'R0m4nk0');
+INSERT INTO Cestujuci (meno, priezvisko, email, heslo)
+VALUES ('Sabína', 'Machajdíková', 'sabina.machaj@gmail.com', 'jALfba156');
+INSERT INTO Cestujuci (meno, priezvisko, email, heslo)
+VALUES ('Ema', 'Madunická', 'debilko@dement.dementor', 'pstrosS5');
+INSERT INTO Cestujuci (meno, priezvisko, email, heslo)
+VALUES ('Nikoleta', 'Znachorová', 'nikoleta2000@zoznam.sk', 'nikA2000');
+INSERT INTO Cestujuci (meno, priezvisko, email, heslo)
+VALUES ('Petr', 'Kučera', 'pet.kucera@seznam.cz', 'maoHaN59');
 
 INSERT INTO Zastavky (nazov_zastavky)
 VALUES ('Brno - ÚAN Zvonařka');
 INSERT INTO Zastavky (nazov_zastavky)
-VALUES ('Hradec Králové - Terminál HD');
+VALUES ('Hradec Králové - Ter. HD');
 INSERT INTO Zastavky (nazov_zastavky)
 VALUES ('Jihlava - aut.nádr.');
 INSERT INTO Zastavky (nazov_zastavky)
