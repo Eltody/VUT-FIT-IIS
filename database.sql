@@ -66,9 +66,10 @@ CREATE TABLE Zastavky(
 CREATE TABLE Jizdenka(
     id INT(11) NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (id),
-    meno VARCHAR(40) NOT NULL,
-    id_spoj_jizdenky INT,
-    id_zastavky_jizdenky INT (40),
+    pocet_miest INTEGER,
+    datum VARCHAR(20),
+    id_spoj_jizdenky INTEGER,
+    id_zastavky_jizdenky INTEGER,
     id_personal_jizdenka INTEGER,
     id_cestujuci_jizdenka INTEGER,
     CONSTRAINT PK_id_spoj_jizdenky
@@ -688,3 +689,97 @@ INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
 VALUES ('43', '1', '14:05'); -- Brno
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('11', '43'); -- flix bus, Ostrava-Zlin-Brno
+
+
+# PRIDELENIE PERSONALU K SPOJOM
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('1', '1');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('2', '2');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('3', '3');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('4', '4');
+
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('5', '5');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('5', '6');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('5', '7');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('5', '8');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('5', '9');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('5', '10');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('5', '11');
+
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('6', '12');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('7', '13');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('6', '14');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('6', '15');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('6', '16');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('7', '17');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('7', '18');
+
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('8', '19');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('8', '20');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('8', '21');
+
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '22');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '23');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '24');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '25');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '26');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '27');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '28');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '29');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '30');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '31');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '32');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '33');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '34');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '35');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '36');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '37');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '38');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('9', '39');
+
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('10', '40');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('11', '41');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('10', '42');
+INSERT INTO Personal_Spoj (id_personalu, id_spoju)
+VALUES ('11', '43');

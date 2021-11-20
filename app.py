@@ -542,8 +542,8 @@ def validate(regOrSignIn):
         cestujuci.close()
         administrator.close()
         personal.close()
-        data = {'message': 'log'}
-        data = json.dumps(data)
+        data = 'log'
+        #data = json.dumps(data)
         return data
 
     if regOrSignIn == 'register':
@@ -599,7 +599,28 @@ def purchase(signedInOrOneTime):
     date = data[7]
     price = data[9]
 
+    # ziskanie id cestujuceho
+    #cursor1 = connection.cursor()
+    #cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % user_email)
+    #idOfUser = cursor1.fetchone()
+    #cursor1.close()
+    #print(idOfUser)
 
+    # ziskanie id personalu daneho spoju
+    #cursor1 = connection.cursor()
+    #cursor1.execute("SELECT id FROM Personal_Spoj WHERE id_spoju='%s';" % numberOfConnection)
+    #idOfPersonal = cursor1.fetchone()
+    #cursor1.close()
+    #print(idOfPersonal)
+
+
+
+    #cursor1 = connection.cursor()
+    #cursor1.execute(
+    #    "insert into `Jizdenka` (pocet_miest, datum, id_spoj_jizdenky, id_cestujuci_jizdenka) VALUES (%s, %s, %s, %s)",
+    #    (numberOfTickets, date, numberOfConnection, idOfUser))
+    #connection.commit()
+    #cursor1.close()
 
 
     # signedIn
