@@ -315,26 +315,30 @@
                 for (var i = 0; i < cookies.length; i++) {
                     c.push(cookies[i].split('='));
                 }
-                if (typeof document.getElementById("formBuy" + buy2) === 'undefined' || document.getElementById("formBuy" + buy2) === null) {
+                if (typeof document.getElementById("formBuyButtons" + buy2) === 'undefined' || document.getElementById("formBuyButtons" + buy2) === null) {
+                    elem.style.background = "white";
                     var buy = document.getElementById(elem.parentNode.parentNode.parentNode.id);
                     buy2 = buy.id;
                     if (signIn == false) {
                         var purchaseButtons = document.createElement("div");
-                            purchaseButtons.setAttribute("id", "formBuy" + buy.id);
+                            purchaseButtons.setAttribute("id", "formBuyButtons" + buy.id);
                             purchaseButtons.classList.add("purchaseButtons");
                             var buttonLogin = document.createElement("a");
                                 buttonLogin.innerHTML = "Prihlásiť sa";
                                 buttonLogin.setAttribute("onclick", "login(this)");
+                                buttonLogin.setAttribute("id", "buttonLogin");
                                 buttonLogin.setAttribute("href", "#");
                             purchaseButtons.appendChild(buttonLogin);
                             var buttonRegister = document.createElement("a");
                                 buttonRegister.innerHTML = "Registrovať";
                                 buttonRegister.setAttribute("onclick", "register(this)");
+                                buttonRegister.setAttribute("id", "buttonRegister");
                                 buttonRegister.setAttribute("href", "#");
                             purchaseButtons.appendChild(buttonRegister);
                             var buttonOneTime = document.createElement("a");
                                 buttonOneTime.innerHTML = "Jednorazový nákup";
                                 buttonOneTime.setAttribute("onclick", "oneTime(this)");
+                                buttonOneTime.setAttribute("id", "buttonOneTime");
                                 buttonOneTime.setAttribute("href", "#");
                             purchaseButtons.appendChild(buttonOneTime);
                         buy.appendChild(purchaseButtons);
@@ -380,27 +384,36 @@
                         buy.appendChild(purchaseForm);
                     };
                 } else {
+                    elem.style.background = "white";
+                    document.getElementById("button" + buy2).style.background = "rgba(255, 255, 255, 0.5)";
                     if (signIn == false) {
                         var buy = document.getElementById(elem.parentNode.parentNode.parentNode.id);
-                        var remove = document.getElementById("formBuy" + buy2);
-                        remove.remove();
+                        var remove1 = document.getElementById("formBuyButtons" + buy2);
+                        var remove2 = document.getElementById("formBuy" + buy2);
+                        remove1.remove();
+                        if (typeof remove2 !== 'undefined' && remove2 !== null) {
+                            remove2.remove();
+                        }
                         if (buy2 != buy.id) {
                             var purchaseButtons = document.createElement("div");
-                                purchaseButtons.setAttribute("id", "formBuy" + buy.id);
+                                purchaseButtons.setAttribute("id", "formBuyButtons" + buy.id);
                                 purchaseButtons.classList.add("purchaseButtons");
                                 var buttonLogin = document.createElement("a");
                                     buttonLogin.innerHTML = "Prihlásiť sa";
                                     buttonLogin.setAttribute("onclick", "login(this)");
+                                    buttonLogin.setAttribute("id", "buttonLogin");
                                     buttonLogin.setAttribute("href", "#");
                                 purchaseButtons.appendChild(buttonLogin);
                                 var buttonRegister = document.createElement("a");
                                     buttonRegister.innerHTML = "Registrovať";
                                     buttonRegister.setAttribute("onclick", "register(this)");
+                                    buttonRegister.setAttribute("id", "buttonRegister");
                                     buttonRegister.setAttribute("href", "#");
                                 purchaseButtons.appendChild(buttonRegister);
                                 var buttonOneTime = document.createElement("a");
                                     buttonOneTime.innerHTML = "Jednorazový nákup";
                                     buttonOneTime.setAttribute("onclick", "oneTime(this)");
+                                    buttonOneTime.setAttribute("id", "buttonOneTime");
                                     buttonOneTime.setAttribute("href", "#");
                                 purchaseButtons.appendChild(buttonOneTime);
                             buy.appendChild(purchaseButtons);
@@ -430,10 +443,14 @@
         </script>
         <script>
             function login(elem) {
-                var buy = document.getElementById(elem.parentNode.parentNode.id);
                 var remove = document.getElementById("formBuy" + buy2);
-                remove.remove();
-
+                if (typeof remove !== 'undefined' && remove !== null) {
+                    document.getElementById("buttonRegister").style.background = "rgba(0, 0, 0, 0.2)";
+                    document.getElementById("buttonOneTime").style.background = "rgba(0, 0, 0, 0.2)";
+                    remove.remove();
+                }
+                document.getElementById("buttonLogin").style.background = "white";
+                var buy = document.getElementById(elem.parentNode.parentNode.id);
                 var formBuy = document.createElement("form");
                     formBuy.classList.add("purchaseNotLoggedForm");
                     formBuy.setAttribute("action", "/signIn");
@@ -500,10 +517,14 @@
             };
 
             function register(elem) {
-                var buy = document.getElementById(elem.parentNode.parentNode.id);
                 var remove = document.getElementById("formBuy" + buy2);
-                remove.remove();
-
+                if (typeof remove !== 'undefined' && remove !== null) {
+                    document.getElementById("buttonLogin").style.background = "rgba(0, 0, 0, 0.2)";
+                    document.getElementById("buttonOneTime").style.background = "rgba(0, 0, 0, 0.2)";
+                    remove.remove();
+                }
+                document.getElementById("buttonRegister").style.background = "white";
+                var buy = document.getElementById(elem.parentNode.parentNode.id);
                 var formBuy = document.createElement("form");
                     formBuy.classList.add("purchaseNotLoggedForm");
                     formBuy.setAttribute("action", "/purchase");
@@ -600,10 +621,14 @@
             };
 
             function oneTime(elem) {
-                var buy = document.getElementById(elem.parentNode.parentNode.id);
                 var remove = document.getElementById("formBuy" + buy2);
-                remove.remove();
-
+                if (typeof remove !== 'undefined' && remove !== null) {
+                    document.getElementById("buttonLogin").style.background = "rgba(0, 0, 0, 0.2)";
+                    document.getElementById("buttonRegister").style.background = "rgba(0, 0, 0, 0.2)";
+                    remove.remove();
+                }
+                document.getElementById("buttonOneTime").style.background = "white";
+                var buy = document.getElementById(elem.parentNode.parentNode.id);
                 var formBuy = document.createElement("form");
                     formBuy.classList.add("purchaseNotLoggedForm");
                     formBuy.setAttribute("action", "/registration");

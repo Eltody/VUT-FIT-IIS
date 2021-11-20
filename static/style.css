@@ -424,6 +424,7 @@ h1, h2, h3, h4, h5, h6, figure {
     font-weight: 600;
     border-radius: 5px 5px 5px 5px;
     box-shadow: inset 1px 1px 10px #333;
+    border: 2px solid rgba(0, 0, 0, 0.3);
     background: rgba(0, 0, 0, 0.2);
 }
 .purchaseButtons a:hover {
