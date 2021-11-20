@@ -510,10 +510,8 @@ def editUsers():
 def validate(regOrSignIn):
     global loginData
     user_email = request.form['email']
-    print(user_email)
     if regOrSignIn == 'signIn':
         password = request.form['password']
-        print(password)
         # kontrola spravnosti prihlasovacich udajov z webu a DB
         cestujuci = connection.cursor()
         administrator = connection.cursor()
@@ -547,10 +545,6 @@ def validate(regOrSignIn):
         return data
 
     if regOrSignIn == 'register':
-        fname = request.form['fname']
-        lname = request.form['lname']
-        password = request.form['password']
-
         cursor = connection.cursor()
         cursor.execute("SELECT email FROM Cestujuci")
         for (email) in cursor:
@@ -562,12 +556,6 @@ def validate(regOrSignIn):
                 return data
         cursor.close()
 
-        cursor = connection.cursor()
-        cursor.execute("insert into `Cestujuci` (meno, priezvisko, email, heslo) VALUES (%s, %s, %s, %s)",
-                       (fname, lname, user_email, password))
-        connection.commit()
-        cursor.close()
-
         loginData = 'success'
         #loginData = json.dumps(loginData)
         return loginData
@@ -577,64 +565,99 @@ def validate(regOrSignIn):
 @app.route('/purchase/<signedInOrOneTime>', methods=['GET', 'POST'])
 def purchase(signedInOrOneTime):
     global loginData
-    signedIn = False
-    oneTime = False
 
     # ziskanie spoju, na ktory vytvorim jizdenku
-    data = request.form['data']
+    tmp_data = request.form['data']
+    data = list(tmp_data.split(","))
     numberOfTickets = request.form['number']  # pocet listkov
-    print(data)
-    print(numberOfTickets)
 
     user_email = request.form['email']
-    print(user_email)
 
+    # jednorazovy nakup
+    if signedInOrOneTime == 'oneTime':
+        fname = request.form['fname']
+        lname = request.form['lname']
+        password = ' '      # registracia bez hesla, pretoze je to jednorazovy nakup
+        cursor = connection.cursor()
+        cursor.execute("insert into `Cestujuci` (meno, priezvisko, email, heslo) VALUES (%s, %s, %s, %s)",
+                       (fname, lname, user_email, password))
+        connection.commit()
+        cursor.close()
+
+    # registrovat
+    if signedInOrOneTime == 'register':
+        fname = request.form['fname']
+        lname = request.form['lname']
+        password = request.form['password']
+
+        cursor = connection.cursor()
+        cursor.execute("insert into `Cestujuci` (meno, priezvisko, email, heslo) VALUES (%s, %s, %s, %s)",
+                       (fname, lname, user_email, password))
+        connection.commit()
+        cursor.close()
+
+    cities = [] # zoznam pre ulozenie miest, odkial kam ide spoj jizdenky a nasledne to sluzi pre ziskanie id danych miest
     # data parsing
     numberOfConnection = data[0]
-    fromCity = data[1]
+    cities.append(data[1])
     timeFromCity = data[2]
-    toCity = data[3]
+    cities.append(data[3])
     timeToCity = data[4]
     carrier_name = data[5]
     date = data[7]
     price = data[9]
+
 
     # ziskanie id cestujuceho
     cursor1 = connection.cursor()
     cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % user_email)
     idOfUser = cursor1.fetchone()
     cursor1.close()
-    print(idOfUser)
+    idOfUser = idOfUser[0]
 
     # ziskanie id personalu daneho spoju
     cursor1 = connection.cursor()
-    cursor1.execute("SELECT id FROM Personal_Spoj WHERE id_spoju='%s';" % numberOfConnection)
+    cursor1.execute("SELECT id_personalu FROM Personal_Spoj WHERE id_spoju='%s';" % numberOfConnection)
     idOfPersonal = cursor1.fetchone()
     cursor1.close()
-    print(idOfPersonal)
-
-
-
-    #cursor1 = connection.cursor()
-    #cursor1.execute(
-    #    "insert into `Jizdenka` (pocet_miest, datum, id_spoj_jizdenky, id_cestujuci_jizdenka) VALUES (%s, %s, %s, %s)",
-    #    (numberOfTickets, date, numberOfConnection, idOfUser))
-    #connection.commit()
-    #cursor1.close()
-
-
-    # signedIn
-    if signedInOrOneTime == 'signedIn':
-        signedIn = True
-
-    # oneTime
-    if signedInOrOneTime == 'oneTime':
-        oneTime = True
+    idOfPersonal = idOfPersonal[0]
 
     # vytvorenie jizdenky
+    cursor1 = connection.cursor()
+    cursor1.execute(
+        "insert into `Jizdenka` (pocet_miest, datum, id_spoj_jizdenky, id_cestujuci_jizdenka, id_personal_jizdenka) VALUES (%s, %s, %s, %s, %s)",
+        (numberOfTickets, date, numberOfConnection, idOfUser, idOfPersonal))
+    connection.commit()
+    cursor1.close()
 
-    # odcitanie poctu miest z daneho spoju
+    # ziskanie id novo vytvorenej jizdenky
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Jizdenka WHERE datum='%s' and id_spoj_jizdenky='%s';" % (date, numberOfConnection))
+    idOfTicket = cursor1.fetchone()
+    cursor1.close()
 
+    # ziskanie id zastavok pre vlozenie do tabulky Jizdenka-Zastavky - pre kt. mesta je vystavena jizdenka
+    for i in range(2):
+        cursor1 = connection.cursor()
+        cursor1.execute("SELECT id FROM Zastavky WHERE nazov_zastavky='%s';" % cities[i])
+        idOfCity = cursor1.fetchone()
+        cursor1.close()
+        idOfCity = idOfCity[0]
+
+        cursor1 = connection.cursor()
+        cursor1.execute(
+        "insert into `Jizdenka_Zastavky` (id_jizdenka, id_zastavka) VALUES (%s, %s)", (idOfTicket, idOfCity))
+        connection.commit()
+        cursor1.close()
+
+
+    # TODO odcitanie poctu miest z daneho spoju
+
+
+
+    loginData = 'success'
+    # loginData = json.dumps(loginData)
+    return loginData
 
 class databaseCheck(threading.Thread):
     def run(self, *args, **kwargs):

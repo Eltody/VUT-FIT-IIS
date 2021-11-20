@@ -1,3 +1,4 @@
+DROP TABLE Jizdenka_Zastavky;
 DROP TABLE Symboly;
 DROP TABLE Personal_Spoj;
 DROP TABLE Vozidlo_Spoj;
@@ -69,14 +70,10 @@ CREATE TABLE Jizdenka(
     pocet_miest INTEGER,
     datum VARCHAR(20),
     id_spoj_jizdenky INTEGER,
-    id_zastavky_jizdenky INTEGER,
     id_personal_jizdenka INTEGER,
     id_cestujuci_jizdenka INTEGER,
     CONSTRAINT PK_id_spoj_jizdenky
 		FOREIGN KEY (id_spoj_jizdenky) REFERENCES Spoj (id)
-		ON DELETE CASCADE,
-    CONSTRAINT PK_id_zastavky_jizdenky
-		FOREIGN KEY (id_zastavky_jizdenky) REFERENCES Zastavky (id)
 		ON DELETE CASCADE,
     CONSTRAINT PK_id_personal_jizdenka
 		FOREIGN KEY (id_personal_jizdenka) REFERENCES Personal (id)
@@ -157,6 +154,19 @@ CREATE TABLE Symboly(
     id INT(11) NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (id),
     symbol VARCHAR(10)
+);
+
+CREATE TABLE Jizdenka_Zastavky(
+    id_jizdenka INTEGER,-- primarni klic
+    id_zastavka INTEGER,
+    CONSTRAINT Personal_Spoj_PK
+		PRIMARY KEY (id_jizdenka, id_zastavka),
+	CONSTRAINT Jizdenka_Zastavky_id_jizdenka_FK
+		FOREIGN KEY (id_jizdenka) REFERENCES Jizdenka (id)
+		ON DELETE CASCADE,
+	CONSTRAINT Jizdenka_Zastavky_id_zastavka_FK
+		FOREIGN KEY (id_zastavka) REFERENCES Zastavky (id)
+		ON DELETE CASCADE
 );
 
 INSERT INTO Symboly(symbol)
@@ -783,3 +793,6 @@ INSERT INTO Personal_Spoj (id_personalu, id_spoju)
 VALUES ('10', '42');
 INSERT INTO Personal_Spoj (id_personalu, id_spoju)
 VALUES ('11', '43');
+
+
+
