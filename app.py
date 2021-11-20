@@ -3,7 +3,7 @@ import time
 import json
 import pymysql  # pip install pymysql
 import datetime  # pip install datetime
-import requests # pip install requests
+import requests  # pip install requests
 import threading
 
 app = Flask(__name__)
@@ -34,12 +34,13 @@ def index():
 
 @app.route('/search/<boolLoadMore>/<lastConnectionOnWeb>', methods=['GET', 'POST'])
 def search(boolLoadMore, lastConnectionOnWeb):
-    if boolLoadMore == 'connections':   # bezne volanie funkcie search - prve volanie tejto funkcie (connections len preto aby dobre vyzerala URL)
+    if boolLoadMore == 'connections':  # bezne volanie funkcie search - prve volanie tejto funkcie (connections len preto aby dobre vyzerala URL)
         fromCity = request.form['fromCity']
         toCity = request.form['toCity']
         timeFromDate = request.form['date']
     else:  # z funkcie LoadMore: nacitanie dalsich spojov, lastConnectionOnWeb je posledny zobrazeny prvok na stranke
-        lastConnectionOnWeb = lastConnectionOnWeb[1:-1]     # KEBY NIECO NEFUNGOVALO TAK ZMENIT ELSE: NA ELIF BOOLLOADMORE == True:
+        lastConnectionOnWeb = lastConnectionOnWeb[
+                              1:-1]  # KEBY NIECO NEFUNGOVALO TAK ZMENIT ELSE: NA ELIF BOOLLOADMORE == True:
         lastConnectionOnWeb = lastConnectionOnWeb.split(',')
         fromCity = lastConnectionOnWeb[1]
         toCity = lastConnectionOnWeb[3]
@@ -245,7 +246,9 @@ def search(boolLoadMore, lastConnectionOnWeb):
 
                             # vyhladanie casu prejazdu cez dane mesto
                             cursor2 = connection.cursor()
-                            cursor2.execute("SELECT cas_prejazdu FROM Spoj_Zastavka WHERE id_zastavky='%s' and id_spoju='%s';" % (i, connectionNumber))
+                            cursor2.execute(
+                                "SELECT cas_prejazdu FROM Spoj_Zastavka WHERE id_zastavky='%s' and id_spoju='%s';" % (
+                                i, connectionNumber))
                             timeOfDeparture = cursor2.fetchone()
                             cursor2.close()
 
@@ -257,23 +260,27 @@ def search(boolLoadMore, lastConnectionOnWeb):
                                 modifiedTimeOfDeparture.insert(-2, ':')
                                 tmp_str = ""
                                 modifiedTimeOfDeparture = tmp_str.join(modifiedTimeOfDeparture)
-                                allCitiesOfConnection.append([cityNameConnection[0], timeOfDeparture, modifiedTimeOfDeparture])
+                                allCitiesOfConnection.append(
+                                    [cityNameConnection[0], timeOfDeparture, modifiedTimeOfDeparture])
 
                         # sortovanie casov od najvacsieho po najmensi - ale ako medzispoje sa na stranke zobrazuju od najmensieho po najvacsie
                         allCitiesOfConnection.sort(key=lambda y: y[1], reverse=True)
 
-                        allCitiesOfConnection = allCitiesOfConnection[1:-1] #posielanie len medzizastavok - vymazanie prveho a posledneho prvku - zaciatok cesty a ciel
+                        allCitiesOfConnection = allCitiesOfConnection[
+                                                1:-1]  # posielanie len medzizastavok - vymazanie prveho a posledneho prvku - zaciatok cesty a ciel
 
                         # zaverecne appendovanie dat do zoznamov
                         if tmp_timeFromCity > timeFromDate and not nextDay and counterOfConnections < 5:  # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
                             possibleBusConnections.append(
                                 [connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name,
-                                 availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection, allCitiesOfConnection])
+                                 availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection,
+                                 allCitiesOfConnection])
                             counterOfConnections += 1
                         if nextDay and counterOfConnections < 5:  # pre dalsie spoje, na dalsi den - rovnake spoje, len datum o cislo vyssi a od zaciatku dna 00:00 vsetky, nie len najblizsie v dany den
                             laterPossibleBusConnections.append(
                                 [connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name,
-                                 availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection, allCitiesOfConnection])
+                                 availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection,
+                                 allCitiesOfConnection])
                             counterOfConnections += 1
 
     possibleBusConnections = possibleBusConnections + laterPossibleBusConnections  # spojenie najblizsich vyhovujucich spojov a spojov pre dalsi den napr
@@ -372,12 +379,14 @@ def registration():
     cursor.close()
 
     cursor = connection.cursor()
-    cursor.execute("insert into `Cestujuci` (meno, priezvisko, email, heslo) VALUES (%s, %s, %s, %s)", (fname, lname, user_email, password))
+    cursor.execute("insert into `Cestujuci` (meno, priezvisko, email, heslo) VALUES (%s, %s, %s, %s)",
+                   (fname, lname, user_email, password))
     connection.commit()
     cursor.close()
 
     loginData = {'message': 'login', 'email': user_email, 'name': fname, 'status': 'cestujuci'}
     return index()
+
 
 # DOPRAVCA
 @app.route('/carrier/addVehicle/<carrier_name>', methods=['GET', 'POST'])
@@ -399,7 +408,7 @@ def addVehicle(carrier_name):
     cursor1.execute("SELECT id FROM Dopravca WHERE nazov='%s';" % carrierName)
     idOfCarrier = cursor1.fetchone()
     cursor1.close()
-    idOfCarrier = idOfCarrier[0]    # ziskanie z listu len prvy prvok - integer (id dopravcu)
+    idOfCarrier = idOfCarrier[0]  # ziskanie z listu len prvy prvok - integer (id dopravcu)
 
     print(idOfCarrier)
     print(carrierName)
@@ -408,10 +417,12 @@ def addVehicle(carrier_name):
 
     # pridanie vozidla do DB
     cursor1 = connection.cursor()
-    cursor1.execute("insert into `Vozidlo` (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo) VALUES (%s, %s, %s, %s)",
-                   (numberOfSeats, descriptionOfBus, actualLocation, idOfCarrier))
+    cursor1.execute(
+        "insert into `Vozidlo` (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo) VALUES (%s, %s, %s, %s)",
+        (numberOfSeats, descriptionOfBus, actualLocation, idOfCarrier))
     connection.commit()
     cursor1.close()
+
 
 # DOPRAVCA
 @app.route('/carrier/addPersonal/<carrier_name>', methods=['GET', 'POST'])
@@ -449,6 +460,7 @@ def addPersonal(carrier_name):
     # TODO EDIT A MAZANIE UZIVALELSKYCH UCTOV PERSONALU DANEHO DOPRAVCU
     # https://swcarpentry.github.io/sql-novice-survey/09-create/index.html
 
+
 # DOPRAVCA
 @app.route('/carrier/showMyVehicles/<carrier_name>', methods=['GET', 'POST'])
 def showMyVehicles(carrier_name):
@@ -467,7 +479,8 @@ def showMyVehicles(carrier_name):
 
     # ziskanie vsetkych vozidiel, pre edit a mazanie dopravcom
     cursor1 = connection.cursor()
-    cursor1.execute("SELECT id, pocet_miest, popis_vozidla, aktualna_poloha FROM Vozidlo WHERE id_dopravca_vozidlo='%s';" % idOfCarrier)
+    cursor1.execute(
+        "SELECT id, pocet_miest, popis_vozidla, aktualna_poloha FROM Vozidlo WHERE id_dopravca_vozidlo='%s';" % idOfCarrier)
     allVehicles = cursor1.fetchall()
     cursor1.close()
 
@@ -475,6 +488,7 @@ def showMyVehicles(carrier_name):
 
     # TODO EDITOVANIE A MAZANIE VOZIDIEL Z DB
     # https://swcarpentry.github.io/sql-novice-survey/09-create/index.html
+
 
 # ADMIN
 @app.route('/admin/editUsers/', methods=['GET', 'POST'])
@@ -490,6 +504,115 @@ def editUsers():
     print(allUsers)
 
     # TODO EDIT UZIVATELSKYCH INFO A PREPISANIE NOVYCH INFO DO DATABAZY
+
+# kontrola pri nakupe listka ci uzivatel klikol na registrovat alebo prihlasit
+@app.route('/validate/<regOrSignIn>', methods=['GET', 'POST'])
+def validate(regOrSignIn):
+    global loginData
+    user_email = request.form['email']
+    print(user_email)
+    if regOrSignIn == 'signIn':
+        password = request.form['password']
+        print(password)
+        # kontrola spravnosti prihlasovacich udajov z webu a DB
+        cestujuci = connection.cursor()
+        administrator = connection.cursor()
+        personal = connection.cursor()
+        cestujuci.execute("SELECT meno, email, heslo FROM Cestujuci")
+        administrator.execute("SELECT meno, email, heslo FROM Administrator")
+        personal.execute("SELECT meno, email, heslo FROM Personal")
+        for (meno, email, heslo) in cestujuci:
+            if email == user_email and heslo == password:
+                cestujuci.close()
+                loginData = {'message': 'success'}
+                loginData = json.dumps(loginData)
+                return loginData
+        for (meno, email, heslo) in administrator:
+            if email == user_email and heslo == password:
+                administrator.close()
+                loginData = {'message': 'success'}
+                loginData = json.dumps(loginData)
+                return loginData
+        for (meno, email, heslo) in personal:
+            if email == user_email and heslo == password:
+                personal.close()
+                loginData = {'message': 'success'}
+                loginData = json.dumps(loginData)
+                return loginData
+        cestujuci.close()
+        administrator.close()
+        personal.close()
+        data = {'message': 'log'}
+        data = json.dumps(data)
+        return data
+
+    if regOrSignIn == 'register':
+        fname = request.form['fname']
+        lname = request.form['lname']
+        password = request.form['password']
+
+        cursor = connection.cursor()
+        cursor.execute("SELECT email FROM Cestujuci")
+        for (email) in cursor:
+            email = ''.join(email)
+            if email == user_email:
+                cursor.close()
+                data = {'message': 'reg'}
+                data = json.dumps(data)
+                return data
+        cursor.close()
+
+        cursor = connection.cursor()
+        cursor.execute("insert into `Cestujuci` (meno, priezvisko, email, heslo) VALUES (%s, %s, %s, %s)",
+                       (fname, lname, user_email, password))
+        connection.commit()
+        cursor.close()
+
+        loginData = {'message': 'success'}
+        loginData = json.dumps(loginData)
+        return loginData
+
+
+# nakup listkana konkretny spoj
+@app.route('/purchase/<signedInOrOneTime>', methods=['GET', 'POST'])
+def purchase(signedInOrOneTime):
+    global loginData
+    signedIn = False
+    oneTime = False
+
+    # ziskanie spoju, na ktory vytvorim jizdenku
+    data = request.form['data']
+    numberOfTickets = request.form['number']  # pocet listkov
+    print(data)
+    print(numberOfTickets)
+
+    user_email = request.form['email']
+    print(user_email)
+
+    # data parsing
+    numberOfConnection = data[0]
+    fromCity = data[1]
+    timeFromCity = data[2]
+    toCity = data[3]
+    timeToCity = data[4]
+    carrier_name = data[5]
+    date = data[7]
+    price = data[9]
+
+
+
+
+    # signedIn
+    if signedInOrOneTime == 'signedIn':
+        signedIn = True
+
+    # oneTime
+    if signedInOrOneTime == 'oneTime':
+        oneTime = True
+
+    # vytvorenie jizdenky
+
+    # odcitanie poctu miest z daneho spoju
 
 
 class databaseCheck(threading.Thread):
