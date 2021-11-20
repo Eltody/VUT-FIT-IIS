@@ -142,9 +142,11 @@
         </script>
         <script>
             var select = document.getElementById('toCity');
-            var items = select.getElementsByTagName('option');
-            var index = Math.floor(Math.random() * (items.length - 1) + 1);
-            select.selectedIndex = index;
+            for (var i = 0; i < select.length; i++) {
+                if (select[i].childNodes[0].nodeValue === 'Praha - Hlavní nádraží'){
+                    select.selectedIndex = i;
+                };
+            };
         </script>
         <script>
             var now = new Date();
