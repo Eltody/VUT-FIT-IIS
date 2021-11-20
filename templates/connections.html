@@ -506,6 +506,14 @@
                                 iPlus.classList.add("fa-plus-square");
                             amountDiv.appendChild(iPlus);
                         formBuyButtons.appendChild(amountDiv);
+                        var dataStorage = document.createElement("input");
+                            dataStorage.style.display = "none";
+                            dataStorage.setAttribute("type", "text");
+                            dataStorage.setAttribute("name", "data");
+                            dataStorage.setAttribute("id", "data");
+                            dataStorage.setAttribute("value", data[1]);
+                        formBuyButtons.appendChild(dataStorage);
+                            console.log(data);
                             var purchaseButton = document.createElement("button");
                             purchaseButton.setAttribute("type", "submit");
                             var a = document.createElement("a");
