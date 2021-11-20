@@ -12,7 +12,7 @@ try:
 except pymysql.Error as error:
     webhookUrl = 'https://maker.ifttt.com/trigger/error/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
     requests.post(webhookUrl, headers={'Content-Type': 'application/json'})
-    print("Cannot connect to database. Error: " + error)
+    print("Cannot connect to database. Error: " + str(error))
 emails = []
 loginData = {}
 
