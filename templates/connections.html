@@ -530,6 +530,7 @@
                             dataStorage.setAttribute("value", data[document.getElementById(buy2).getAttribute("name")]);
                         formBuyButtons.appendChild(dataStorage);
                             var purchaseButton = document.createElement("button");
+                            purchaseButton.setAttribute("type", "button");
                             purchaseButton.setAttribute("id", "login");
                             var a = document.createElement("a");
                                 a.innerHTML = "Kúpiť";
@@ -641,6 +642,7 @@
                             dataStorage.setAttribute("value", data[document.getElementById(buy2).getAttribute("name")]);
                         formBuyButtons.appendChild(dataStorage);
                             var purchaseButton = document.createElement("button");
+                            purchaseButton.setAttribute("type", "button");
                             purchaseButton.setAttribute("id", "register");
                             var a = document.createElement("a");
                                 a.innerHTML = "Kúpiť";
@@ -742,38 +744,6 @@
             }
         </script>
         <script>
-            $(function() {
-                $("#login").click(function (event) {
-                    $.post('/validate/signIn', {"email": "email", "password": "test2"})
-                    .done(function(data) {
-                        var message = "{{data.message}}";
-                        if (message === 'reg') {
-                            document.getElementById("regError").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
-                        } else if (message === 'log') {
-                            document.getElementById("logError").innerHTML = "Chybne zadaný email alebo heslo."
-                        } else {
-                            document.getElementById("formBuy" + buy2).submit();
-                        };
-                    });
-                });
-            });
-            $(function() {
-                $("#register").click(function (event) {
-                    $.getJSON('/validate/register')
-                    .done(function(data) {
-                        var message = "{{data.message}}";
-                        if (message === 'reg') {
-                            document.getElementById("regError").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
-                        } else if (message === 'log') {
-                            document.getElementById("logError").innerHTML = "Chybne zadaný email alebo heslo."
-                        } else {
-                            document.getElementById("formBuy" + buy2).submit();
-                        };
-                    });
-                });
-            });
-        </script>
-        <script>
             function validatePassword() {
                 var password = document.getElementById("password");
                 var passwordConfirm = document.getElementById("passwordConfirm");
@@ -783,6 +753,38 @@
                     passwordConfirm.setCustomValidity("Heslá sa nezhodujú");
                 };
             };
+        </script>
+        <script>
+            $(document).on('click','#login', function() {
+                var email = $("#email").val();
+                var password = $("#password").val();
+                $.post('/validate/signIn', {"email": email, "password": password})
+                .done(function(data) {
+                    var message = "{{data.message}}";
+                    if (message === 'reg') {
+                        document.getElementById("regError").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
+                    } else if (message === 'log') {
+                        document.getElementById("logError").innerHTML = "Chybne zadaný email alebo heslo."
+                    } else if (message === 'success') {
+                        document.getElementById("formBuy" + buy2).submit();
+                    };
+                });
+            });
+            $(document).on('click','#register', function() {
+                var email = $("#email").val();
+                var password = $("#password").val();
+                $.post('/validate/register', {"email": email, "password": password})
+                .done(function(data) {
+                    var message = "{{data.message}}";
+                    if (message === 'reg') {
+                        document.getElementById("regError").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
+                    } else if (message === 'log') {
+                        document.getElementById("logError").innerHTML = "Chybne zadaný email alebo heslo."
+                    } else if (message === 'success') {
+                        document.getElementById("formBuy" + buy2).submit();
+                    };
+                });
+            });
         </script>
     </body>
 </html>
