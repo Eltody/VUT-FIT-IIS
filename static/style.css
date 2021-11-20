@@ -409,20 +409,30 @@ h1, h2, h3, h4, h5, h6, figure {
 .resultConFooter a:hover {
     box-shadow: 0;
 }
-.purchaseDiv {
+.purchaseButtons {
+    margin-left: 15px;
+    padding: 1px 15px;
+    color: black;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: inset 1px 1px 10px #333;
+    background: rgba(255, 255, 255, 0.5);
+}
+.purchaseForm {
     display: flex;
     align-items: center;
     padding: 10px 25px;
     flex-direction: row;
     justify-content: space-around;
 }
-.purchaseDiv p, .purchaseDiv pre {
+.purchaseForm p, .purchaseForm pre {
     margin: 0;
     padding: 0 0 0 15px;
     color: black;
     font-size: 16px;
 }
-.purchaseDiv div {
+.purchaseForm div {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
