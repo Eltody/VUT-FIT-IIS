@@ -393,6 +393,7 @@
                                 var purchaseButton = document.createElement("button");
                                 purchaseButton.style.margin = "0";
                                 purchaseButton.setAttribute("type", "submit");
+                                purchaseButton.setAttribute("id", "signedIn");
                                 var a = document.createElement("a");
                                     a.innerHTML = "Kúpiť";
                                 purchaseButton.appendChild(a);
@@ -745,6 +746,7 @@
                         formBuyButtons.appendChild(dataStorage);
                             var purchaseButton = document.createElement("button");
                             purchaseButton.setAttribute("type", "submit");
+                            purchaseButton.setAttribute("id", "oneTime");
                             var a = document.createElement("a");
                                 a.innerHTML = "Kúpiť";
                             purchaseButton.appendChild(a);
@@ -789,6 +791,12 @@
                         submitForm();
                     };
                 });
+            });
+            $(document).on('click','#oneTime', function() {
+                submitForm();
+            });
+            $(document).on('click','#signedIn', function() {
+                submitForm();
             });
             function submitForm() {
                 document.getElementById("formBuy" + buy2).submit();
