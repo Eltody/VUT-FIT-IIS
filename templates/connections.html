@@ -25,7 +25,7 @@
                                 <div class="dropdown-content">
                                     <a href="#">Lístky</a>
                                     <a href="#">Profil</a>
-                                    <a onclick="signOut()" href="/">Odhlásiť sa</a>
+                                    <a onclick="signOut()" href="#">Odhlásiť sa</a>
                                 </div>
                             </div>
                         </ul>
@@ -275,9 +275,10 @@
             }
             function signOut() {
                 signIn = false;
-                document.cookie = "name=; Max-Age=0";
-                document.cookie = "email=; Max-Age=0";
-                location.reload();
+                document.cookie = "name=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                document.cookie = "email=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                document.cookie = "status=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                window.location.replace("/");
             }
         </script>
         <script>
@@ -314,55 +315,369 @@
                 for (var i = 0; i < cookies.length; i++) {
                     c.push(cookies[i].split('='));
                 }
-                if (typeof document.getElementById("divBuy" + buy2) === 'undefined' || document.getElementById("divBuy" + buy2) === null) {
-                    var buy = document.getElementById(elem.parentNode.id);
-                    buy2 = document.getElementById(buy.parentNode.id);
-                    buy = document.getElementById(buy2.parentNode.id);
-                    buy2 = buy2.parentNode.id;
-                    console.log(buy);
+                if (typeof document.getElementById("formBuy" + buy2) === 'undefined' || document.getElementById("formBuy" + buy2) === null) {
+                    var buy = document.getElementById(elem.parentNode.parentNode.parentNode.id);
+                    buy2 = buy.id;
                     if (signIn == false) {
                         var purchaseButtons = document.createElement("div");
-                            purchaseButtons.classList.add("");
+                            purchaseButtons.setAttribute("id", "formBuy" + buy.id);
+                            purchaseButtons.classList.add("purchaseButtons");
                             var buttonLogin = document.createElement("a");
                                 buttonLogin.innerHTML = "Prihlásiť sa";
-                                buttonLogin.setAttribute("type", "submit");
-                                buttonLogin.setAttribute("href", "/signIn");
+                                buttonLogin.setAttribute("onclick", "login(this)");
+                                buttonLogin.setAttribute("href", "#");
                             purchaseButtons.appendChild(buttonLogin);
                             var buttonRegister = document.createElement("a");
                                 buttonRegister.innerHTML = "Registrovať";
-                                buttonRegister.setAttribute("type", "submit");
-                                buttonRegister.setAttribute("href", "/registration");
+                                buttonRegister.setAttribute("onclick", "register(this)");
+                                buttonRegister.setAttribute("href", "#");
                             purchaseButtons.appendChild(buttonRegister);
                             var buttonOneTime = document.createElement("a");
                                 buttonOneTime.innerHTML = "Jednorazový nákup";
+                                buttonOneTime.setAttribute("onclick", "oneTime(this)");
+                                buttonOneTime.setAttribute("href", "#");
                             purchaseButtons.appendChild(buttonOneTime);
-                        buy.appendChild("purchaseButtons");
+                        buy.appendChild(purchaseButtons);
                     } else {
-                        var formBuy = document.createElement("div");
-                        formBuy.classList.add("purchaseDiv");
-                        formBuy.setAttribute("id", "formBuy" + buy2);
-                        var formBuyForm = document.createElement("div");
-                            var inputName = document.createElement("input");
-                        formBuyForm.appendChild(inputName);
-                        formBuy.appendChild(formBuyForm);
-                        var formBuyButtons = document.createElement("div");
-                            var buttonBuy = document.createElement("a");
-                            buttonBuy.innerHTML = "Kúpiť";
-                            formBuyButtons.appendChild(buttonBuy);
-                        };
-                        formBuy.appendChild(formBuyButtons);
-                    buy.appendChild(formBuy);
+                        var purchaseForm = document.createElement("form");
+                            purchaseForm.classList.add("purchaseForm");
+                            purchaseForm.setAttribute("action", "/purchase");
+                            purchaseForm.setAttribute("method", "POST");
+                            purchaseForm.setAttribute("id", "formBuy" + buy2);
+                            var amountDiv = document.createElement("div");
+                                var iPassenger = document.createElement("i");
+                                    iPassenger.style.paddingRight = "15px";
+                                    iPassenger.classList.add("fas");
+                                    iPassenger.classList.add("fa-user");
+                                amountDiv.appendChild(iPassenger);
+                                var iMinus = document.createElement("i");
+                                    iMinus.setAttribute("onclick", "sub()");
+                                    iMinus.style.cursor = "pointer";
+                                    iMinus.classList.add("fas");
+                                    iMinus.classList.add("fa-minus-square");
+                                amountDiv.appendChild(iMinus);
+                                var input = document.createElement("input");
+                                    input.setAttribute("type", "text");
+                                    input.setAttribute("name", "number");
+                                    input.setAttribute("id", "number");
+                                    input.setAttribute("value", "1");
+                                    input.disabled = true;
+                                amountDiv.appendChild(input);
+                                var iPlus = document.createElement("i");
+                                    iPlus.setAttribute("onclick", "add()");
+                                    iPlus.style.cursor = "pointer";
+                                    iPlus.classList.add("fas");
+                                    iPlus.classList.add("fa-plus-square");
+                                amountDiv.appendChild(iPlus);
+                            purchaseForm.appendChild(amountDiv);
+                                var purchaseButton = document.createElement("button");
+                                purchaseButton.style.margin = "0";
+                                purchaseButton.setAttribute("type", "submit");
+                                var a = document.createElement("a");
+                                    a.innerHTML = "Kúpiť";
+                                purchaseButton.appendChild(a);
+                            purchaseForm.appendChild(purchaseButton);
+                        buy.appendChild(purchaseForm);
+                    };
                 } else {
-                    var tmp = document.getElementById(elem.parentNode.id);
-                    tmp = document.getElementById(tmp.parentNode.id);
-                    tmp = tmp.parentNode.id;
-                    var isSet = false;
-                    if (buy2 != tmp) {
-                        isSet = true;
+                    if (signIn == false) {
+                        var buy = document.getElementById(elem.parentNode.parentNode.parentNode.id);
+                        var remove = document.getElementById("formBuy" + buy2);
+                        remove.remove();
+                        if (buy2 != buy.id) {
+                            var purchaseButtons = document.createElement("div");
+                                purchaseButtons.setAttribute("id", "formBuy" + buy.id);
+                                purchaseButtons.classList.add("purchaseButtons");
+                                var buttonLogin = document.createElement("a");
+                                    buttonLogin.innerHTML = "Prihlásiť sa";
+                                    buttonLogin.setAttribute("onclick", "login(this)");
+                                    buttonLogin.setAttribute("href", "#");
+                                purchaseButtons.appendChild(buttonLogin);
+                                var buttonRegister = document.createElement("a");
+                                    buttonRegister.innerHTML = "Registrovať";
+                                    buttonRegister.setAttribute("onclick", "register(this)");
+                                    buttonRegister.setAttribute("href", "#");
+                                purchaseButtons.appendChild(buttonRegister);
+                                var buttonOneTime = document.createElement("a");
+                                    buttonOneTime.innerHTML = "Jednorazový nákup";
+                                    buttonOneTime.setAttribute("onclick", "oneTime(this)");
+                                    buttonOneTime.setAttribute("href", "#");
+                                purchaseButtons.appendChild(buttonOneTime);
+                            buy.appendChild(purchaseButtons);
+                            buy2 = buy.id;
+                        } else {
+                            buy2 = null;
+                        };
                     };
                 };
-
             };
+        </script>
+        <script>
+            function sub() {
+                var number = document.getElementById("number");
+                var count = parseInt(number.getAttribute("value"));
+                if (count - 1 > 0) {
+                    number.setAttribute("value", count-1);
+                };
+            };
+            function add() {
+                var number = document.getElementById("number");
+                var count = parseInt(number.getAttribute("value"));
+                if (count + 1 < 11) {
+                    number.setAttribute("value", count+1);
+                };
+            };
+        </script>
+        <script>
+            function login(elem) {
+                var buy = document.getElementById(elem.parentNode.parentNode.id);
+                var remove = document.getElementById("formBuy" + buy2);
+                remove.remove();
+
+                var formBuy = document.createElement("form");
+                    formBuy.classList.add("purchaseNotLoggedForm");
+                    formBuy.setAttribute("action", "/signIn");
+                    formBuy.setAttribute("method", "POST");
+                    formBuy.setAttribute("id", "formBuy" + buy2);
+                    var formBuyForm = document.createElement("div");
+                        var labelEmail = document.createElement("label");
+                            labelEmail.setAttribute("for", "email");
+                            labelEmail.innerHTML = "Email:";
+                        var inputEmail = document.createElement("input");
+                            inputEmail.setAttribute("type", "email");
+                            inputEmail.setAttribute("id", "email");
+                            inputEmail.setAttribute("name", "email");
+                            inputEmail.required = true;
+                        var labelPassword = document.createElement("label");
+                            labelPassword.setAttribute("for", "password");
+                            labelPassword.innerHTML = "Heslo:";
+                        var inputPassword = document.createElement("input");
+                            inputPassword.setAttribute("type", "password");
+                            inputPassword.setAttribute("id", "password");
+                            inputPassword.setAttribute("name", "password");
+                            inputPassword.required = true;
+                        formBuyForm.appendChild(labelEmail);
+                        formBuyForm.appendChild(inputEmail);
+                        formBuyForm.appendChild(labelPassword);
+                        formBuyForm.appendChild(inputPassword);
+                    formBuy.appendChild(formBuyForm);
+                    var formBuyButtons = document.createElement("div");
+                        var amountDiv = document.createElement("div");
+                        amountDiv.style.flexDirection = "row";
+                            var iPassenger = document.createElement("i");
+                                iPassenger.style.paddingRight = "15px";
+                                iPassenger.classList.add("fas");
+                                iPassenger.classList.add("fa-user");
+                            amountDiv.appendChild(iPassenger);
+                            var iMinus = document.createElement("i");
+                                iMinus.setAttribute("onclick", "sub()");
+                                iMinus.style.cursor = "pointer";
+                                iMinus.classList.add("fas");
+                                iMinus.classList.add("fa-minus-square");
+                            amountDiv.appendChild(iMinus);
+                            var input = document.createElement("input");
+                                input.setAttribute("type", "text");
+                                input.setAttribute("name", "number");
+                                input.setAttribute("id", "number");
+                                input.setAttribute("value", "1");
+                                input.disabled = true;
+                            amountDiv.appendChild(input);
+                            var iPlus = document.createElement("i");
+                                iPlus.setAttribute("onclick", "add()");
+                                iPlus.style.cursor = "pointer";
+                                iPlus.classList.add("fas");
+                                iPlus.classList.add("fa-plus-square");
+                            amountDiv.appendChild(iPlus);
+                        formBuyButtons.appendChild(amountDiv);
+                            var purchaseButton = document.createElement("button");
+                            purchaseButton.setAttribute("type", "submit");
+                            var a = document.createElement("a");
+                                a.innerHTML = "Kúpiť";
+                            purchaseButton.appendChild(a);
+                        formBuyButtons.appendChild(purchaseButton);
+                    formBuy.appendChild(formBuyButtons);
+                buy.appendChild(formBuy);
+            };
+
+            function register(elem) {
+                var buy = document.getElementById(elem.parentNode.parentNode.id);
+                var remove = document.getElementById("formBuy" + buy2);
+                remove.remove();
+
+                var formBuy = document.createElement("form");
+                    formBuy.classList.add("purchaseNotLoggedForm");
+                    formBuy.setAttribute("action", "/purchase");
+                    formBuy.setAttribute("method", "POST");
+                    formBuy.setAttribute("id", "formBuy" + buy2);
+                    var formBuyForm = document.createElement("div");
+                        var labelFName = document.createElement("label");
+                            labelFName.setAttribute("for", "fname");
+                            labelFName.innerHTML = "Meno:";
+                        var inputFName = document.createElement("input");
+                            inputFName.setAttribute("type", "text");
+                            inputFName.setAttribute("id", "fname");
+                            inputFName.setAttribute("name", "fname");
+                            inputFName.required = true;
+                        var labelLName = document.createElement("label");
+                            labelLName.setAttribute("for", "lname");
+                            labelLName.innerHTML = "Priezvisko:";
+                        var inputLName = document.createElement("input");
+                            inputLName.setAttribute("type", "text");
+                            inputLName.setAttribute("id", "lname");
+                            inputLName.setAttribute("name", "lname");
+                            inputLName.required = true;
+                        var labelEmail = document.createElement("label");
+                            labelEmail.setAttribute("for", "email");
+                            labelEmail.innerHTML = "Email:";
+                        var inputEmail = document.createElement("input");
+                            inputEmail.setAttribute("type", "email");
+                            inputEmail.setAttribute("id", "email");
+                            inputEmail.setAttribute("name", "email");
+                            inputEmail.required = true;
+                        var labelPassword = document.createElement("label");
+                            labelPassword.setAttribute("for", "password");
+                            labelPassword.innerHTML = "Heslo:";
+                        var inputPassword = document.createElement("input");
+                            inputPassword.setAttribute("type", "password");
+                            inputPassword.setAttribute("id", "password");
+                            inputPassword.setAttribute("name", "password");
+                            inputPassword.required = true;
+                        var labelPasswordConfirm = document.createElement("label");
+                            labelPasswordConfirm.setAttribute("for", "passwordConfirm");
+                            labelPasswordConfirm.innerHTML = "Potvrďte heslo:";
+                        var inputPasswordConfirm = document.createElement("input");
+                            inputPasswordConfirm.setAttribute("type", "password");
+                            inputPasswordConfirm.setAttribute("id", "passwordConfirm");
+                            inputPasswordConfirm.setAttribute("name", "passwordConfirm");
+                            inputPasswordConfirm.required = true;
+                        formBuyForm.appendChild(labelFName);
+                        formBuyForm.appendChild(inputFName);
+                        formBuyForm.appendChild(labelLName);
+                        formBuyForm.appendChild(inputLName);
+                        formBuyForm.appendChild(labelEmail);
+                        formBuyForm.appendChild(inputEmail);
+                        formBuyForm.appendChild(labelPassword);
+                        formBuyForm.appendChild(inputPassword);
+                        formBuyForm.appendChild(labelPasswordConfirm);
+                        formBuyForm.appendChild(inputPasswordConfirm);
+                    formBuy.appendChild(formBuyForm);
+                    var formBuyButtons = document.createElement("div");
+                        var amountDiv = document.createElement("div");
+                        amountDiv.style.flexDirection = "row";
+                            var iPassenger = document.createElement("i");
+                                iPassenger.style.paddingRight = "15px";
+                                iPassenger.classList.add("fas");
+                                iPassenger.classList.add("fa-user");
+                            amountDiv.appendChild(iPassenger);
+                            var iMinus = document.createElement("i");
+                                iMinus.setAttribute("onclick", "sub()");
+                                iMinus.style.cursor = "pointer";
+                                iMinus.classList.add("fas");
+                                iMinus.classList.add("fa-minus-square");
+                            amountDiv.appendChild(iMinus);
+                            var input = document.createElement("input");
+                                input.setAttribute("type", "text");
+                                input.setAttribute("name", "number");
+                                input.setAttribute("id", "number");
+                                input.setAttribute("value", "1");
+                                input.disabled = true;
+                            amountDiv.appendChild(input);
+                            var iPlus = document.createElement("i");
+                                iPlus.setAttribute("onclick", "add()");
+                                iPlus.style.cursor = "pointer";
+                                iPlus.classList.add("fas");
+                                iPlus.classList.add("fa-plus-square");
+                            amountDiv.appendChild(iPlus);
+                        formBuyButtons.appendChild(amountDiv);
+                            var purchaseButton = document.createElement("button");
+                            purchaseButton.setAttribute("type", "submit");
+                            var a = document.createElement("a");
+                                a.innerHTML = "Kúpiť";
+                            purchaseButton.appendChild(a);
+                        formBuyButtons.appendChild(purchaseButton);
+                    formBuy.appendChild(formBuyButtons);
+                buy.appendChild(formBuy);
+            };
+
+            function oneTime(elem) {
+                var buy = document.getElementById(elem.parentNode.parentNode.id);
+                var remove = document.getElementById("formBuy" + buy2);
+                remove.remove();
+
+                var formBuy = document.createElement("form");
+                    formBuy.classList.add("purchaseNotLoggedForm");
+                    formBuy.setAttribute("action", "/registration");
+                    formBuy.setAttribute("method", "POST");
+                    formBuy.setAttribute("id", "formBuy" + buy2);
+                    var formBuyForm = document.createElement("div");
+                        var labelFName = document.createElement("label");
+                            labelFName.setAttribute("for", "fname");
+                            labelFName.innerHTML = "Meno:";
+                        var inputFName = document.createElement("input");
+                            inputFName.setAttribute("type", "text");
+                            inputFName.setAttribute("id", "fname");
+                            inputFName.setAttribute("name", "fname");
+                            inputFName.required = true;
+                        var labelLName = document.createElement("label");
+                            labelLName.setAttribute("for", "lname");
+                            labelLName.innerHTML = "Priezvisko:";
+                        var inputLName = document.createElement("input");
+                            inputLName.setAttribute("type", "text");
+                            inputLName.setAttribute("id", "lname");
+                            inputLName.setAttribute("name", "lname");
+                            inputLName.required = true;
+                        var labelEmail = document.createElement("label");
+                            labelEmail.setAttribute("for", "email");
+                            labelEmail.innerHTML = "Email:";
+                        var inputEmail = document.createElement("input");
+                            inputEmail.setAttribute("type", "email");
+                            inputEmail.setAttribute("id", "email");
+                            inputEmail.setAttribute("name", "email");
+                            inputEmail.required = true;
+                        formBuyForm.appendChild(labelFName);
+                        formBuyForm.appendChild(inputFName);
+                        formBuyForm.appendChild(labelLName);
+                        formBuyForm.appendChild(inputLName);
+                        formBuyForm.appendChild(labelEmail);
+                        formBuyForm.appendChild(inputEmail);
+                    formBuy.appendChild(formBuyForm);
+                    var formBuyButtons = document.createElement("div");
+                        var amountDiv = document.createElement("div");
+                        amountDiv.style.flexDirection = "row";
+                            var iPassenger = document.createElement("i");
+                                iPassenger.style.paddingRight = "15px";
+                                iPassenger.classList.add("fas");
+                                iPassenger.classList.add("fa-user");
+                            amountDiv.appendChild(iPassenger);
+                            var iMinus = document.createElement("i");
+                                iMinus.setAttribute("onclick", "sub()");
+                                iMinus.style.cursor = "pointer";
+                                iMinus.classList.add("fas");
+                                iMinus.classList.add("fa-minus-square");
+                            amountDiv.appendChild(iMinus);
+                            var input = document.createElement("input");
+                                input.setAttribute("type", "text");
+                                input.setAttribute("name", "number");
+                                input.setAttribute("id", "number");
+                                input.setAttribute("value", "1");
+                                input.disabled = true;
+                            amountDiv.appendChild(input);
+                            var iPlus = document.createElement("i");
+                                iPlus.setAttribute("onclick", "add()");
+                                iPlus.style.cursor = "pointer";
+                                iPlus.classList.add("fas");
+                                iPlus.classList.add("fa-plus-square");
+                            amountDiv.appendChild(iPlus);
+                        formBuyButtons.appendChild(amountDiv);
+                            var purchaseButton = document.createElement("button");
+                            purchaseButton.setAttribute("type", "submit");
+                            var a = document.createElement("a");
+                                a.innerHTML = "Kúpiť";
+                            purchaseButton.appendChild(a);
+                        formBuyButtons.appendChild(purchaseButton);
+                    formBuy.appendChild(formBuyButtons);
+                buy.appendChild(formBuy);
+            }
         </script>
     </body>
 </html>

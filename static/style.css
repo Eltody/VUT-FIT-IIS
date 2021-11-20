@@ -407,9 +407,16 @@ h1, h2, h3, h4, h5, h6, figure {
     background: rgba(255, 255, 255, 0.5);
 }
 .resultConFooter a:hover {
-    box-shadow: 0;
+    box-shadow: none;
 }
 .purchaseButtons {
+    display: flex;
+    padding: 10px 25px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.purchaseButtons a {
     margin-left: 15px;
     padding: 1px 15px;
     color: black;
@@ -417,7 +424,10 @@ h1, h2, h3, h4, h5, h6, figure {
     font-weight: 600;
     border-radius: 5px 5px 5px 5px;
     box-shadow: inset 1px 1px 10px #333;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.2);
+}
+.purchaseButtons a:hover {
+    box-shadow: none;
 }
 .purchaseForm {
     display: flex;
@@ -426,16 +436,79 @@ h1, h2, h3, h4, h5, h6, figure {
     flex-direction: row;
     justify-content: space-around;
 }
-.purchaseForm p, .purchaseForm pre {
+.purchaseForm input, .purchaseForm i {
+    width: 25px;
     margin: 0;
-    padding: 0 0 0 15px;
+    padding: 0 0 0 10px;
+    background: none;
+    border: none;
     color: black;
-    font-size: 16px;
+    font-size: 20px;
+    text-align: center;
+}
+.purchaseForm a {
+    color: black;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 4px 15px;
+}
+.purchaseForm button {
+    padding: 0;
+    cursor: pointer;
+    margin-top: 20px;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: inset 1px 1px 10px #333;
+    background: rgba(0, 0, 0, 0.1);
+}
+.purchaseForm button:hover {
+    box-shadow: none;
 }
 .purchaseForm div {
     display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+}
+.purchaseNotLoggedForm {
+    display: flex;
+    padding: 15px 25px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.purchaseNotLoggedForm #number, .purchaseNotLoggedForm i {
+    width: 25px;
+    margin: 0;
+    padding: 0 0 0 10px;
+    background: none;
+    border: none;
+    color: black;
+    font-size: 20px;
+    text-align: center;
+}
+.purchaseNotLoggedForm a {
+    color: black;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 4px 15px;
+}
+.purchaseNotLoggedForm button {
+    padding: 0;
+    cursor: pointer;
+    margin-top: 20px;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: inset 1px 1px 10px #333;
+    background: rgba(0, 0, 0, 0.1);
+}
+.purchaseNotLoggedForm button:hover {
+    box-shadow: none;
+}
+.purchaseNotLoggedForm div {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
 }
 
 @media screen and (min-width: 1300px) {
