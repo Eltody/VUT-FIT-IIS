@@ -346,7 +346,7 @@
                     } else {
                         var purchaseForm = document.createElement("form");
                             purchaseForm.classList.add("purchaseForm");
-                            purchaseForm.setAttribute("action", "/purchase");
+                            purchaseForm.setAttribute("action", "/purchase/signedIn");
                             purchaseForm.setAttribute("method", "POST");
                             purchaseForm.setAttribute("id", "formBuy" + buy2);
                             var amountDiv = document.createElement("div");
@@ -381,7 +381,7 @@
                                 emailStorage.setAttribute("type", "text");
                                 emailStorage.setAttribute("name", "email");
                                 emailStorage.setAttribute("id", "email");
-                                emailStorage.setAttribute("value", cookies[0]);
+                                emailStorage.setAttribute("value", cookies[1]);
                             purchaseForm.appendChild(emailStorage);
                             var dataStorage = document.createElement("input");
                                 dataStorage.style.display = "none";
@@ -469,7 +469,7 @@
                 var buy = document.getElementById(elem.parentNode.parentNode.id);
                 var formBuy = document.createElement("form");
                     formBuy.classList.add("purchaseNotLoggedForm");
-                    formBuy.setAttribute("action", "/purchase");
+                    formBuy.setAttribute("action", "/purchase/signIn");
                     formBuy.setAttribute("method", "POST");
                     formBuy.setAttribute("id", "formBuy" + buy2);
                     var formBuyForm = document.createElement("div");
@@ -551,7 +551,7 @@
                 var buy = document.getElementById(elem.parentNode.parentNode.id);
                 var formBuy = document.createElement("form");
                     formBuy.classList.add("purchaseNotLoggedForm");
-                    formBuy.setAttribute("action", "/purchase");
+                    formBuy.setAttribute("action", "/purchase/register");
                     formBuy.setAttribute("method", "POST");
                     formBuy.setAttribute("id", "formBuy" + buy2);
                     var formBuyForm = document.createElement("div");
@@ -662,7 +662,7 @@
                 var buy = document.getElementById(elem.parentNode.parentNode.id);
                 var formBuy = document.createElement("form");
                     formBuy.classList.add("purchaseNotLoggedForm");
-                    formBuy.setAttribute("action", "/registration");
+                    formBuy.setAttribute("action", "/registration/oneTime");
                     formBuy.setAttribute("method", "POST");
                     formBuy.setAttribute("id", "formBuy" + buy2);
                     var formBuyForm = document.createElement("div");
