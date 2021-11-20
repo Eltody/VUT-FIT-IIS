@@ -72,6 +72,7 @@
                 for (i in data) {
                     var divMain = document.createElement("div");
                     divMain.classList.add("resultCon");
+                    divMain.setAttribute("name", i);
                     divMain.setAttribute("id", data[i][2] + data[i][7]);
                         var div1 = document.createElement("div");
                             div1.classList.add("resultConHead");
@@ -365,7 +366,7 @@
                                     input.setAttribute("name", "number");
                                     input.setAttribute("id", "number");
                                     input.setAttribute("value", "1");
-                                    input.disabled = true;
+                                    input.readOnly = true;
                                 amountDiv.appendChild(input);
                                 var iPlus = document.createElement("i");
                                     iPlus.setAttribute("onclick", "add(); return false;");
@@ -374,6 +375,13 @@
                                     iPlus.classList.add("fa-plus-square");
                                 amountDiv.appendChild(iPlus);
                             purchaseForm.appendChild(amountDiv);
+                            var dataStorage = document.createElement("input");
+                                dataStorage.style.display = "none";
+                                dataStorage.setAttribute("type", "text");
+                                dataStorage.setAttribute("name", "data");
+                                dataStorage.setAttribute("id", "data");
+                                dataStorage.setAttribute("value", data[document.getElementById(buy2).getAttribute("name")]);
+                            purchaseForm.appendChild(dataStorage);
                                 var purchaseButton = document.createElement("button");
                                 purchaseButton.style.margin = "0";
                                 purchaseButton.setAttribute("type", "submit");
@@ -497,7 +505,7 @@
                                 input.setAttribute("name", "number");
                                 input.setAttribute("id", "number");
                                 input.setAttribute("value", "1");
-                                input.disabled = true;
+                                input.readOnly = true;
                             amountDiv.appendChild(input);
                             var iPlus = document.createElement("i");
                                 iPlus.setAttribute("onclick", "add(); return false;");
@@ -511,7 +519,7 @@
                             dataStorage.setAttribute("type", "text");
                             dataStorage.setAttribute("name", "data");
                             dataStorage.setAttribute("id", "data");
-                            dataStorage.setAttribute("value", data[1]);
+                            dataStorage.setAttribute("value", data[document.getElementById(buy2).getAttribute("name")]);
                         formBuyButtons.appendChild(dataStorage);
                             console.log(data);
                             var purchaseButton = document.createElement("button");
@@ -609,7 +617,7 @@
                                 input.setAttribute("name", "number");
                                 input.setAttribute("id", "number");
                                 input.setAttribute("value", "1");
-                                input.disabled = true;
+                                input.readOnly = true;
                             amountDiv.appendChild(input);
                             var iPlus = document.createElement("i");
                                 iPlus.setAttribute("onclick", "add(); return false;");
@@ -618,6 +626,13 @@
                                 iPlus.classList.add("fa-plus-square");
                             amountDiv.appendChild(iPlus);
                         formBuyButtons.appendChild(amountDiv);
+                        var dataStorage = document.createElement("input");
+                            dataStorage.style.display = "none";
+                            dataStorage.setAttribute("type", "text");
+                            dataStorage.setAttribute("name", "data");
+                            dataStorage.setAttribute("id", "data");
+                            dataStorage.setAttribute("value", data[document.getElementById(buy2).getAttribute("name")]);
+                        formBuyButtons.appendChild(dataStorage);
                             var purchaseButton = document.createElement("button");
                             purchaseButton.setAttribute("type", "submit");
                             var a = document.createElement("a");
@@ -693,7 +708,7 @@
                                 input.setAttribute("name", "number");
                                 input.setAttribute("id", "number");
                                 input.setAttribute("value", "1");
-                                input.disabled = true;
+                                input.readOnly = true;
                             amountDiv.appendChild(input);
                             var iPlus = document.createElement("i");
                                 iPlus.setAttribute("onclick", "add(); return false;");
@@ -702,6 +717,13 @@
                                 iPlus.classList.add("fa-plus-square");
                             amountDiv.appendChild(iPlus);
                         formBuyButtons.appendChild(amountDiv);
+                        var dataStorage = document.createElement("input");
+                            dataStorage.style.display = "none";
+                            dataStorage.setAttribute("type", "text");
+                            dataStorage.setAttribute("name", "data");
+                            dataStorage.setAttribute("id", "data");
+                            dataStorage.setAttribute("value", data[document.getElementById(buy2).getAttribute("name")]);
+                        formBuyButtons.appendChild(dataStorage);
                             var purchaseButton = document.createElement("button");
                             purchaseButton.setAttribute("type", "submit");
                             var a = document.createElement("a");
