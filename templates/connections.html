@@ -279,7 +279,7 @@
                 document.cookie = "name=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
                 document.cookie = "email=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
                 document.cookie = "status=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-                window.location.replace("/");
+                location.reload();
             }
         </script>
         <script>
@@ -381,7 +381,7 @@
                                 emailStorage.setAttribute("type", "text");
                                 emailStorage.setAttribute("name", "email");
                                 emailStorage.setAttribute("id", "email");
-                                emailStorage.setAttribute("value", cookies[1]);
+                                emailStorage.setAttribute("value", cookies[1].substring(6));
                             purchaseForm.appendChild(emailStorage);
                             var dataStorage = document.createElement("input");
                                 dataStorage.style.display = "none";
@@ -529,9 +529,8 @@
                             dataStorage.setAttribute("id", "data");
                             dataStorage.setAttribute("value", data[document.getElementById(buy2).getAttribute("name")]);
                         formBuyButtons.appendChild(dataStorage);
-                            console.log(data);
                             var purchaseButton = document.createElement("button");
-                            purchaseButton.setAttribute("type", "submit");
+                            purchaseButton.setAttribute("id", "login");
                             var a = document.createElement("a");
                                 a.innerHTML = "Kúpiť";
                             purchaseButton.appendChild(a);
@@ -642,7 +641,7 @@
                             dataStorage.setAttribute("value", data[document.getElementById(buy2).getAttribute("name")]);
                         formBuyButtons.appendChild(dataStorage);
                             var purchaseButton = document.createElement("button");
-                            purchaseButton.setAttribute("type", "submit");
+                            purchaseButton.setAttribute("id", "register");
                             var a = document.createElement("a");
                                 a.innerHTML = "Kúpiť";
                             purchaseButton.appendChild(a);
@@ -741,6 +740,49 @@
                     formBuy.appendChild(formBuyButtons);
                 buy.appendChild(formBuy);
             }
+        </script>
+        <script>
+            $(function() {
+                $("#login").click(function (event) {
+                    $.getJSON('/validate/signIn')
+                    .done(function(data) {
+                        var message = "{{data.message}}";
+                        if (message === 'reg') {
+                            document.getElementById("regError").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
+                        } else if (message === 'log') {
+                            document.getElementById("logError").innerHTML = "Chybne zadaný email alebo heslo."
+                        } else {
+                            document.getElementById("formBuy" + buy2).submit();
+                        };
+                    });
+                });
+            });
+            $(function() {
+                $("#register").click(function (event) {
+                    $.getJSON('/validate/register')
+                    .done(function(data) {
+                        var message = "{{data.message}}";
+                        if (message === 'reg') {
+                            document.getElementById("regError").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
+                        } else if (message === 'log') {
+                            document.getElementById("logError").innerHTML = "Chybne zadaný email alebo heslo."
+                        } else {
+                            document.getElementById("formBuy" + buy2).submit();
+                        };
+                    });
+                });
+            });
+        </script>
+        <script>
+            function validatePassword() {
+                var password = document.getElementById("password");
+                var passwordConfirm = document.getElementById("passwordConfirm");
+                if (password.value == passwordConfirm.value) {
+                    passwordConfirm.setCustomValidity('');
+                } else {
+                    passwordConfirm.setCustomValidity("Heslá sa nezhodujú");
+                };
+            };
         </script>
     </body>
 </html>
