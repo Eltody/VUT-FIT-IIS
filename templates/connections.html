@@ -744,7 +744,7 @@
         <script>
             $(function() {
                 $("#login").click(function (event) {
-                    $.post('/validate/signIn', {email: "email", password: "test2"})
+                    $.post('/validate/signIn', {"email": "email", "password": "test2"})
                     .done(function(data) {
                         var message = "{{data.message}}";
                         if (message === 'reg') {
