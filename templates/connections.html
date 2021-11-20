@@ -375,6 +375,14 @@
                                     iPlus.classList.add("fa-plus-square");
                                 amountDiv.appendChild(iPlus);
                             purchaseForm.appendChild(amountDiv);
+                            var emailStorage = document.createElement("input");
+                                var cookies = document.cookie.split('; ');
+                                emailStorage.style.display = "none";
+                                emailStorage.setAttribute("type", "text");
+                                emailStorage.setAttribute("name", "email");
+                                emailStorage.setAttribute("id", "email");
+                                emailStorage.setAttribute("value", cookies[0]);
+                            purchaseForm.appendChild(emailStorage);
                             var dataStorage = document.createElement("input");
                                 dataStorage.style.display = "none";
                                 dataStorage.setAttribute("type", "text");
