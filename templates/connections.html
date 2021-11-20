@@ -471,6 +471,7 @@
                     formBuy.classList.add("purchaseNotLoggedForm");
                     formBuy.setAttribute("action", "/purchase/signIn");
                     formBuy.setAttribute("method", "POST");
+                    formBuy.setAttribute("name", "form");
                     formBuy.setAttribute("id", "formBuy" + buy2);
                     var formBuyForm = document.createElement("div");
                         var labelEmail = document.createElement("label");
@@ -489,10 +490,14 @@
                             inputPassword.setAttribute("id", "password");
                             inputPassword.setAttribute("name", "password");
                             inputPassword.required = true;
+                        var p = document.createElement("p");
+                            p.classList.add("error");
+                            p.setAttribute("id", "error");
                         formBuyForm.appendChild(labelEmail);
                         formBuyForm.appendChild(inputEmail);
                         formBuyForm.appendChild(labelPassword);
                         formBuyForm.appendChild(inputPassword);
+                        formBuyForm.appendChild(p);
                     formBuy.appendChild(formBuyForm);
                     var formBuyButtons = document.createElement("div");
                         var amountDiv = document.createElement("div");
@@ -530,7 +535,7 @@
                             dataStorage.setAttribute("value", data[document.getElementById(buy2).getAttribute("name")]);
                         formBuyButtons.appendChild(dataStorage);
                             var purchaseButton = document.createElement("button");
-                            purchaseButton.setAttribute("type", "button");
+                            purchaseButton.setAttribute("type", "submit");
                             purchaseButton.setAttribute("id", "login");
                             var a = document.createElement("a");
                                 a.innerHTML = "Kúpiť";
@@ -553,6 +558,7 @@
                     formBuy.classList.add("purchaseNotLoggedForm");
                     formBuy.setAttribute("action", "/purchase/register");
                     formBuy.setAttribute("method", "POST");
+                    formBuy.setAttribute("name", "form");
                     formBuy.setAttribute("id", "formBuy" + buy2);
                     var formBuyForm = document.createElement("div");
                         var labelFName = document.createElement("label");
@@ -595,6 +601,9 @@
                             inputPasswordConfirm.setAttribute("id", "passwordConfirm");
                             inputPasswordConfirm.setAttribute("name", "passwordConfirm");
                             inputPasswordConfirm.required = true;
+                        var p = document.createElement("p");
+                            p.classList.add("error");
+                            p.setAttribute("id", "error");
                         formBuyForm.appendChild(labelFName);
                         formBuyForm.appendChild(inputFName);
                         formBuyForm.appendChild(labelLName);
@@ -605,6 +614,7 @@
                         formBuyForm.appendChild(inputPassword);
                         formBuyForm.appendChild(labelPasswordConfirm);
                         formBuyForm.appendChild(inputPasswordConfirm);
+                        formBuyForm.appendChild(p);
                     formBuy.appendChild(formBuyForm);
                     var formBuyButtons = document.createElement("div");
                         var amountDiv = document.createElement("div");
@@ -642,7 +652,7 @@
                             dataStorage.setAttribute("value", data[document.getElementById(buy2).getAttribute("name")]);
                         formBuyButtons.appendChild(dataStorage);
                             var purchaseButton = document.createElement("button");
-                            purchaseButton.setAttribute("type", "button");
+                            purchaseButton.setAttribute("type", "submit");
                             purchaseButton.setAttribute("id", "register");
                             var a = document.createElement("a");
                                 a.innerHTML = "Kúpiť";
@@ -755,36 +765,34 @@
             };
         </script>
         <script>
+            $(document).on("submit", "form", function(e){
+                e.preventDefault();
+                return  false;
+            });
             $(document).on('click','#login', function() {
                 var email = $("#email").val();
                 var password = $("#password").val();
-                $.post('/validate/signIn', {"email": email, "password": password})
-                .done(function(data) {
-                    var message = "{{data.message}}";
-                    if (message === 'reg') {
-                        document.getElementById("regError").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
-                    } else if (message === 'log') {
-                        document.getElementById("logError").innerHTML = "Chybne zadaný email alebo heslo."
-                    } else if (message === 'success') {
-                        document.getElementById("formBuy" + buy2).submit();
+                $.post('/validate/signIn', {"email": email, "password": password}, function(result) {
+                    if (result === "log") {
+                        document.getElementById("error").innerHTML = "Chybne zadaný email alebo heslo."
+                    } else if (result === "success") {
+                        submitForm();
                     };
                 });
             });
             $(document).on('click','#register', function() {
                 var email = $("#email").val();
-                var password = $("#password").val();
-                $.post('/validate/register', {"email": email, "password": password})
-                .done(function(data) {
-                    var message = "{{data.message}}";
-                    if (message === 'reg') {
-                        document.getElementById("regError").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
-                    } else if (message === 'log') {
-                        document.getElementById("logError").innerHTML = "Chybne zadaný email alebo heslo."
-                    } else if (message === 'success') {
-                        document.getElementById("formBuy" + buy2).submit();
+                $.post('/validate/register', {"email": email}, function(result) {
+                    if (result === "reg") {
+                        document.getElementById("error").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
+                    } else if (result === "success") {
+                        submitForm();
                     };
                 });
             });
+            function submitForm() {
+                document.getElementById("formBuy" + buy2).submit();
+            };
         </script>
     </body>
 </html>
