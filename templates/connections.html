@@ -317,7 +317,7 @@
                 }
                 if (typeof document.getElementById("formBuyButtons" + buy2) === 'undefined' || document.getElementById("formBuyButtons" + buy2) === null) {
                     elem.style.background = "white";
-                    var buy = document.getElementById(elem.parentNode.parentNode.parentNode.id);
+                    var buy = elem.parentNode.parentNode.parentNode;
                     buy2 = buy.id;
                     if (signIn == false) {
                         var purchaseButtons = document.createElement("div");
@@ -400,10 +400,10 @@
                         buy.appendChild(purchaseForm);
                     };
                 } else {
-                    elem.style.background = "white";
                     document.getElementById("button" + buy2).style.background = "rgba(255, 255, 255, 0.5)";
+                    elem.style.background = "white";
                     if (signIn == false) {
-                        var buy = document.getElementById(elem.parentNode.parentNode.parentNode.id);
+                        var buy = elem.parentNode.parentNode.parentNode;
                         var remove1 = document.getElementById("formBuyButtons" + buy2);
                         var remove2 = document.getElementById("formBuy" + buy2);
                         remove1.remove();
@@ -466,7 +466,7 @@
                     remove.remove();
                 }
                 document.getElementById("buttonLogin").style.background = "white";
-                var buy = document.getElementById(elem.parentNode.parentNode.id);
+                var buy = elem.parentNode.parentNode;
                 var formBuy = document.createElement("form");
                     formBuy.classList.add("purchaseNotLoggedForm");
                     formBuy.setAttribute("action", "/purchase/signIn");
@@ -553,7 +553,7 @@
                     remove.remove();
                 }
                 document.getElementById("buttonRegister").style.background = "white";
-                var buy = document.getElementById(elem.parentNode.parentNode.id);
+                var buy = elem.parentNode.parentNode;
                 var formBuy = document.createElement("form");
                     formBuy.classList.add("purchaseNotLoggedForm");
                     formBuy.setAttribute("action", "/purchase/register");
@@ -670,7 +670,7 @@
                     remove.remove();
                 }
                 document.getElementById("buttonOneTime").style.background = "white";
-                var buy = document.getElementById(elem.parentNode.parentNode.id);
+                var buy = elem.parentNode.parentNode;
                 var formBuy = document.createElement("form");
                     formBuy.classList.add("purchaseNotLoggedForm");
                     formBuy.setAttribute("action", "/purchase/oneTime");
