@@ -524,20 +524,20 @@ def validate(regOrSignIn):
         for (meno, email, heslo) in cestujuci:
             if email == user_email and heslo == password:
                 cestujuci.close()
-                loginData = {'message': 'success'}
-                loginData = json.dumps(loginData)
+                loginData = 'success'
+                # loginData = json.dumps(loginData)
                 return loginData
         for (meno, email, heslo) in administrator:
             if email == user_email and heslo == password:
                 administrator.close()
-                loginData = {'message': 'success'}
-                loginData = json.dumps(loginData)
+                loginData = 'success'
+                #loginData = json.dumps(loginData)
                 return loginData
         for (meno, email, heslo) in personal:
             if email == user_email and heslo == password:
                 personal.close()
-                loginData = {'message': 'success'}
-                loginData = json.dumps(loginData)
+                loginData = 'success'
+                # loginData = json.dumps(loginData)
                 return loginData
         cestujuci.close()
         administrator.close()
@@ -557,8 +557,8 @@ def validate(regOrSignIn):
             email = ''.join(email)
             if email == user_email:
                 cursor.close()
-                data = {'message': 'reg'}
-                data = json.dumps(data)
+                data = 'reg'
+                #data = json.dumps(data)
                 return data
         cursor.close()
 
@@ -568,8 +568,8 @@ def validate(regOrSignIn):
         connection.commit()
         cursor.close()
 
-        loginData = {'message': 'success'}
-        loginData = json.dumps(loginData)
+        loginData = 'success'
+        #loginData = json.dumps(loginData)
         return loginData
 
 
@@ -600,18 +600,18 @@ def purchase(signedInOrOneTime):
     price = data[9]
 
     # ziskanie id cestujuceho
-    #cursor1 = connection.cursor()
-    #cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % user_email)
-    #idOfUser = cursor1.fetchone()
-    #cursor1.close()
-    #print(idOfUser)
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % user_email)
+    idOfUser = cursor1.fetchone()
+    cursor1.close()
+    print(idOfUser)
 
     # ziskanie id personalu daneho spoju
-    #cursor1 = connection.cursor()
-    #cursor1.execute("SELECT id FROM Personal_Spoj WHERE id_spoju='%s';" % numberOfConnection)
-    #idOfPersonal = cursor1.fetchone()
-    #cursor1.close()
-    #print(idOfPersonal)
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Personal_Spoj WHERE id_spoju='%s';" % numberOfConnection)
+    idOfPersonal = cursor1.fetchone()
+    cursor1.close()
+    print(idOfPersonal)
 
 
 
