@@ -28,9 +28,9 @@
                             <div class="dropdown">
                                 <a href="#" class="hidden" id="user"></a>
                                 <div class="dropdown-content">
-                                    <a href="#">Lístky</a>
-                                    <a href="#">Profil</a>
-                                    <a onclick="signOut()" href="/">Odhlásiť sa</a>
+                                    <a id="status" href="/tickets">Lístky</a>
+                                    <a href="/profile">Profil</a>
+                                    <a onclick="signOut()" href="#">Odhlásiť sa</a>
                                 </div>
                             </div>
                         </ul>
@@ -104,18 +104,28 @@
             var c = [];
             for (var i = 0; i < cookies.length; i++) {
                 c.push(cookies[i].split('='));
-            }
+            };
             if (c[0][0] === "name") {
+                if (c[3][1] === "personal") {
+                    document.getElementById("status").setAttribute("href", "/personal");
+                    document.getElementById("status").innerHTML = "Editor";
+                } else if (c[3][1] === "carrier") {
+                    document.getElementById("status").setAttribute("href", "/carrier");
+                    document.getElementById("status").innerHTML = "Editor";
+                } else if (c[3][1] === "administrator") {
+                    document.getElementById("status").setAttribute("href", "/administrator");
+                    document.getElementById("status").innerHTML = "Editor";
+                };
                 document.getElementById("user").classList.remove("hidden");
                 document.getElementById("login").classList.add("hidden");
                 document.getElementById("user").innerHTML = c[0][1];
-            }
+            };
             function signOut() {
                 document.cookie = "name=; Max-Age=0";
                 document.cookie = "email=; Max-Age=0";
                 document.cookie = "status=; Max-Age=0";
                 location.reload();
-            }
+            };
         </script>
         <script>
             var message = "{{data.message}}";

@@ -23,8 +23,8 @@
                             <div class="dropdown">
                                 <a href="#" class="hidden" id="user"></a>
                                 <div class="dropdown-content">
-                                    <a href="#">Lístky</a>
-                                    <a href="#">Profil</a>
+                                    <a id="status" href="/tickets">Lístky</a>
+                                    <a href="/profile">Profil</a>
                                     <a onclick="signOut()" href="#">Odhlásiť sa</a>
                                 </div>
                             </div>
@@ -268,11 +268,20 @@
                 c.push(cookies[i].split('='));
             }
             if (c[0][0] === "name") {
-                signIn = true;
+                if (c[3][1] === "personal") {
+                    document.getElementById("status").setAttribute("href", "/personal");
+                    document.getElementById("status").innerHTML = "Editor";
+                } else if (c[3][1] === "carrier") {
+                    document.getElementById("status").setAttribute("href", "/carrier");
+                    document.getElementById("status").innerHTML = "Editor";
+                } else if (c[3][1] === "administrator") {
+                    document.getElementById("status").setAttribute("href", "/administrator");
+                    document.getElementById("status").innerHTML = "Editor";
+                };
                 document.getElementById("user").classList.remove("hidden");
                 document.getElementById("login").classList.add("hidden");
                 document.getElementById("user").innerHTML = c[0][1];
-            }
+            };
             function signOut() {
                 signIn = false;
                 document.cookie = "name=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
@@ -593,6 +602,8 @@
                             inputPassword.setAttribute("type", "password");
                             inputPassword.setAttribute("id", "password");
                             inputPassword.setAttribute("name", "password");
+                            inputPassword.setAttribute("pattern", "(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}");
+                            inputPassword.setAttribute("onkeyup", "validatePassword()");
                             inputPassword.required = true;
                         var labelPasswordConfirm = document.createElement("label");
                             labelPasswordConfirm.setAttribute("for", "passwordConfirm");
@@ -601,6 +612,7 @@
                             inputPasswordConfirm.setAttribute("type", "password");
                             inputPasswordConfirm.setAttribute("id", "passwordConfirm");
                             inputPasswordConfirm.setAttribute("name", "passwordConfirm");
+                            inputPasswordConfirm.setAttribute("onkeyup", "validatePassword()");
                             inputPasswordConfirm.required = true;
                         var p = document.createElement("p");
                             p.classList.add("error");
