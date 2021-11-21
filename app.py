@@ -60,14 +60,6 @@ def tickets():
     cursor1.close()
     print(idOfTickets)
 
-    # ziskanie id zastavok pre vlozenie do tabulky Jizdenka-Zastavky - pre kt. mesta je vystavena jizdenka
-    # for i in range(2):
-    #   cursor1 = connection.cursor()
-    #  cursor1.execute("SELECT id FROM Zastavky WHERE nazov_zastavky='%s';" % cities[i])
-    # connectionStops = cursor1.fetchone()
-    # cursor1.close()
-    # idOfCity = idOfCity[0]
-
     return render_template("tickets.html")
 
 
@@ -665,11 +657,19 @@ def purchase(signedInOrOneTime):
     price = data[9]
 
     # ziskanie id cestujuceho
-    cursor1 = connection.cursor()
-    cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % user_email)
-    idOfUser = cursor1.fetchone()
-    cursor1.close()
-    idOfUser = idOfUser[0]
+    if signedInOrOneTime != 'oneTime':  # lebo jednorazovy by mohol mat rovnaky email a po druhykrat by sa vybral ten prvy kupeny listok
+        cursor1 = connection.cursor()
+        cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % user_email)
+        idOfUser = cursor1.fetchone()
+        cursor1.close()
+        idOfUser = idOfUser[0]
+
+    if signedInOrOneTime == 'oneTime':
+        cursor1 = connection.cursor()
+        cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % user_email)
+        idOfUser = cursor1.fetchall()
+        cursor1.close()
+        idOfUser = idOfUser[-1][0] # ziskanie posledneho vytvoreneho id (keby jednorazovy uzivatel uz druhykrat kupoval listok)
 
     # ziskanie id personalu daneho spoju
     cursor1 = connection.cursor()
@@ -693,7 +693,7 @@ def purchase(signedInOrOneTime):
             date, numberOfConnection, idOfUser))
     idOfTicket = cursor1.fetchall()
     cursor1.close()
-    idOfTicket = idOfTicket[-1] # ziskanie posledneho vytvoreneho id (teda listku) konkretneho uzivatela 
+    idOfTicket = idOfTicket[-1] # ziskanie posledneho vytvoreneho id (teda listku) konkretneho uzivatela
 
     # ziskanie id zastavok pre vlozenie do tabulky Jizdenka-Zastavky - pre kt. mesta je vystavena jizdenka
     for i in range(2):
@@ -715,10 +715,8 @@ def purchase(signedInOrOneTime):
         return tickets()
     if signedInOrOneTime == 'oneTime':
         data = []
-        datum = '27.11. ne'
-        pocet_miest = 2
-        id_spoj_jizdenky = 1
-        data.append([fname, lname, datum, pocet_miest, id_spoj_jizdenky])   # TODO DOPLNIT ODKIAL KAM, CASY A DOPRAVCU
+        data.append([fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1], timeToCity, carrier_name])
+        print(data)
         return render_template('ticket.html', data=data)
 
 
