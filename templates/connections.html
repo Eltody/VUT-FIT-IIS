@@ -72,7 +72,7 @@
                 for (i in data) {
                     var divMain = document.createElement("div");
                     divMain.classList.add("resultCon");
-                    divMain.setAttribute("name", i);
+                    divMain.setAttribute("name", data[i]);
                     divMain.setAttribute("id", data[i][2] + data[i][7]);
                         var div1 = document.createElement("div");
                             div1.classList.add("resultConHead");
@@ -387,7 +387,7 @@
                                 dataStorage.setAttribute("type", "text");
                                 dataStorage.setAttribute("name", "data");
                                 dataStorage.setAttribute("id", "data");
-                                dataStorage.setAttribute("value", data[document.getElementById(buy2).getAttribute("name")]);
+                                dataStorage.setAttribute("value", document.getElementById(buy2).getAttribute("name"));
                             purchaseForm.appendChild(dataStorage);
                                 var purchaseButton = document.createElement("button");
                                 purchaseButton.style.margin = "0";
@@ -400,8 +400,9 @@
                         buy.appendChild(purchaseForm);
                     };
                 } else {
-                    document.getElementById("button" + buy2).style.background = "rgba(255, 255, 255, 0.5)";
                     elem.style.background = "white";
+                    document.getElementById("button" + buy2).style.background = "rgba(255, 255, 255, 0.5)";
+                    console.log(elem, document.getElementById("button" + buy2));
                     if (signIn == false) {
                         var buy = elem.parentNode.parentNode.parentNode;
                         var remove1 = document.getElementById("formBuyButtons" + buy2);
@@ -532,7 +533,7 @@
                             dataStorage.setAttribute("type", "text");
                             dataStorage.setAttribute("name", "data");
                             dataStorage.setAttribute("id", "data");
-                            dataStorage.setAttribute("value", data[document.getElementById(buy2).getAttribute("name")]);
+                            dataStorage.setAttribute("value", document.getElementById(buy2).getAttribute("name"));
                         formBuyButtons.appendChild(dataStorage);
                             var purchaseButton = document.createElement("button");
                             purchaseButton.setAttribute("type", "submit");
@@ -649,7 +650,7 @@
                             dataStorage.setAttribute("type", "text");
                             dataStorage.setAttribute("name", "data");
                             dataStorage.setAttribute("id", "data");
-                            dataStorage.setAttribute("value", data[document.getElementById(buy2).getAttribute("name")]);
+                            dataStorage.setAttribute("value", document.getElementById(buy2).getAttribute("name"));
                         formBuyButtons.appendChild(dataStorage);
                             var purchaseButton = document.createElement("button");
                             purchaseButton.setAttribute("type", "submit");
@@ -741,7 +742,7 @@
                             dataStorage.setAttribute("type", "text");
                             dataStorage.setAttribute("name", "data");
                             dataStorage.setAttribute("id", "data");
-                            dataStorage.setAttribute("value", data[document.getElementById(buy2).getAttribute("name")]);
+                            dataStorage.setAttribute("value", document.getElementById(buy2).getAttribute("name"));
                         formBuyButtons.appendChild(dataStorage);
                             var purchaseButton = document.createElement("button");
                             purchaseButton.setAttribute("type", "submit");
