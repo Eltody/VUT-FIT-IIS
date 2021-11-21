@@ -139,6 +139,16 @@
                 document.cookie = "name="+name+"; expires=" + expiry.toGMTString();
                 document.cookie = "email="+email+"; expires=" + expiry.toGMTString();
                 document.cookie = "status="+status+"; expires=" + expiry.toGMTString();
+                if (status === "personal") {
+                    document.getElementById("status").setAttribute("href", "/personal");
+                    document.getElementById("status").innerHTML = "Editor";
+                } else if (status === "carrier") {
+                    document.getElementById("status").setAttribute("href", "/carrier");
+                    document.getElementById("status").innerHTML = "Editor";
+                } else if (status === "administrator") {
+                    document.getElementById("status").setAttribute("href", "/administrator");
+                    document.getElementById("status").innerHTML = "Editor";
+                };
                 document.getElementById("user").classList.remove("hidden");
                 document.getElementById("login").classList.add("hidden");
                 document.getElementById("user").innerHTML = name;
