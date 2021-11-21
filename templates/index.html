@@ -106,13 +106,13 @@
                 c.push(cookies[i].split('='));
             };
             if (c[0][0] === "name") {
-                if (c[3][1] === "personal") {
+                if (c[2][1] === "personal") {
                     document.getElementById("status").setAttribute("href", "/personal");
                     document.getElementById("status").innerHTML = "Editor";
-                } else if (c[3][1] === "carrier") {
+                } else if (c[2][1] === "carrier") {
                     document.getElementById("status").setAttribute("href", "/carrier");
                     document.getElementById("status").innerHTML = "Editor";
-                } else if (c[3][1] === "administrator") {
+                } else if (c[2][1] === "administrator") {
                     document.getElementById("status").setAttribute("href", "/administrator");
                     document.getElementById("status").innerHTML = "Editor";
                 };
@@ -121,17 +121,18 @@
                 document.getElementById("user").innerHTML = c[0][1];
             };
             function signOut() {
-                document.cookie = "name=; Max-Age=0";
-                document.cookie = "email=; Max-Age=0";
-                document.cookie = "status=; Max-Age=0";
-                location.reload();
-            };
+                document.cookie = "name=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                document.cookie = "email=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                document.cookie = "status=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                location.replace("/");
+            }
         </script>
         <script>
             var message = "{{data.message}}";
             var email = "{{data.email}}";
             var name = "{{data.name}}";
             var status = "{{data.status}}";
+            console.log(message, email, name, status);
             if (message !== '') {
                 expiry = new Date();
                 expiry.setTime(expiry.getTime()+(3600*1000));

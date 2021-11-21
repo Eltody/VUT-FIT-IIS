@@ -268,13 +268,13 @@
                 c.push(cookies[i].split('='));
             }
             if (c[0][0] === "name") {
-                if (c[3][1] === "personal") {
+                if (c[2][1] === "personal") {
                     document.getElementById("status").setAttribute("href", "/personal");
                     document.getElementById("status").innerHTML = "Editor";
-                } else if (c[3][1] === "carrier") {
+                } else if (c[2][1] === "carrier") {
                     document.getElementById("status").setAttribute("href", "/carrier");
                     document.getElementById("status").innerHTML = "Editor";
-                } else if (c[3][1] === "administrator") {
+                } else if (c[2][1] === "administrator") {
                     document.getElementById("status").setAttribute("href", "/administrator");
                     document.getElementById("status").innerHTML = "Editor";
                 };
