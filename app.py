@@ -31,21 +31,59 @@ def index():
     loginData.clear()
     return render_template("index.html", cities=cities, data=data)
 
+
+@app.route('/profile')
+def profile():
+    return render_template("profile.html")
+
+
 @app.route('/tickets')
 def tickets():
+    # TODO budem vracat vsetky uzivatelove listky
+    # na listku bude teda cislo toho listku, datum, pocet miest, odkial kam, casy
+
+    user_email = request.form['email']
+
+    # ziskanie id cestujuceho
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % user_email)
+    idOfUser = cursor1.fetchone()
+    cursor1.close()
+    idOfUser = idOfUser[0]
+
+    # ziskanie id jizdeniek
+    cursor1 = connection.cursor()
+    cursor1.execute(
+        "SELECT id, datum, pocet_miest, id_spoj_jizdenky FROM Jizdenka WHERE id_cestujuci_jizdenka='%s';" % idOfUser)
+    idOfTickets = cursor1.fetchall()
+    cursor1.close()
+    print(idOfTickets)
+
+    # ziskanie id zastavok pre vlozenie do tabulky Jizdenka-Zastavky - pre kt. mesta je vystavena jizdenka
+    # for i in range(2):
+    #   cursor1 = connection.cursor()
+    #  cursor1.execute("SELECT id FROM Zastavky WHERE nazov_zastavky='%s';" % cities[i])
+    # connectionStops = cursor1.fetchone()
+    # cursor1.close()
+    # idOfCity = idOfCity[0]
+
     return render_template("tickets.html")
 
+
 @app.route('/personal')
-def administrator():
+def personal():
     return render_template("personal.html")
+
 
 @app.route('/carrier')
 def carrier():
     return render_template("carrier.html")
 
+
 @app.route('/administrator')
 def administrator():
     return render_template("administrator.html")
+
 
 @app.route('/search/<boolLoadMore>/<lastConnectionOnWeb>', methods=['GET', 'POST'])
 def search(boolLoadMore, lastConnectionOnWeb):
@@ -276,7 +314,8 @@ def search(boolLoadMore, lastConnectionOnWeb):
 
                         # sortovanie casov od najvacsieho po najmensi - ale ako medzispoje sa na stranke zobrazuju od najmensieho po najvacsie
                         allCitiesOfConnection.sort(key=lambda y: y[1], reverse=True)
-                        allCitiesOfConnection = allCitiesOfConnection[1:-1]  # posielanie len medzizastavok - vymazanie prveho a posledneho prvku - zaciatok cesty a ciel
+                        allCitiesOfConnection = allCitiesOfConnection[
+                                                1:-1]  # posielanie len medzizastavok - vymazanie prveho a posledneho prvku - zaciatok cesty a ciel
                         # zaverecne appendovanie dat do zoznamov
                         if tmp_timeFromCity > timeFromDate and not nextDay:  # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
                             possibleBusConnections.append(
@@ -284,14 +323,16 @@ def search(boolLoadMore, lastConnectionOnWeb):
                                  availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection,
                                  allCitiesOfConnection, tmp_timeFromCity])
                             counterOfConnections += 1
-                            possibleBusConnections.sort(key=lambda y: y[11])  # sortovanie, aby boli spoje zoradene od najmensieho cisla po najvacsie pre zobrazenie
+                            possibleBusConnections.sort(key=lambda y: y[
+                                11])  # sortovanie, aby boli spoje zoradene od najmensieho cisla po najvacsie pre zobrazenie
                         if nextDay:  # pre dalsie spoje, na dalsi den - rovnake spoje, len datum o cislo vyssi a od zaciatku dna 00:00 vsetky, nie len najblizsie v dany den
                             laterPossibleBusConnections.append(
                                 [connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name,
                                  availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection,
                                  allCitiesOfConnection, tmp_timeFromCity])
                             counterOfConnections += 1
-                            laterPossibleBusConnections.sort(key=lambda y: y[11])  # sortovanie, aby boli spoje zoradene od najmensieho cisla po najvacsie pre zobrazenie
+                            laterPossibleBusConnections.sort(key=lambda y: y[
+                                11])  # sortovanie, aby boli spoje zoradene od najmensieho cisla po najvacsie pre zobrazenie
 
     possibleBusConnections = possibleBusConnections + laterPossibleBusConnections  # spojenie najblizsich vyhovujucich spojov a spojov pre dalsi den napr
 
@@ -665,7 +706,6 @@ def purchase(signedInOrOneTime):
         cursor1.close()
 
     # TODO odcitanie poctu miest z daneho spoju
-
 
     if signedInOrOneTime == 'register' or signedInOrOneTime == 'signIn' or signedInOrOneTime == 'signedIn':
         return tickets()
