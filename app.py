@@ -571,19 +571,19 @@ def validate(regOrSignIn):
         for (meno, email, heslo) in cestujuci:
             if email == user_email and heslo == password:
                 cestujuci.close()
-                loginData = 'success'
+                loginData = 'cestujuci'
                 # loginData = json.dumps(loginData)
                 return loginData
         for (meno, email, heslo) in administrator:
             if email == user_email and heslo == password:
                 administrator.close()
-                loginData = 'success'
+                loginData = 'administrator'
                 # loginData = json.dumps(loginData)
                 return loginData
         for (meno, email, heslo) in personal:
             if email == user_email and heslo == password:
                 personal.close()
-                loginData = 'success'
+                loginData = 'personal'
                 # loginData = json.dumps(loginData)
                 return loginData
         cestujuci.close()
