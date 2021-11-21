@@ -651,12 +651,11 @@ def purchase(signedInOrOneTime):
 
     # TODO odcitanie poctu miest z daneho spoju
 
-    loginData = 'success'
-    # loginData = json.dumps(loginData)
+
     if signedInOrOneTime == 'register' or signedInOrOneTime == 'signIn' or signedInOrOneTime == 'signedIn':
-        return render_template('tickets.html', data=loginData)
+        return tickets()
     if signedInOrOneTime == 'oneTime':
-        return render_template('ticket.html', data=loginData)
+        return render_template('ticket.html')
 
 
 class databaseCheck(threading.Thread):
