@@ -280,18 +280,18 @@ VALUES ('52', 'Naše služby v autobuse s FlixBusom Pri ceste FlixBusom máte za
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('1');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('1', '1', '9:30'); -- Brno
+VALUES ('1', '1', '12:00'); -- Brno
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('1', '10', '12:00'); -- Praha
+VALUES ('1', '10', '14:30'); -- Praha
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('1', '1'); -- regio, Brno-Praha
 
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('1');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('2', '1', '12:00'); -- Brno
+VALUES ('2', '1', '09:30'); -- Brno
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('2', '10', '14:30'); -- Praha
+VALUES ('2', '10', '12:00'); -- Praha
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('2', '2'); -- regio, Brno-Praha
 
@@ -585,120 +585,111 @@ VALUES ('9', '31'); -- flix bus, Plzen-Praha
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('32', '9', '12:00'); -- Plzen
+VALUES ('32', '9', '11:00'); -- Plzen
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('32', '10', '13:00'); -- Praha
+VALUES ('32', '10', '12:00'); -- Praha
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('9', '32'); -- flix bus, Plzen-Praha
 
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('33', '9', '11:00'); -- Plzen
+VALUES ('33', '9', '13:00'); -- Plzen
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('33', '10', '12:00'); -- Praha
+VALUES ('33', '10', '14:00'); -- Praha
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('9', '33'); -- flix bus, Plzen-Praha
 
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('34', '9', '13:00'); -- Plzen
+VALUES ('34', '9', '15:00'); -- Plzen
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('34', '10', '14:00'); -- Praha
+VALUES ('34', '10', '16:00'); -- Praha
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('9', '34'); -- flix bus, Plzen-Praha
 
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('35', '9', '15:00'); -- Plzen
+VALUES ('35', '9', '17:00'); -- Plzen
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('35', '10', '16:00'); -- Praha
+VALUES ('35', '10', '18:00'); -- Praha
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('9', '35'); -- flix bus, Plzen-Praha
 
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('36', '9', '17:00'); -- Plzen
+VALUES ('36', '9', '19:00'); -- Plzen
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('36', '10', '18:00'); -- Praha
+VALUES ('36', '10', '20:00'); -- Praha
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('9', '36'); -- flix bus, Plzen-Praha
 
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('37', '9', '19:00'); -- Plzen
+VALUES ('37', '9', '21:00'); -- Plzen
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('37', '10', '20:00'); -- Praha
+VALUES ('37', '10', '22:00'); -- Praha
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('9', '37'); -- flix bus, Plzen-Praha
 
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('38', '9', '21:00'); -- Plzen
+VALUES ('38', '9', '23:00'); -- Plzen
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('38', '10', '22:00'); -- Praha
+VALUES ('38', '10', '00:00'); -- Praha
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('9', '38'); -- flix bus, Plzen-Praha
-
-INSERT INTO Spoj (id_dopravca_spoje)
-VALUES ('3');
-INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('39', '9', '23:00'); -- Plzen
-INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('39', '10', '00:00'); -- Praha
-INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
-VALUES ('9', '39'); -- flix bus, Plzen-Praha
 
 -- BRNO -> ZLIN -> OSTRAVA, FLIX BUS (id 3)
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('40', '1', '9:00'); -- Brno
+VALUES ('39', '1', '9:00'); -- Brno
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('40', '11', '10:45'); -- Zlin
+VALUES ('39', '11', '10:45'); -- Zlin
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('40', '7', '14:10'); -- Ostrava
+VALUES ('39', '7', '14:10'); -- Ostrava
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
-VALUES ('10', '40'); -- flix bus, Brno-Zlin-Ostrava
+VALUES ('10', '39'); -- flix bus, Brno-Zlin-Ostrava
 
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('41', '1', '15:15'); -- Brno
+VALUES ('40', '1', '15:15'); -- Brno
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('41', '11', '17:35'); -- Zlin
+VALUES ('40', '11', '17:35'); -- Zlin
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('41', '7', '20:57'); -- Ostrava
+VALUES ('40', '7', '20:57'); -- Ostrava
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
-VALUES ('11', '41'); -- flix bus, Brno-Zlin-Ostrava
+VALUES ('11', '40'); -- flix bus, Brno-Zlin-Ostrava
 
 -- OSTRAVA -> ZLIN -> BRNO, FLIX BUS (id 3)
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('42', '7', '14:15'); -- Ostrava
+VALUES ('41', '7', '14:15'); -- Ostrava
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('42', '11', '17:45'); -- Zlin
+VALUES ('41', '11', '17:45'); -- Zlin
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('42', '1', '20:00'); -- Brno
+VALUES ('41', '1', '20:00'); -- Brno
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
-VALUES ('10', '42'); -- flix bus, Ostrava-Zlin-Brno
+VALUES ('10', '41'); -- flix bus, Ostrava-Zlin-Brno
 
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('43', '7', '9:40'); -- Ostrava
+VALUES ('42', '7', '9:40'); -- Ostrava
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('43', '11', '12:45'); -- Zlin
+VALUES ('42', '11', '12:45'); -- Zlin
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('43', '1', '14:05'); -- Brno
+VALUES ('42', '1', '14:05'); -- Brno
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
-VALUES ('11', '43'); -- flix bus, Ostrava-Zlin-Brno
+VALUES ('11', '42'); -- flix bus, Ostrava-Zlin-Brno
 
 
 # PRIDELENIE PERSONALU K SPOJOM
@@ -782,17 +773,16 @@ INSERT INTO Personal_Spoj (id_personalu, id_spoju)
 VALUES ('9', '37');
 INSERT INTO Personal_Spoj (id_personalu, id_spoju)
 VALUES ('9', '38');
-INSERT INTO Personal_Spoj (id_personalu, id_spoju)
-VALUES ('9', '39');
 
 INSERT INTO Personal_Spoj (id_personalu, id_spoju)
-VALUES ('10', '40');
+VALUES ('10', '39');
 INSERT INTO Personal_Spoj (id_personalu, id_spoju)
-VALUES ('11', '41');
+VALUES ('11', '40');
 INSERT INTO Personal_Spoj (id_personalu, id_spoju)
-VALUES ('10', '42');
+VALUES ('10', '41');
 INSERT INTO Personal_Spoj (id_personalu, id_spoju)
-VALUES ('11', '43');
+VALUES ('11', '42');
+
 
 
 
