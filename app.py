@@ -5,6 +5,7 @@ import pymysql  # pip install pymysql
 import datetime  # pip install datetime
 import requests  # pip install requests
 import threading
+from fpdf import FPDF  # fpdf class
 
 app = Flask(__name__)
 try:
@@ -59,6 +60,8 @@ def tickets():
     idOfTickets = cursor1.fetchall()
     cursor1.close()
     print(idOfTickets)
+
+    # Generovanie PDF
 
     return render_template("tickets.html")
 
@@ -668,7 +671,8 @@ def purchase(signedInOrOneTime):
         cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % user_email)
         idOfUser = cursor1.fetchall()
         cursor1.close()
-        idOfUser = idOfUser[-1][0] # ziskanie posledneho vytvoreneho id (keby jednorazovy uzivatel uz druhykrat kupoval listok)
+        idOfUser = idOfUser[-1][
+            0]  # ziskanie posledneho vytvoreneho id (keby jednorazovy uzivatel uz druhykrat kupoval listok)
 
     # ziskanie id personalu daneho spoju
     cursor1 = connection.cursor()
@@ -692,7 +696,7 @@ def purchase(signedInOrOneTime):
             date, numberOfConnection, idOfUser))
     idOfTicket = cursor1.fetchall()
     cursor1.close()
-    idOfTicket = idOfTicket[-1] # ziskanie posledneho vytvoreneho id (teda listku) konkretneho uzivatela
+    idOfTicket = idOfTicket[-1]  # ziskanie posledneho vytvoreneho id (teda listku) konkretneho uzivatela
 
     # ziskanie id zastavok pre vlozenie do tabulky Jizdenka-Zastavky - pre kt. mesta je vystavena jizdenka
     for i in range(2):
@@ -714,9 +718,101 @@ def purchase(signedInOrOneTime):
         return tickets()
     if signedInOrOneTime == 'oneTime':
         data = []
-        data.append([fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1], timeToCity, carrier_name])
-        print(data)
+        data.append([user_email, idOfTicket])
+        generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1], timeToCity,
+             carrier_name, user_email, idOfTicket)
+
         return render_template('ticket.html', data=data)
+
+def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCity, timeFrom, toCity, timeTo,
+             carrier_name, user_email, idOfTicket):
+    # GENEROVANIE PDF
+
+    class PDF(FPDF):
+        pass
+
+    name = fname + ' ' + lname
+    timeFromTo = timeFrom + ' ' + date + '  ' + timeTo + ' ' + date
+
+    pdf = PDF(orientation='L', format='A5')
+    pdf.add_font("OpenSans", "", "OpenSans-VariableFont_wdth,wght.ttf", uni=True)
+    pdf.add_page()
+    pdf.set_line_width(0.0)
+    pdf.set_font('Times', 'B', size=17)
+    pdf.cell(0, 0, txt="CP ", ln=1, align="L")
+    pdf.cell(8)
+    pdf.set_font('Times', 'I', size=10)
+    pdf.cell(0, 2, txt="by (j)Elita", ln=1)
+    pdf.ln(12)
+    pdf.cell(4)
+    pdf.cell(183, 40, ' ', 'LTRB', 0, 'L', 0)
+    pdf.ln(0)
+    pdf.cell(4)
+    pdf.cell(183, 20, ' ', 'B', 0, 'L', 0)  # middle horizontal line
+    pdf.ln(0)
+    pdf.cell(61)
+    pdf.cell(1, 40, ' ', 'L', 0, 'L', 0)  # first vertical line
+    pdf.ln(0)
+    pdf.cell(122)
+    pdf.cell(1, 40, ' ', 'L', 0, 'L', 0)  # second vertical line
+    pdf.ln(10)
+    pdf.cell(4)
+    pdf.cell(183, 20, ' ', 'B', 0, 'L', 0)  # middle horizontal line
+    pdf.ln(-20)
+    pdf.cell(61)
+    pdf.cell(125.8, 20, ' ', 'B', 0, 'L', 0)  # middle horizontal line
+    pdf.ln(20)
+    pdf.cell(14)
+    str_ticket = 'Cestovný lístok'
+    pdf.set_font('Times', 'B', size=16)
+    pdf.cell(0, 2, txt=str_ticket, ln=1)
+    pdf.ln(-8)
+    pdf.cell(85)
+    str_connection = 'Spoj'
+    str_name = 'Meno'
+    pdf.set_font('Times', 'B', size=13)
+    pdf.cell(0, 2, txt=str_connection, ln=1)
+    pdf.ln(-2)
+    pdf.cell(148)
+    pdf.cell(0, 2, txt=str_name, ln=1)
+    pdf.ln(18)
+    pdf.cell(30)
+    str_from = 'Z'
+    pdf.cell(0, 2, txt=str_from, ln=1)
+    pdf.ln(-2)
+    pdf.cell(73)
+    str_time = 'Odchod - Príchod'
+    pdf.cell(0, 2, txt=str_time, ln=1)
+    pdf.ln(-12)
+    pdf.cell(88)
+    pdf.set_font('OpenSans', size=13)
+    pdf.cell(0, 2, txt=numberOfConnection, ln=1)
+    pdf.ln(8)
+    pdf.cell(150)
+    pdf.set_font('Times', 'B', size=13)
+    str_to = 'DO'
+    pdf.cell(0, 2, txt=str_to, ln=1)
+    pdf.ln(8)
+    pdf.cell(60)
+    pdf.set_font('OpenSans', size=12)
+    pdf.cell(0, 2, txt=timeFromTo, ln=1)  # datumy casy
+    pdf.ln(-2)
+    pdf.cell(128)
+    pdf.set_font('OpenSans', size=12)
+    pdf.cell(0, 2, txt=toCity, ln=1)  # kam
+    pdf.ln(-2)
+    pdf.cell(10)
+    pdf.set_font('OpenSans', size=12)
+    pdf.cell(0, 2, txt=fromCity, ln=1)  # odkial
+    pdf.ln(-22)
+    pdf.cell(138)
+    pdf.set_font('OpenSans', size=12)
+    pdf.cell(0, 2, txt=name, ln=1)  # meno
+
+    idOfTicket = str(idOfTicket[0])
+    savePDFname = 'static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
+    pdf.output(savePDFname, 'F')
+    return
 
 
 class databaseCheck(threading.Thread):
