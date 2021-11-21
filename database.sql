@@ -31,8 +31,7 @@ CREATE TABLE Administrator(
 );
 CREATE TABLE Dopravca(
     id INT(11) NOT NULL AUTO_INCREMENT,
-    meno VARCHAR(40) NOT NULL,
-    priezvisko VARCHAR(40) NOT NULL,
+    nazov VARCHAR(40) NOT NULL,
     email VARCHAR(40) NOT NULL,
     heslo VARCHAR(40) NOT NULL,
 	PRIMARY KEY (id)
@@ -175,6 +174,9 @@ VALUES('š');
 INSERT INTO Symboly(symbol)
 VALUES('€');
 
+INSERT INTO Symboly(symbol)
+VALUES('ľ');
+
 INSERT INTO Administrator (meno, priezvisko, email, heslo)
 VALUES ('Admin', 'Admin', 'admin@admin.com', 'password');
 
@@ -215,12 +217,12 @@ INSERT INTO Zastavky (nazov_zastavky)
 VALUES ('Český Krumlov');
 
 
-INSERT INTO Dopravca (meno, priezvisko, email, heslo)
-VALUES ('Regio', 'Jet', 'regiojet@regiojet.com', 'studentAgency2011ToTheInfinityAndBeyond'); -- dopravca c.1
-INSERT INTO Dopravca (meno, priezvisko, email, heslo)
-VALUES ('Leo', 'Express', 'expressileo@leoexpress.com', 'Kah9-Cy.a55'); -- dopravca c.2
-INSERT INTO Dopravca (meno, priezvisko, email, heslo)
-VALUES ('Flix', 'BUS', 'flixmotors@flixbus.com', 'flexiBuZzes4596'); -- dopravca c.3
+INSERT INTO Dopravca (nazov, email, heslo)
+VALUES ('RegioJet', 'regiojet@regiojet.com', 'studentAgency2011ToTheInfinityAndBeyond'); -- dopravca c.1
+INSERT INTO Dopravca (nazov, email, heslo)
+VALUES ('LeoExpress', 'expressileo@leoexpress.com', 'Kah9-Cy.a55'); -- dopravca c.2
+INSERT INTO Dopravca (nazov, email, heslo)
+VALUES ('FlixBUS', 'flixmotors@flixbus.com', 'flexiBuZzes4596'); -- dopravca c.3
 
 INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
 VALUES ('Patrik', 'Jacola', 'patrikus@jacolus.sk', '2BitStudent', '1'); -- id_dopravca_personal (1: REGIOJET)
