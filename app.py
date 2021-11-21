@@ -31,6 +31,21 @@ def index():
     loginData.clear()
     return render_template("index.html", cities=cities, data=data)
 
+@app.route('/tickets')
+def tickets():
+    return render_template("tickets.html")
+
+@app.route('/personal')
+def administrator():
+    return render_template("personal.html")
+
+@app.route('/carrier')
+def carrier():
+    return render_template("carrier.html")
+
+@app.route('/administrator')
+def administrator():
+    return render_template("administrator.html")
 
 @app.route('/search/<boolLoadMore>/<lastConnectionOnWeb>', methods=['GET', 'POST'])
 def search(boolLoadMore, lastConnectionOnWeb):
