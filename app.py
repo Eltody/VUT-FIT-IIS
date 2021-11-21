@@ -733,6 +733,8 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
 
     name = fname + ' ' + lname
     timeFromTo = timeFrom + ' ' + date + '  ' + timeTo + ' ' + date
+    numberOfConnection = numberOfConnection + '  ' + carrier_name
+    numberOfTickets = 'Počet miest: ' + numberOfTickets
 
     pdf = PDF(orientation='L', format='A5')
     pdf.add_font("OpenSans", "", "OpenSans-VariableFont_wdth,wght.ttf", uni=True)
@@ -784,7 +786,7 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     str_time = 'Odchod - Príchod'
     pdf.cell(0, 2, txt=str_time, ln=1)
     pdf.ln(-12)
-    pdf.cell(88)
+    pdf.cell(85)
     pdf.set_font('OpenSans', size=13)
     pdf.cell(0, 2, txt=numberOfConnection, ln=1)
     pdf.ln(8)
@@ -794,10 +796,10 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.cell(0, 2, txt=str_to, ln=1)
     pdf.ln(8)
     pdf.cell(60)
-    pdf.set_font('OpenSans', size=12)
+    pdf.set_font('OpenSans', size=10)
     pdf.cell(0, 2, txt=timeFromTo, ln=1)  # datumy casy
     pdf.ln(-2)
-    pdf.cell(128)
+    pdf.cell(129)
     pdf.set_font('OpenSans', size=12)
     pdf.cell(0, 2, txt=toCity, ln=1)  # kam
     pdf.ln(-2)
@@ -808,6 +810,10 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.cell(138)
     pdf.set_font('OpenSans', size=12)
     pdf.cell(0, 2, txt=name, ln=1)  # meno
+    pdf.ln(0)
+    pdf.cell(20)
+    pdf.set_font('OpenSans', size=10)
+    pdf.cell(0, 2, txt=numberOfTickets, ln=1)  # pocet miest
 
     idOfTicket = str(idOfTicket[0])
     savePDFname = 'static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
