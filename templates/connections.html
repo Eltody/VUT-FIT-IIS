@@ -288,6 +288,9 @@
                 document.cookie = "name=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
                 document.cookie = "email=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
                 document.cookie = "status=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                document.cookie = "name=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+                document.cookie = "email=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+                document.cookie = "status=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
                 location.reload();
             }
         </script>
@@ -852,7 +855,6 @@
         <script>
             let correct = false;
             $(document).on("submit", "form", function(e){
-                validatePassword();
                 e.preventDefault();
                 return false;
             });
@@ -862,17 +864,29 @@
                 $.post('/validate/signIn', {"email": email, "password": password}, function(result) {
                     if (result === "log") {
                         document.getElementById("error").innerHTML = "Chybne zadaný email alebo heslo."
-                    } else if (result === "success") {
+                    } else {
+                        expiry = new Date();
+                        expiry.setTime(expiry.getTime()+(3600*1000));
+                        var result = result.split("+");
+                        document.cookie = "name="+result[1]+"; expires=" + expiry.toGMTString();
+                        document.cookie = "email="+email+"; expires=" + expiry.toGMTString();
+                        document.cookie = "status="+result[0]+"; expires=" + expiry.toGMTString();
                         submitForm();
                     };
                 });
             });
             $(document).on('click','#register', function() {
+                var name = $("#fname").val();
                 var email = $("#email").val();
                 $.post('/validate/register', {"email": email}, function(result) {
                     if (result === "reg") {
                         document.getElementById("error").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
-                    } else if (result === "success") {
+                    } else {
+                        expiry = new Date();
+                        expiry.setTime(expiry.getTime()+(3600*1000));
+                        document.cookie = "name="+name+"; expires=" + expiry.toGMTString();
+                        document.cookie = "email="+email+"; expires=" + expiry.toGMTString();
+                        document.cookie = "status=cestujuci ; expires=" + expiry.toGMTString();
                         submitForm();
                     };
                 });
