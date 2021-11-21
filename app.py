@@ -261,9 +261,7 @@ def search(boolLoadMore, lastConnectionOnWeb):
 
                         # sortovanie casov od najvacsieho po najmensi - ale ako medzispoje sa na stranke zobrazuju od najmensieho po najvacsie
                         allCitiesOfConnection.sort(key=lambda y: y[1], reverse=True)
-                        print(allCitiesOfConnection)
                         allCitiesOfConnection = allCitiesOfConnection[1:-1]  # posielanie len medzizastavok - vymazanie prveho a posledneho prvku - zaciatok cesty a ciel
-                        print(allCitiesOfConnection)
                         # zaverecne appendovanie dat do zoznamov
                         if tmp_timeFromCity > timeFromDate and not nextDay:  # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
                             possibleBusConnections.append(
