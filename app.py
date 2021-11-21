@@ -718,6 +718,7 @@ def purchase(signedInOrOneTime):
         return tickets()
     if signedInOrOneTime == 'oneTime':
         data = []
+        idOfTicket = str(idOfTicket[0])
         data.append([user_email, idOfTicket])
         generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1], timeToCity,
              carrier_name, user_email, idOfTicket)
