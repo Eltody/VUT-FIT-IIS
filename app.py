@@ -50,6 +50,7 @@ def tickets():
     idOfUser = cursor1.fetchone()
     cursor1.close()
     idOfUser = idOfUser[0]
+    print(idOfUser)
 
     # ziskanie id jizdeniek
     cursor1 = connection.cursor()
@@ -620,7 +621,7 @@ def validate(regOrSignIn):
 # nakup listkana konkretny spoj
 @app.route('/purchase/<signedInOrOneTime>', methods=['GET', 'POST'])
 def purchase(signedInOrOneTime):
-    global loginData
+    global loginData, lname, fname
 
     # ziskanie spoju, na ktory vytvorim jizdenku
     tmp_data = request.form['data']
@@ -687,9 +688,12 @@ def purchase(signedInOrOneTime):
 
     # ziskanie id novo vytvorenej jizdenky
     cursor1 = connection.cursor()
-    cursor1.execute("SELECT id FROM Jizdenka WHERE datum='%s' and id_spoj_jizdenky='%s';" % (date, numberOfConnection))
-    idOfTicket = cursor1.fetchone()
+    cursor1.execute(
+        "SELECT id FROM Jizdenka WHERE datum='%s' and id_spoj_jizdenky='%s' and id_cestujuci_jizdenka='%s';" % (
+            date, numberOfConnection, idOfUser))
+    idOfTicket = cursor1.fetchall()
     cursor1.close()
+    idOfTicket = idOfTicket[-1] # ziskanie posledneho vytvoreneho id (teda listku) konkretneho uzivatela 
 
     # ziskanie id zastavok pre vlozenie do tabulky Jizdenka-Zastavky - pre kt. mesta je vystavena jizdenka
     for i in range(2):
@@ -710,7 +714,12 @@ def purchase(signedInOrOneTime):
     if signedInOrOneTime == 'register' or signedInOrOneTime == 'signIn' or signedInOrOneTime == 'signedIn':
         return tickets()
     if signedInOrOneTime == 'oneTime':
-        return render_template('ticket.html')
+        data = []
+        datum = '27.11. ne'
+        pocet_miest = 2
+        id_spoj_jizdenky = 1
+        data.append([fname, lname, datum, pocet_miest, id_spoj_jizdenky])   # TODO DOPLNIT ODKIAL KAM, CASY A DOPRAVCU
+        return render_template('ticket.html', data=data)
 
 
 class databaseCheck(threading.Thread):
