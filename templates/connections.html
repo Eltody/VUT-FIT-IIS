@@ -731,7 +731,7 @@
                         formBuyButtons.appendChild(dataStorage);
                             var purchaseButton = document.createElement("button");
                             purchaseButton.setAttribute("type", "submit");
-                            purchaseButton.setAttribute("id", "register");
+                            purchaseButton.setAttribute("id", "tmp");
                             var a = document.createElement("a");
                                 a.innerHTML = "Kúpiť";
                             purchaseButton.appendChild(a);
@@ -836,17 +836,25 @@
             function validatePassword() {
                 var password = document.getElementById("password");
                 var passwordConfirm = document.getElementById("passwordConfirm");
-                if (password.value == passwordConfirm.value) {
+                if (password.value === passwordConfirm.value) {
                     passwordConfirm.setCustomValidity('');
+                    if (document.getElementById("tmp") != null) {
+                        document.getElementById("tmp").setAttribute("id", "register");
+                    };
                 } else {
                     passwordConfirm.setCustomValidity("Heslá sa nezhodujú");
+                    if (document.getElementById("register") != null) {
+                        document.getElementById("register").setAttribute("id", "tmp");
+                    };
                 };
             };
         </script>
         <script>
+            let correct = false;
             $(document).on("submit", "form", function(e){
+                validatePassword();
                 e.preventDefault();
-                return  false;
+                return false;
             });
             $(document).on('click','#login', function() {
                 var email = $("#email").val();
