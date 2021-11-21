@@ -653,7 +653,10 @@ def purchase(signedInOrOneTime):
 
     loginData = 'success'
     # loginData = json.dumps(loginData)
-    return loginData
+    if signedInOrOneTime == 'register' or signedInOrOneTime == 'signIn' or signedInOrOneTime == 'signedIn':
+        return render_template('tickets.html', data=loginData)
+    if signedInOrOneTime == 'oneTime':
+        return render_template('ticket.html', data=loginData)
 
 
 class databaseCheck(threading.Thread):
