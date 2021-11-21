@@ -159,7 +159,7 @@ def search(boolLoadMore, lastConnectionOnWeb):
                         cursor1.close()
 
                         cursor1 = connection.cursor()
-                        cursor1.execute("SELECT meno, priezvisko FROM Dopravca WHERE id='%s';" % id_dopravca)
+                        cursor1.execute("SELECT nazov FROM Dopravca WHERE id='%s';" % id_dopravca)
                         carrier_name = cursor1.fetchone()  # ziskanie id_dopravcu_spoje
                         cursor1.close()
 
@@ -177,7 +177,6 @@ def search(boolLoadMore, lastConnectionOnWeb):
                         toCityTime = row2[0]
                         connectionNumber = row1[1]  # cislo spoju
                         availableSeats = availableSeats[0]  # array to string
-                        carrier_name = carrier_name[0] + carrier_name[1]  # spojenie meno a priezvisko do jedneho
 
                         tmp_secsTimeFromCity = tmp_secsTimeFromCity.rsplit(':',
                                                                            1)  # splitnutie na hodiny [0] a minuty [1]
@@ -571,19 +570,19 @@ def validate(regOrSignIn):
         for (meno, email, heslo) in cestujuci:
             if email == user_email and heslo == password:
                 cestujuci.close()
-                loginData = 'cestujuci'
+                loginData = 'cestujuci+' + meno
                 # loginData = json.dumps(loginData)
                 return loginData
         for (meno, email, heslo) in administrator:
             if email == user_email and heslo == password:
                 administrator.close()
-                loginData = 'administrator'
+                loginData = 'administrator+' + meno
                 # loginData = json.dumps(loginData)
                 return loginData
         for (meno, email, heslo) in personal:
             if email == user_email and heslo == password:
                 personal.close()
-                loginData = 'personal'
+                loginData = 'personal+' + meno
                 # loginData = json.dumps(loginData)
                 return loginData
         cestujuci.close()
