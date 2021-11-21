@@ -95,11 +95,7 @@ def search(boolLoadMore, lastConnectionOnWeb):
         if x == 1:  # druhe vykonanie for cyklu - druhe hladanie v databazi - rovnake, len datum sa zvysi o 1
             nextDay = True
         for row1 in possibilities_fromCity:
-            if counterOfConnections >= 5:
-                continue
             for row2 in possibilities_toCity:
-                if counterOfConnections >= 5:
-                    continue
                 if row1[1] == row2[1]:  # rovnanie cisla spojov v jednotlivych casoch prejazdov pre vyber z DB
                     tmp_timeFromCity = str(row1[0])  # array to string
                     tmp_timeToCity = str(row2[0])
@@ -248,13 +244,13 @@ def search(boolLoadMore, lastConnectionOnWeb):
                             cursor2 = connection.cursor()
                             cursor2.execute(
                                 "SELECT cas_prejazdu FROM Spoj_Zastavka WHERE id_zastavky='%s' and id_spoju='%s';" % (
-                                i, connectionNumber))
+                                    i, connectionNumber))
                             timeOfDeparture = cursor2.fetchone()
                             cursor2.close()
 
                             timeOfDeparture = timeOfDeparture[0].replace(":", "")  # odstranenie ':' pre prevod na int
                             timeOfDeparture = int(timeOfDeparture)  # string to int pre porovanie casov
-                            if tmp_timeFromCity <= timeOfDeparture:
+                            if tmp_timeFromCity <= timeOfDeparture and tmp_timeToCity >= timeOfDeparture:
                                 modifiedTimeOfDeparture = str(timeOfDeparture)
                                 modifiedTimeOfDeparture = list(modifiedTimeOfDeparture)
                                 modifiedTimeOfDeparture.insert(-2, ':')
@@ -265,25 +261,30 @@ def search(boolLoadMore, lastConnectionOnWeb):
 
                         # sortovanie casov od najvacsieho po najmensi - ale ako medzispoje sa na stranke zobrazuju od najmensieho po najvacsie
                         allCitiesOfConnection.sort(key=lambda y: y[1], reverse=True)
-
-                        allCitiesOfConnection = allCitiesOfConnection[
-                                                1:-1]  # posielanie len medzizastavok - vymazanie prveho a posledneho prvku - zaciatok cesty a ciel
-
+                        print(allCitiesOfConnection)
+                        allCitiesOfConnection = allCitiesOfConnection[1:-1]  # posielanie len medzizastavok - vymazanie prveho a posledneho prvku - zaciatok cesty a ciel
+                        print(allCitiesOfConnection)
                         # zaverecne appendovanie dat do zoznamov
-                        if tmp_timeFromCity > timeFromDate and not nextDay and counterOfConnections < 5:  # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
+                        if tmp_timeFromCity > timeFromDate and not nextDay:  # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
                             possibleBusConnections.append(
                                 [connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name,
                                  availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection,
-                                 allCitiesOfConnection])
+                                 allCitiesOfConnection, tmp_timeFromCity])
                             counterOfConnections += 1
-                        if nextDay and counterOfConnections < 5:  # pre dalsie spoje, na dalsi den - rovnake spoje, len datum o cislo vyssi a od zaciatku dna 00:00 vsetky, nie len najblizsie v dany den
+                            possibleBusConnections.sort(key=lambda y: y[11])  # sortovanie, aby boli spoje zoradene od najmensieho cisla po najvacsie pre zobrazenie
+                        if nextDay:  # pre dalsie spoje, na dalsi den - rovnake spoje, len datum o cislo vyssi a od zaciatku dna 00:00 vsetky, nie len najblizsie v dany den
                             laterPossibleBusConnections.append(
                                 [connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name,
                                  availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection,
-                                 allCitiesOfConnection])
+                                 allCitiesOfConnection, tmp_timeFromCity])
                             counterOfConnections += 1
+                            laterPossibleBusConnections.sort(key=lambda y: y[11])  # sortovanie, aby boli spoje zoradene od najmensieho cisla po najvacsie pre zobrazenie
 
     possibleBusConnections = possibleBusConnections + laterPossibleBusConnections  # spojenie najblizsich vyhovujucich spojov a spojov pre dalsi den napr
+
+    # aby zoznam vratil len prvych 5 prkov vyhovujucich spojov
+    if counterOfConnections >= 5:
+        possibleBusConnections = possibleBusConnections[:5]
     print(possibleBusConnections)
     if boolLoadMore != 'connections':
         return possibleBusConnections
@@ -505,6 +506,7 @@ def editUsers():
 
     # TODO EDIT UZIVATELSKYCH INFO A PREPISANIE NOVYCH INFO DO DATABAZY
 
+
 # kontrola pri nakupe listka ci uzivatel klikol na registrovat alebo prihlasit
 @app.route('/validate/<regOrSignIn>', methods=['GET', 'POST'])
 def validate(regOrSignIn):
@@ -529,7 +531,7 @@ def validate(regOrSignIn):
             if email == user_email and heslo == password:
                 administrator.close()
                 loginData = 'success'
-                #loginData = json.dumps(loginData)
+                # loginData = json.dumps(loginData)
                 return loginData
         for (meno, email, heslo) in personal:
             if email == user_email and heslo == password:
@@ -541,7 +543,7 @@ def validate(regOrSignIn):
         administrator.close()
         personal.close()
         data = 'log'
-        #data = json.dumps(data)
+        # data = json.dumps(data)
         return data
 
     if regOrSignIn == 'register':
@@ -552,12 +554,12 @@ def validate(regOrSignIn):
             if email == user_email:
                 cursor.close()
                 data = 'reg'
-                #data = json.dumps(data)
+                # data = json.dumps(data)
                 return data
         cursor.close()
 
         loginData = 'success'
-        #loginData = json.dumps(loginData)
+        # loginData = json.dumps(loginData)
         return loginData
 
 
@@ -577,7 +579,7 @@ def purchase(signedInOrOneTime):
     if signedInOrOneTime == 'oneTime':
         fname = request.form['fname']
         lname = request.form['lname']
-        password = ' '      # registracia bez hesla, pretoze je to jednorazovy nakup
+        password = ' '  # registracia bez hesla, pretoze je to jednorazovy nakup
         cursor = connection.cursor()
         cursor.execute("insert into `Cestujuci` (meno, priezvisko, email, heslo) VALUES (%s, %s, %s, %s)",
                        (fname, lname, user_email, password))
@@ -596,7 +598,7 @@ def purchase(signedInOrOneTime):
         connection.commit()
         cursor.close()
 
-    cities = [] # zoznam pre ulozenie miest, odkial kam ide spoj jizdenky a nasledne to sluzi pre ziskanie id danych miest
+    cities = []  # zoznam pre ulozenie miest, odkial kam ide spoj jizdenky a nasledne to sluzi pre ziskanie id danych miest
     # data parsing
     numberOfConnection = data[0]
     cities.append(data[1])
@@ -606,7 +608,6 @@ def purchase(signedInOrOneTime):
     carrier_name = data[5]
     date = data[7]
     price = data[9]
-
 
     # ziskanie id cestujuceho
     cursor1 = connection.cursor()
@@ -646,18 +647,16 @@ def purchase(signedInOrOneTime):
 
         cursor1 = connection.cursor()
         cursor1.execute(
-        "insert into `Jizdenka_Zastavky` (id_jizdenka, id_zastavka) VALUES (%s, %s)", (idOfTicket, idOfCity))
+            "insert into `Jizdenka_Zastavky` (id_jizdenka, id_zastavka) VALUES (%s, %s)", (idOfTicket, idOfCity))
         connection.commit()
         cursor1.close()
 
-
     # TODO odcitanie poctu miest z daneho spoju
-
-
 
     loginData = 'success'
     # loginData = json.dumps(loginData)
     return loginData
+
 
 class databaseCheck(threading.Thread):
     def run(self, *args, **kwargs):
