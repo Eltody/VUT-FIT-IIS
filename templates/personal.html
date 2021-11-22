@@ -137,9 +137,9 @@
                 vehiclesSelect.add(option);
             };
             vehiclesSelect.onchange = function() {
-                var id = vehiclesSelect.value.split(' ')[0];
-                console.log(id, vehicles[id][1]);
-                for (var i in vehicles[id][1])
+                var id = vehiclesSelect.value;
+                console.log(id, vehicles[0][0]);
+                for (var i in vehicles)
                     var input = document.createElement("input");
                         input.setAttribute("type", "checkbox");
                         input.setAttribute("id", vehicles[id][1][i]);
