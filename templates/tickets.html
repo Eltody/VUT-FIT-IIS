@@ -11,7 +11,7 @@
         <script src="https://kit.fontawesome.com/6079958bc1.js" crossorigin="anonymous"></script>
     </head>
     <!-- Main body -->
-    <body class="background" style="background-image: url(static/background.jpg);">
+    <body class="background" style="background-image: url('../../static/background.jpg');">
 	    <div id="page">
             <!-- Navigation bar -->
             <nav class="navbar">
@@ -38,41 +38,9 @@
                 </div>
             </nav>
             <!-- Header -->
-            <header id="header"role="banner">
+            <header id="header">
                 <div class="container">
-                    <div class="flex">
-                        <!-- Slogan -->
-                        <div class="col-full">
-                            <h1 class="animate__animated animate__fadeIn animate__slow" id="test">Potrebujete nájsť autobus či&nbsp;vlak?</h1>
-                        </div>
-                        <div class="spacer"></div>
-                        <!-- Search window -->
-                        <div class="col-full animate__animated animate__fadeIn animate__slow animate__delay-1s">
-                            <div class="form-wrap">
-                                <div class="form-content">
-                                    <h3>Vyhľadajte spoj:</h3>
-                                    <form action="/search/connections/bus" method="POST">
-                                        <div class="search-col" style="padding-bottom: 10px;">
-                                            <label for="fromCity">Odkiaľ:</label><br>
-                                            <select name="fromCity" id="fromCity" class="search-select"></select>
-                                        </div>
-                                        <div class="search-col">
-                                            <label for="toCity">Kam:</label><br>
-						                    <select name="toCity" id="toCity" class="search-select"></select>
-                                        </div>
-                                        <div class="search-col">
-                                            <label for="date">Dátum:</label><br>
-                                            <input type="datetime-local" name="date" id="date" class="search-select"/>
-                                        </div>
-                                        <div class="search-col" style="height: 40px;">
-                                            <button type="submit" class="buttonSearch"><a>Hľadať</a></button>
-                                            <button type="button" class="buttonSwap" onclick="swap()"><i class="fas fa-retweet"></i></button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="ticketsFlex"></div>
                 </div>
             </header>
             <!-- Footer -->
@@ -81,24 +49,6 @@
             </footer>
         </div>
         <!-- Scripts -->
-        <script>
-            var cities = {{cities|tojson}};
-            cities = cities.sort(Intl.Collator().compare);
-            var fromCity = document.getElementById('fromCity');
-            var toCity = document.getElementById('toCity');
-            for (var i in cities) {
-                var option = document.createElement('option');
-                option.value = cities[i];
-                option.innerHTML = cities[i];
-                fromCity.add(option);
-            }
-            for (var i in cities) {
-                var option = document.createElement('option');
-                option.value = cities[i];
-                option.innerHTML = cities[i];
-                toCity.add(option);
-            }
-        </script>
         <script>
             var cookies = document.cookie.split('; ');
             var c = [];
@@ -128,46 +78,30 @@
             };
         </script>
         <script>
-            var message = "{{data.message}}";
-            var email = "{{data.email}}";
-            var name = "{{data.name}}";
-            var status = "{{data.status}}";
-            if (message !== '') {
-                expiry = new Date();
-                expiry.setTime(expiry.getTime()+(3600*1000));
-                document.cookie = "name="+name+"; expires=" + expiry.toGMTString();
-                document.cookie = "email="+email+"; expires=" + expiry.toGMTString();
-                document.cookie = "status="+status+"; expires=" + expiry.toGMTString();
-                document.getElementById("user").classList.remove("hidden");
-                document.getElementById("login").classList.add("hidden");
-                document.getElementById("user").innerHTML = name;
-            }
-        </script>
-        <script>
-            function swap(){
-                var tmp = document.getElementById("fromCity").options.selectedIndex;
-                document.getElementById("fromCity").options.selectedIndex = document.getElementById("toCity").options.selectedIndex;
-                document.getElementById("toCity").options.selectedIndex = tmp;
-            }
-        </script>
-        <script>
-            var select = document.getElementById('toCity');
-            for (var i = 0; i < select.length; i++) {
-                if (select[i].childNodes[0].nodeValue === 'Praha - Hlavní nádraží'){
-                    select.selectedIndex = i;
-                };
+            var data = {{data|tojson}}
+            for (i in data) {
+                var div = document.getElementsByClassName('ticketFlex')[0];
+                var iframe = document.createElement("object");
+                    object.data = "https://drive.google.com/viewerng/viewer?embedded=true&url=http://92.52.58.251/static/tickets/" + data[0][0] + "_" + data[0][1] + ".pdf";
+                div.appendChild(object);
             };
         </script>
         <script>
-            var now = new Date();
-            var year = now.getFullYear();
-            var month = ('0'+(now.getMonth()+1)).slice(-2);
-            var day = ('0'+now.getDate()).slice(-2);
-            var hour = ('0'+now.getHours()).slice(-2);
-            var minutes = ('0'+now.getMinutes()).slice(-2);
-            document.getElementById('date').setAttribute("min", year + "-01-01T00:00:00");
-            document.getElementById('date').setAttribute("max", year+1 + "-12-31T23:59:59");
-            document.getElementById('date').setAttribute("value", year + "-" + month + "-" + day + "T" + hour + ":" + minutes);
+            var pdf = document.getElementsByClassName("pdf");
+            for (i in pdf) {
+                var width = Math.min(window.innerWidth * 0.8, 880);
+                pdf[i].style.marginBottom = (width * 0.05) + 'px';
+                pdf[i].width = width + 'px';
+                if (width > 840) {
+                    pdf[i].height = width * 0.75 + 'px';
+                } else if (width < 285 || width > 670) {
+                    pdf[i].height = width * 0.775 + 'px';
+                } else if (width > 310) {
+                    pdf[i].height = width * 0.85 + 'px';
+                } else {
+                    pdf[i].height = width * 0.9 + 'px';
+                };
+            };
         </script>
     </body>
 </html>

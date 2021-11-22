@@ -5,4 +5,4 @@
 *.xml
 *.xml
 *.iml
-static/tickets/
+.static/tickets/
