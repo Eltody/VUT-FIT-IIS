@@ -18,7 +18,6 @@ except pymysql.Error as error:
     print("Cannot connect to database. Error: " + str(error))
 emails = []
 loginData = {}
-generatePDFdata = [] # data z purchase pre signIn, signedIn a register uzivatelov (okrem oneTime)
 
 #############################################
 @app.route('/')
@@ -42,10 +41,8 @@ def profile():
 
 @app.route('/tickets')
 def tickets():
-    # TODO budem vracat vsetky uzivatelove listky
-    # na listku bude teda cislo toho listku, datum, pocet miest, odkial kam, casy
-    print(generatePDFdata)
     user_email = request.form['email']
+    print(user_email)
 
     # ziskanie id cestujuceho
     cursor1 = connection.cursor()
@@ -67,25 +64,8 @@ def tickets():
         for j in i:
             ids.append(''.join(str(j)))
 
+    print(idOfTickets)
 
-    fname = generatePDFdata[0][0]
-    lname = generatePDFdata[0][1]
-    numberOfConnection = generatePDFdata[0][2]
-    date = generatePDFdata[0][3]
-    numberOfTickets = generatePDFdata[0][4]
-    fromCity = generatePDFdata[0][5]
-    timeFrom = generatePDFdata[0][6]
-    toCity = generatePDFdata[0][7]
-    timeTo = generatePDFdata[0][8]
-    carrier_name = generatePDFdata[0][9]
-    user_email = generatePDFdata[0][10]
-    idOfTicket = generatePDFdata[0][11][0]
-    idOfTicket = str(idOfTicket)
-
-    # Generovanie PDF
-    generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCity, timeFrom, toCity, timeTo,
-                carrier_name, user_email, idOfTicket)
-    data = user_email
     data = {'email': user_email, 'ids': ids}
     return render_template("tickets.html", data=data)
 
@@ -447,9 +427,15 @@ def registration():
     for (email) in cursor:
         email = ''.join(email)
         if email == user_email:
+            cursor1 = connection.cursor()
+            cursor1.execute("SELECT heslo FROM Cestujuci WHERE email='%s';" % email)
+            passwordOfEmail = cursor1.fetchone()
+            cursor1.close()
             cursor.close()
-            data = {'error': 'reg', 'email': user_email}
-            return render_template('signIn.html', data=data)
+            passwordOfEmail = passwordOfEmail[0]
+            if passwordOfEmail != ' ':
+                data = {'error': 'reg', 'email': user_email}
+                return render_template('signIn.html', data=data)
     cursor.close()
 
     cursor = connection.cursor()
@@ -625,10 +611,15 @@ def validate(regOrSignIn):
         for (email) in cursor:
             email = ''.join(email)
             if email == user_email:
+                cursor1 = connection.cursor()
+                cursor1.execute("SELECT heslo FROM Cestujuci WHERE email='%s';" % email)
+                passwordOfEmail = cursor1.fetchone()
+                cursor1.close()
+                passwordOfEmail = passwordOfEmail[0]
                 cursor.close()
-                data = 'reg'
-                # data = json.dumps(data)
-                return data
+                if passwordOfEmail != ' ':
+                    data = 'reg'
+                    return data
         cursor.close()
 
         loginData = 'success'
@@ -743,7 +734,10 @@ def purchase(signedInOrOneTime):
     # TODO odcitanie poctu miest z daneho spoju
 
     if signedInOrOneTime == 'register' or signedInOrOneTime == 'signIn' or signedInOrOneTime == 'signedIn':
-        generatePDFdata.append([fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1], timeToCity, carrier_name, user_email, idOfTicket])
+        # Generovanie PDF
+        generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1], timeToCity,
+                    carrier_name, user_email, idOfTicket)
+
         return tickets()
     if signedInOrOneTime == 'oneTime':
         data = []
