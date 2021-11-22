@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request
+from fpdf import FPDF  # fpdf class
+import os
 import time
 import json
+import qrcode
 import pymysql  # pip install pymysql
 import datetime  # pip install datetime
 import requests  # pip install requests
 import threading
-import os
-from fpdf import FPDF  # fpdf class
 
 app = Flask(__name__)
 try:
@@ -745,6 +746,14 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     numberOfConnection = numberOfConnection + '  ' + carrier_name
     numberOfTickets = 'Miest: ' + numberOfTickets
 
+    data = name + "; " + numberOfConnection + "; " + fromCity + "; " + toCity + "; " + timeFromTo + "; " + numberOfTickets
+    qr = qrcode.QRCode(version=None, box_size=10, border=0)
+    qr.add_data(data)
+    qr.make(fit=True)
+    img = qr.make_image(fill='black', back_color='white')
+    img.save(os.path.dirname(
+        os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png')
+
     pdf = PDF(orientation='L', format='A5')
     pdf.add_font("OpenSans", "", os.path.dirname(os.path.realpath(__file__)) + '/OpenSans.ttf', uni=True)
     pdf.add_page()
@@ -824,6 +833,11 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.cell(25)
     pdf.set_font('OpenSans', size=10)
     pdf.cell(0, 2, txt=numberOfTickets, ln=1)  # pocet miest
+    pdf.ln(30)
+    pdf.cell(64)
+    pdf.image(name=os.path.dirname(
+        os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png', w=55)
+
 
     savePDFname = os.path.dirname(
         os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
