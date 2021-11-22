@@ -39,7 +39,7 @@ def profile():
     return render_template("profile.html")
 
 
-@app.route('/tickets')
+@app.route('/tickets', methods=['GET', 'POST'])
 def tickets():
     user_email = request.form['email']
     print(user_email)
@@ -772,6 +772,11 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     qr.add_data(data)
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
+    print(user_email, idOfTicket)
+    if type(idOfTicket) == tuple:
+        idOfTicket = idOfTicket[0]
+    if type(idOfTicket) == int:
+        idOfTicket = str(idOfTicket)
     img.save(os.path.dirname(
         os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png')
 
