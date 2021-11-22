@@ -185,7 +185,7 @@
                 if (document.getElementById("status").innerHTML == "Lístky") {
                     $.redirectPost('/tickets', {"email": document.cookie.split('; ')[1].split('=')[1]});
                 } else if (document.getElementById("status").innerHTML == "Editor") {
-                    $.redirectPost('/' + document.cookie.split('; ')[0].split('=')[1], {"email": document.cookie.split('; ')[1].split('=')[1]});
+                    $.redirectPost('/' + document.cookie.split('; ')[2].split('=')[1], {"email": document.cookie.split('; ')[1].split('=')[1]});
                 };
             });
             $.extend({
