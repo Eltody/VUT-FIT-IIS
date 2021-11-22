@@ -795,10 +795,26 @@ def purchase(signedInOrOneTime):
     if signedInOrOneTime == 'oneTime':
         data = []
         idOfTicket = str(idOfTicket[0])
-        data.append([user_email, idOfTicket])
         generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1],
                     timeToCity,
                     carrier_name, user_email, idOfTicket)
+
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT id_vozidla FROM Vozidlo_Spoj WHERE id_spoju='%s';" % numberOfConnection)
+        idOfVehicle = cursor1.fetchone()
+        idOfVehicle = idOfVehicle[0]
+        cursor1.close()
+
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT aktualna_poloha FROM Vozidlo WHERE id='%s';" % idOfVehicle)
+        currentLocation = cursor1.fetchone()
+        currentLocation = currentLocation[0]
+        cursor1.close()
+
+        data.append([user_email, idOfTicket, currentLocation])
+        print(data)
 
         return render_template('ticket.html', data=data)
 
