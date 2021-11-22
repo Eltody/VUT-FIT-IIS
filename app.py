@@ -721,14 +721,15 @@ def purchase(signedInOrOneTime):
         data = []
         idOfTicket = str(idOfTicket[0])
         data.append([user_email, idOfTicket])
-        generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1], timeToCity,
-             carrier_name, user_email, idOfTicket)
+        generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1],
+                    timeToCity,
+                    carrier_name, user_email, idOfTicket)
 
         return render_template('ticket.html', data=data)
 
-def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCity, timeFrom, toCity, timeTo,
-             carrier_name, user_email, idOfTicket):
 
+def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCity, timeFrom, toCity, timeTo,
+                carrier_name, user_email, idOfTicket):
     cursor = connection.cursor()
     cursor.execute("SELECT symbol from Symboly")
     symbols = cursor.fetchall()
@@ -742,10 +743,10 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     name = fname + ' ' + lname
     timeFromTo = timeFrom + ' ' + date + '  ' + timeTo + ' ' + date
     numberOfConnection = numberOfConnection + '  ' + carrier_name
-    numberOfTickets = 'Počet miest: ' + numberOfTickets
+    numberOfTickets = symbols[4][0] + numberOfTickets
 
     pdf = PDF(orientation='L', format='A5')
-    pdf.add_font("OpenSans", "", os.path.abspath('OpenSans.ttf'), uni=True)
+    pdf.add_font("OpenSans", "", os.path.dirname(os.path.realpath(__file__)) + 'OpenSans.ttf', uni=True)
     pdf.add_page()
     pdf.set_line_width(0.0)
     pdf.set_font('Times', 'B', size=17)
@@ -824,7 +825,8 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.set_font('OpenSans', size=10)
     pdf.cell(0, 2, txt=numberOfTickets, ln=1)  # pocet miest
 
-    savePDFname = os.path.abspath('/static/tickets/'+ user_email + '_' + idOfTicket + '.pdf')
+    savePDFname = os.path.dirname(
+        os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
     print(savePDFname)
     pdf.output(savePDFname, 'F')
     return
