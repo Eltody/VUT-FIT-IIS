@@ -18,7 +18,7 @@ except pymysql.Error as error:
     print("Cannot connect to database. Error: " + str(error))
 emails = []
 loginData = {}
-
+generatePDFdata = [] # data z purchase pre signIn, signedIn a register uzivatelov (okrem oneTime)
 
 #############################################
 @app.route('/')
@@ -44,7 +44,7 @@ def profile():
 def tickets():
     # TODO budem vracat vsetky uzivatelove listky
     # na listku bude teda cislo toho listku, datum, pocet miest, odkial kam, casy
-
+    print(generatePDFdata)
     user_email = request.form['email']
 
     # ziskanie id cestujuceho
@@ -63,9 +63,25 @@ def tickets():
     cursor1.close()
     print(idOfTickets)
 
-    # Generovanie PDF
+    fname = generatePDFdata[0][0]
+    lname = generatePDFdata[0][1]
+    numberOfConnection = generatePDFdata[0][2]
+    date = generatePDFdata[0][3]
+    numberOfTickets = generatePDFdata[0][4]
+    fromCity = generatePDFdata[0][5]
+    timeFrom = generatePDFdata[0][6]
+    toCity = generatePDFdata[0][7]
+    timeTo = generatePDFdata[0][8]
+    carrier_name = generatePDFdata[0][9]
+    user_email = generatePDFdata[0][10]
+    idOfTicket = generatePDFdata[0][11][0]
+    idOfTicket = str(idOfTicket)
 
-    return render_template("tickets.html")
+    # Generovanie PDF
+    generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCity, timeFrom, toCity, timeTo,
+                carrier_name, user_email, idOfTicket)
+    data = user_email
+    return render_template("tickets.html", data=data)
 
 
 @app.route('/personal')
@@ -663,10 +679,14 @@ def purchase(signedInOrOneTime):
     # ziskanie id cestujuceho
     if signedInOrOneTime != 'oneTime':  # lebo jednorazovy by mohol mat rovnaky email a po druhykrat by sa vybral ten prvy kupeny listok
         cursor1 = connection.cursor()
-        cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % user_email)
+        cursor1.execute("SELECT id, meno, priezvisko FROM Cestujuci WHERE email='%s';" % user_email)
         idOfUser = cursor1.fetchone()
         cursor1.close()
+        tmp_fname_lname = idOfUser
         idOfUser = idOfUser[0]
+        if signedInOrOneTime == 'signIn' or signedInOrOneTime == 'signedIn':
+            fname = tmp_fname_lname[1]
+            lname = tmp_fname_lname[2]
 
     if signedInOrOneTime == 'oneTime':
         cursor1 = connection.cursor()
@@ -717,6 +737,7 @@ def purchase(signedInOrOneTime):
     # TODO odcitanie poctu miest z daneho spoju
 
     if signedInOrOneTime == 'register' or signedInOrOneTime == 'signIn' or signedInOrOneTime == 'signedIn':
+        generatePDFdata.append([fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1], timeToCity, carrier_name, user_email, idOfTicket])
         return tickets()
     if signedInOrOneTime == 'oneTime':
         data = []
@@ -755,7 +776,7 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
         os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png')
 
     pdf = PDF(orientation='L', format='A5')
-    pdf.add_font("OpenSans", "", os.path.dirname(os.path.realpath(__file__)) + '/OpenSans.ttf', uni=True)
+    pdf.add_font("OpenSans", "", os.path.dirname(os.path.realpath(__file__)) + '/static/OpenSans.ttf', uni=True)
     pdf.add_page()
     pdf.set_line_width(0.0)
     pdf.set_font('Times', 'B', size=17)
