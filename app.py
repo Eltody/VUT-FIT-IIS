@@ -43,22 +43,18 @@ def profile():
 @app.route('/tickets', methods=['GET', 'POST'])
 def tickets():
     user_email = request.form['email']
-    print(user_email)
 
     # ziskanie id cestujuceho
     cursor1 = connection.cursor()
     cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % user_email)
     idOfUser = cursor1.fetchall()
     cursor1.close()
-    # idOfUser = idOfUser[0]
-    print(idOfUser)
 
     allIdsOfUsers = []
     for i in idOfUser:
         for j in i:
             allIdsOfUsers.append(int(''.join(str(j))))
 
-    print(allIdsOfUsers)
     allIdsOfTickets = []
     tmp_data = []
     for i in allIdsOfUsers:
@@ -73,13 +69,8 @@ def tickets():
         for m in idsOfTickets:
             for n in m:
                 tmp_allIdsOfTickets.append(''.join(str(n)))
-        print('ids of tickets')
-        print(tmp_allIdsOfTickets)
         allIdsOfTickets.append([tmp_allIdsOfTickets])
 
-
-        print('user c.')
-        print(i)
         # ziskanie id spojov
         cursor1 = connection.cursor()
         cursor1.execute(
@@ -91,8 +82,6 @@ def tickets():
         for m in IdsOfConnections:
             for n in m:
                 allIdsOfConnections.append(''.join(str(n)))
-        print('ids of connections')
-        print(allIdsOfConnections)
 
         idsOfVehicles = []
         for e in allIdsOfConnections:
@@ -108,8 +97,6 @@ def tickets():
         for f in idsOfVehicles:
             for g in f:
                 allIdsOfVehicles.append(''.join(str(g)))
-        print('ids of vehicles')
-        print(allIdsOfVehicles)
 
         currentLocations = []
         for h in allIdsOfVehicles:
@@ -125,18 +112,12 @@ def tickets():
         for k in currentLocations:
             for l in k:
                 allCurrentLocations.append(''.join(str(l)))
-        print('all locations')
-        print(allCurrentLocations)
 
         for y in range(len(allCurrentLocations)):
-            print(allCurrentLocations[y])
-            print(tmp_allIdsOfTickets[y])
             currentLocation = allCurrentLocations[y]
             currentId = tmp_allIdsOfTickets[y]
             tmp_data.append([currentLocation, currentId])
-        print(tmp_allIdsOfTickets)
 
-    print(tmp_data)
     data = {'email': user_email, 'ids': tmp_data}
     return render_template("tickets.html", data=data)
 
