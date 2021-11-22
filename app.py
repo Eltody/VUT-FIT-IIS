@@ -149,6 +149,7 @@ def personal():
     for i in tmp:
         vehicles.append(''.join(str(i)))
 
+    # vehicles = [[id, [stop1, stop2]], [id, [stop1, stop2]]]
     data = {'tickets': tickets, 'passengers': passengers, 'vehicles': vehicles}
 
     return render_template("personal.html", data=data)
