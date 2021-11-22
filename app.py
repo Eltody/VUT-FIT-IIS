@@ -123,8 +123,10 @@ def tickets():
     return render_template("tickets.html", data=data)
 
 
-@app.route('/personal')
+@app.route('/personal', methods=['GET', 'POST'])
 def personal():
+    emailPersonal = request.form['email']
+
     cursor = connection.cursor()
     cursor.execute("SELECT id from Jizdenka")
     tmp = cursor.fetchall()
@@ -149,8 +151,109 @@ def personal():
     for i in tmp:
         vehicles.append(''.join(str(i)))
 
-    # vehicles = [[id, [stop1, stop2]], [id, [stop1, stop2]]]
-    data = {'tickets': tickets, 'passengers': passengers, 'vehicles': vehicles}
+
+
+
+    # ziskanie id personalu z emailu
+    cursor = connection.cursor()
+    cursor.execute("SELECT id FROM Personal WHERE email='%s';" % emailPersonal)
+    idPersonal = cursor.fetchone()
+    cursor.close()
+    idPersonal = idPersonal[0]
+
+    # ziskanie ids spojov, na ktorych dany personal pracuje
+    cursor1 = connection.cursor()
+    cursor1.execute(
+        "SELECT id_spoju FROM Personal_Spoj WHERE id_personalu='%s';" % idPersonal)
+    tmp = cursor1.fetchall()
+    cursor1.close()
+
+    idsOfAllConnections = []
+    for m in tmp:
+        for n in m:
+            idsOfAllConnections.append(''.join(str(n)))
+    print(idsOfAllConnections)
+
+    vehicles = []
+    allIdsAndTimesOfConnection = []
+    for i in idsOfAllConnections:
+        allTimesSplitted = []
+        tmp_fromAndToTime = []
+        cityFrom = []
+        print('spoj cislo:')
+        print(i)
+
+        # ziskanie ids z konkretneho spoju
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT id_vozidla FROM Vozidlo_Spoj WHERE id_spoju='%s';" % i)
+        idOfVehicle = cursor1.fetchone()
+        cursor1.close()
+        idOfVehicle = idOfVehicle[0]
+        print(idOfVehicle)
+
+        # ziskanie vsetkych casov, cez ktore spoj premava
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT cas_prejazdu FROM Spoj_Zastavka WHERE id_spoju='%s';" % i)
+        tmp_allTimes = cursor1.fetchall()
+        cursor1.close()
+
+        allTimes = []
+        for m in tmp_allTimes:
+            for n in m:
+                allTimes.append(''.join(str(n)))
+
+
+        # odstranenie ':' z casu
+        for k in range(len(allTimes)):
+            tmp2 = allTimes[k].replace(":", "")  # odstranenie ':' pre prevod na int
+            tmp2 = int(tmp2)
+            allTimesSplitted.append(tmp2)
+
+        # sortovanie, aby boli spoje zoradene od najmensieho cisla po najvacsie pre zobrazenie
+        allTimesSplitted.sort()
+        fromTime = str(allTimesSplitted[0])
+        toTime = str(allTimesSplitted[-1])
+        if allTimesSplitted[0] > 959:
+            fromTime = fromTime[:2] + ':' + fromTime[2:]
+        elif allTimesSplitted[0] <= 959:
+            fromTime = fromTime[:1] + ':' + fromTime[1:]
+        if allTimesSplitted[1] > 959:
+            toTime = toTime[:2] + ':' + toTime[2:]
+        elif allTimesSplitted[1] <= 959:
+            toTime = toTime[:1] + ':' + toTime[2:]
+
+        fromTime = str(fromTime)
+        toTime = str(toTime)
+        tmp_fromAndToTime.append(fromTime)
+        tmp_fromAndToTime.append(toTime)
+        for t in tmp_fromAndToTime:
+            cursor1 = connection.cursor()
+            cursor1.execute("SELECT id_zastavky FROM Spoj_Zastavka WHERE id_spoju='%s' and cas_prejazdu='%s';" % (
+                    i, t))
+            idOfStop = cursor1.fetchone()
+            cursor1.close()
+            idOfStop = idOfStop[0]
+
+            cursor1 = connection.cursor()
+            cursor1.execute(
+                "SELECT nazov_zastavky FROM Zastavky WHERE id='%s';" % idOfStop)
+            city = cursor1.fetchone()
+            cursor1.close()
+            cityFrom.append(city[0])
+
+        vehicle = str(idOfVehicle) + ' ' + fromTime + ' ' + cityFrom[0]
+
+    # id vozidla, cas zastavok a zastavky
+    allStops = ['Brno', 'Ostrava']
+    vehicles.append([vehicle, allStops])
+    vehicle = str(idOfVehicle) + ' ' + fromTime + ' ' + cityFrom[0]
+    vehicles.append([vehicle, allStops])
+    print(vehicles)
+    tickets = ['ticket', 'ticket2']
+    # vehicles = [[id + timeFrom + TimeTo, [stop1, stop2]], [id, [stop1, stop2]]]
+    data = {'tickets': tickets, 'vehicles': vehicles, 'currentStop': 'Brno'}
 
     return render_template("personal.html", data=data)
 
