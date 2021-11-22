@@ -91,12 +91,17 @@
                ids.push(data[i][1]);
                locations.push(data[i][0]);
             };
-            console.log(data, ids, locations);
             for (i in ids) {
                 var div = document.getElementsByClassName('ticketsFlex')[0];
                 if (locations[i] != null) {
                     var p = document.createElement("p");
-                        p.innerHTML = ("Aktuálna poloha: " + locations[i]);
+                        p.style.color = "white";
+                        p.style.fontSize = "18px";
+                        p.innerHTML = "Aktuálna poloha: ";
+                        var em = document.createElement("em");
+                            em.style.fontWeight = "600";
+                            em.innerHTML = locations[i];
+                        p.appendChild(em);
                     div.appendChild(p);
                 };
                 var object = document.createElement("object");
