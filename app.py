@@ -134,14 +134,6 @@ def personal():
         tickets.append(''.join(str(i)))
 
     cursor = connection.cursor()
-    cursor.execute("SELECT email from Cestujuci")
-    tmp = cursor.fetchall()
-    cursor.close()
-    passengers = []
-    for i in tmp:
-        passengers.append(''.join(i))
-
-    cursor = connection.cursor()
     cursor.execute("SELECT id from Vozidlo")
     tmp = cursor.fetchall()
     cursor.close()
@@ -149,7 +141,7 @@ def personal():
     for i in tmp:
         vehicles.append(''.join(str(i)))
 
-    data = {'tickets': tickets, 'passengers': passengers, 'vehicles': vehicles}
+    data = {'tickets': tickets, 'vehicles': vehicles}
 
     return render_template("personal.html", data=data)
 

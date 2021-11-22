@@ -47,8 +47,9 @@
                                 <div class="resultContent" id="content">
                                     <h3>Vyberte lístok:</h3>
                                     <select name="tickets" id="tickets" class="search-select"></select>
-                                    <h3>Vyberte cestujúceho:</h3>
-                                    <select name="passengers" id="passengers" class="search-select"></select>
+                                    <div class="resultConDetails">
+                                        <input >
+                                    </div>
                                     <h3>Vyberte vozidlo:</h3>
                                     <select name="vehicles" id="vehicles" class="search-select"></select>
                                 </div>
@@ -113,23 +114,15 @@
         </script>
         <script>
             var tickets = {{data.tickets|tojson}};
-            var passengers = {{data.passengers|tojson}};
             var vehicles = {{data.vehicles|tojson}};
 
             var ticketsSelect = document.getElementById('tickets');
-            var passengersSelect = document.getElementById('passengers');
             var vehiclesSelect = document.getElementById('vehicles');
             for (var i in tickets) {
                 var option = document.createElement('option');
                     option.value = tickets[i];
                     option.innerHTML = tickets[i];
                 ticketsSelect.add(option);
-            };
-            for (var i in passengers) {
-                var option = document.createElement('option');
-                    option.value = passengers[i];
-                    option.innerHTML = passengers[i];
-                passengersSelect.add(option);
             };
             for (var i in vehicles) {
                 var option = document.createElement('option');
