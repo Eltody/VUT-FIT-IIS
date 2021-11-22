@@ -8,10 +8,11 @@
         <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" type="text/css" href="/static/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"> </script>
         <script src="https://kit.fontawesome.com/6079958bc1.js" crossorigin="anonymous"></script>
     </head>
     <!-- Main body -->
-    <body class="background" style="background-image: url(static/background.jpg);">
+    <body class="background" style="background-image: url('../../static/background.jpg');">
 	    <div id="page">
             <!-- Navigation bar -->
             <nav class="navbar">
@@ -28,7 +29,7 @@
                             <div class="dropdown">
                                 <a href="#" class="hidden" id="user"></a>
                                 <div class="dropdown-content">
-                                    <a id="status" href="/tickets">Lístky</a>
+                                    <a id="status" href="#">Lístky</a>
                                     <a href="/profile">Profil</a>
                                     <a onclick="signOut()" href="#">Odhlásiť sa</a>
                                 </div>
@@ -38,41 +39,9 @@
                 </div>
             </nav>
             <!-- Header -->
-            <header id="header"role="banner">
+            <header id="header">
                 <div class="container">
-                    <div class="flex">
-                        <!-- Slogan -->
-                        <div class="col-full">
-                            <h1 class="animate__animated animate__fadeIn animate__slow" id="test">Potrebujete nájsť autobus či&nbsp;vlak?</h1>
-                        </div>
-                        <div class="spacer"></div>
-                        <!-- Search window -->
-                        <div class="col-full animate__animated animate__fadeIn animate__slow animate__delay-1s">
-                            <div class="form-wrap">
-                                <div class="form-content">
-                                    <h3>Vyhľadajte spoj:</h3>
-                                    <form action="/search/connections/bus" method="POST">
-                                        <div class="search-col" style="padding-bottom: 10px;">
-                                            <label for="fromCity">Odkiaľ:</label><br>
-                                            <select name="fromCity" id="fromCity" class="search-select"></select>
-                                        </div>
-                                        <div class="search-col">
-                                            <label for="toCity">Kam:</label><br>
-						                    <select name="toCity" id="toCity" class="search-select"></select>
-                                        </div>
-                                        <div class="search-col">
-                                            <label for="date">Dátum:</label><br>
-                                            <input type="datetime-local" name="date" id="date" class="search-select"/>
-                                        </div>
-                                        <div class="search-col" style="height: 40px;">
-                                            <button type="submit" class="buttonSearch"><a>Hľadať</a></button>
-                                            <button type="button" class="buttonSwap" onclick="swap()"><i class="fas fa-retweet"></i></button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </header>
             <!-- Footer -->
@@ -82,37 +51,19 @@
         </div>
         <!-- Scripts -->
         <script>
-            var cities = {{cities|tojson}};
-            cities = cities.sort(Intl.Collator().compare);
-            var fromCity = document.getElementById('fromCity');
-            var toCity = document.getElementById('toCity');
-            for (var i in cities) {
-                var option = document.createElement('option');
-                option.value = cities[i];
-                option.innerHTML = cities[i];
-                fromCity.add(option);
-            }
-            for (var i in cities) {
-                var option = document.createElement('option');
-                option.value = cities[i];
-                option.innerHTML = cities[i];
-                toCity.add(option);
-            }
-        </script>
-        <script>
             var cookies = document.cookie.split('; ');
             var c = [];
             for (var i = 0; i < cookies.length; i++) {
                 c.push(cookies[i].split('='));
             };
             if (c[0][0] === "name") {
-                if (c[3][1] === "personal") {
+                if (c[2][1] === "personal") {
                     document.getElementById("status").setAttribute("href", "/personal");
                     document.getElementById("status").innerHTML = "Editor";
-                } else if (c[3][1] === "carrier") {
+                } else if (c[2][1] === "carrier") {
                     document.getElementById("status").setAttribute("href", "/carrier");
                     document.getElementById("status").innerHTML = "Editor";
-                } else if (c[3][1] === "administrator") {
+                } else if (c[2][1] === "administrator") {
                     document.getElementById("status").setAttribute("href", "/administrator");
                     document.getElementById("status").innerHTML = "Editor";
                 };
@@ -121,53 +72,31 @@
                 document.getElementById("user").innerHTML = c[0][1];
             };
             function signOut() {
-                document.cookie = "name=; Max-Age=0";
-                document.cookie = "email=; Max-Age=0";
-                document.cookie = "status=; Max-Age=0";
-                location.reload();
+                document.cookie = "name=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                document.cookie = "email=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                document.cookie = "status=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                document.cookie = "name=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+                document.cookie = "email=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+                document.cookie = "status=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+                location.replace("/");
             };
         </script>
         <script>
-            var message = "{{data.message}}";
-            var email = "{{data.email}}";
-            var name = "{{data.name}}";
-            var status = "{{data.status}}";
-            if (message !== '') {
-                expiry = new Date();
-                expiry.setTime(expiry.getTime()+(3600*1000));
-                document.cookie = "name="+name+"; expires=" + expiry.toGMTString();
-                document.cookie = "email="+email+"; expires=" + expiry.toGMTString();
-                document.cookie = "status="+status+"; expires=" + expiry.toGMTString();
-                document.getElementById("user").classList.remove("hidden");
-                document.getElementById("login").classList.add("hidden");
-                document.getElementById("user").innerHTML = name;
-            }
-        </script>
-        <script>
-            function swap(){
-                var tmp = document.getElementById("fromCity").options.selectedIndex;
-                document.getElementById("fromCity").options.selectedIndex = document.getElementById("toCity").options.selectedIndex;
-                document.getElementById("toCity").options.selectedIndex = tmp;
-            }
-        </script>
-        <script>
-            var select = document.getElementById('toCity');
-            for (var i = 0; i < select.length; i++) {
-                if (select[i].childNodes[0].nodeValue === 'Praha - Hlavní nádraží'){
-                    select.selectedIndex = i;
+            $("#status").click(function (event) {
+                if (document.getElementById("status").innerHTML == "Lístky") {
+                    $.redirectPost('/tickets', {"email": document.cookie.split('; ')[1].split('=')[1]});
                 };
-            };
-        </script>
-        <script>
-            var now = new Date();
-            var year = now.getFullYear();
-            var month = ('0'+(now.getMonth()+1)).slice(-2);
-            var day = ('0'+now.getDate()).slice(-2);
-            var hour = ('0'+now.getHours()).slice(-2);
-            var minutes = ('0'+now.getMinutes()).slice(-2);
-            document.getElementById('date').setAttribute("min", year + "-01-01T00:00:00");
-            document.getElementById('date').setAttribute("max", year+1 + "-12-31T23:59:59");
-            document.getElementById('date').setAttribute("value", year + "-" + month + "-" + day + "T" + hour + ":" + minutes);
+            });
+            $.extend({
+                redirectPost: function(location, args){
+                    var form = '';
+                    $.each( args, function( key, value ) {
+                        value = value.split('"').join('\"')
+                        form += '<input type="hidden" name="'+key+'" value="'+value+'">';
+                    });
+                    $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo($(document.body)).submit();
+                }
+            });
         </script>
     </body>
 </html>

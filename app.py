@@ -125,7 +125,33 @@ def tickets():
 
 @app.route('/personal')
 def personal():
-    return render_template("personal.html")
+    cursor = connection.cursor()
+    cursor.execute("SELECT id from Jizdenka")
+    tmp = cursor.fetchall()
+    cursor.close()
+    tickets = []
+    for i in tmp:
+        tickets.append(''.join(str(i)))
+
+    cursor = connection.cursor()
+    cursor.execute("SELECT email from Cestujuci")
+    tmp = cursor.fetchall()
+    cursor.close()
+    passengers = []
+    for i in tmp:
+        passengers.append(''.join(i))
+
+    cursor = connection.cursor()
+    cursor.execute("SELECT id from Vozidlo")
+    tmp = cursor.fetchall()
+    cursor.close()
+    vehicles = []
+    for i in tmp:
+        vehicles.append(''.join(str(i)))
+
+    data = {'tickets': tickets, 'passengers': passengers, 'vehicles': vehicles}
+
+    return render_template("personal.html", data=data)
 
 
 @app.route('/carrier')
