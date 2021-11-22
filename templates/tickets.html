@@ -49,46 +49,18 @@
             </footer>
         </div>
         <!-- Scripts -->
+
         <script>
-            var cookies = document.cookie.split('; ');
-            var c = [];
-            for (var i = 0; i < cookies.length; i++) {
-                c.push(cookies[i].split('='));
+            var email = "{{data.email}}"
+            var ids = {{data.ids|tojson}}
+
+            for (i in ids) {
+                var div = document.getElementsByClassName('ticketsFlex')[0];
+                var object = document.createElement("object");
+                    object.classList.add("pdf");
+                    object.data = "https://drive.google.com/viewerng/viewer?embedded=true&url=http://92.52.58.251/static/tickets/" + email + "_" + ids[i] + ".pdf";
+                div.appendChild(object);
             };
-            if (c[0][0] === "name") {
-                if (c[3][1] === "personal") {
-                    document.getElementById("status").setAttribute("href", "/personal");
-                    document.getElementById("status").innerHTML = "Editor";
-                } else if (c[3][1] === "carrier") {
-                    document.getElementById("status").setAttribute("href", "/carrier");
-                    document.getElementById("status").innerHTML = "Editor";
-                } else if (c[3][1] === "administrator") {
-                    document.getElementById("status").setAttribute("href", "/administrator");
-                    document.getElementById("status").innerHTML = "Editor";
-                };
-                document.getElementById("user").classList.remove("hidden");
-                document.getElementById("login").classList.add("hidden");
-                document.getElementById("user").innerHTML = c[0][1];
-            };
-            function signOut() {
-                document.cookie = "name=; Max-Age=0";
-                document.cookie = "email=; Max-Age=0";
-                document.cookie = "status=; Max-Age=0";
-                location.reload();
-            };
-        </script>
-        <script>
-            const data = require({{data}});
-            console.log(data);
-            data.readdir('https://drive.google.com/viewerng/viewer?embedded=true&url=http://92.52.58.251/static/tickets/', (err, files) => {
-                files.forEach(file => {
-                    console.log(file);
-                    var div = document.getElementsByClassName('ticketFlex')[0];
-                    var iframe = document.createElement("object");
-                        object.data = "https://drive.google.com/viewerng/viewer?embedded=true&url=http://92.52.58.251/static/tickets/" + file;
-                    div.appendChild(object);
-                });
-            });
         </script>
         <script>
             var pdf = document.getElementsByClassName("pdf");

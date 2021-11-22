@@ -58,10 +58,15 @@ def tickets():
     # ziskanie id jizdeniek
     cursor1 = connection.cursor()
     cursor1.execute(
-        "SELECT id, datum, pocet_miest, id_spoj_jizdenky FROM Jizdenka WHERE id_cestujuci_jizdenka='%s';" % idOfUser)
+        "SELECT id FROM Jizdenka WHERE id_cestujuci_jizdenka='%s';" % idOfUser)
     idOfTickets = cursor1.fetchall()
     cursor1.close()
-    print(idOfTickets)
+
+    ids = []
+    for i in idOfTickets:
+        for j in i:
+            ids.append(''.join(str(j)))
+
 
     fname = generatePDFdata[0][0]
     lname = generatePDFdata[0][1]
@@ -81,6 +86,7 @@ def tickets():
     generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCity, timeFrom, toCity, timeTo,
                 carrier_name, user_email, idOfTicket)
     data = user_email
+    data = {'email': user_email, 'ids': ids}
     return render_template("tickets.html", data=data)
 
 
