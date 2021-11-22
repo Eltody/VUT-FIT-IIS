@@ -243,12 +243,12 @@ def personal():
             cursor1.close()
             cityFrom.append(city[0])
 
-        vehicle = str(idOfVehicle) + ' ' + fromTime + ' ' + cityFrom[0]
+        vehicle = str(idOfVehicle) + ' | ' + cityFrom[0] + ' <---> ' + cityFrom[1]
 
     # id vozidla, cas zastavok a zastavky
     allStops = ['Brno', 'Ostrava']
     vehicles.append([vehicle, allStops])
-    vehicle = str(idOfVehicle) + ' ' + fromTime + ' ' + cityFrom[0]
+    vehicle = str(idOfVehicle) + ' | ' + cityFrom[0] + ' <---> ' + cityFrom[1]
     vehicles.append([vehicle, allStops])
     print(vehicles)
     tickets = ['ticket', 'ticket2']
