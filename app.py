@@ -967,57 +967,79 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
 
 
 def databaseCheck():
-   # try:
-    #   conn = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
-   # except pymysql.Error as error:
-   #     webhookUrl = 'https://maker.ifttt.com/trigger/error/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
-   #     requests.post(webhookUrl, headers={'Content-Type': 'application/json'})
-   #     print("Cannot connect to database.")
+    try:
+       conn = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
+    except pymysql.Error as error:
+        webhookUrl = 'https://maker.ifttt.com/trigger/error/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
+        requests.post(webhookUrl, headers={'Content-Type': 'application/json'})
+        print("Cannot connect to database.")
 
     # ziskanie vsetkych id jizdeniek
-    cursor = connection.cursor()
+    cursor = conn.cursor()
     cursor.execute("SELECT id from Jizdenka")
     tmp_ids = cursor.fetchall()
     cursor.close()
 
-
     allIds = []
     for m in tmp_ids:
         for n in m:
-            allIds.append(''.join(str(n)))
+            allIds.append(n)
 
-    # ziskanie vsetkych emailov
-    cursor = connection.cursor()
-    cursor.execute("SELECT email from Cestujuci")
-    tmp_emails = cursor.fetchall()
+    # ziskanie vsetkych id jizdeniek
+    cursor = conn.cursor()
+    cursor.execute("SELECT id_cestujuci_jizdenka from Jizdenka")
+    tmp_passenger_ids = cursor.fetchall()
     cursor.close()
 
+    allPassengerIds = []
+    for m in tmp_passenger_ids:
+        for n in m:
+            allPassengerIds.append(n)
+
+    tmp_emails = []
+    for i in reversed(range(len(allPassengerIds))):
+        # ziskanie vsetkych emailov
+        cursor = connection.cursor()
+        cursor.execute("SELECT email from Cestujuci WHERE id=%s" % allPassengerIds[i])
+        tmp_emails.append(cursor.fetchall())
+        cursor.close()
 
     allEmails = []
     for m in tmp_emails:
         for n in m:
-            allEmails.append(''.join(str(n)))
+            for o in n:
+                allEmails.append(''.join(str(o)))
 
-    allEmailsWithIds = []
-    for i in allEmails:
-        for j in allIds:
-            idAndEmail = i + '_' + j + '.pdf'  # format nazvu stiahnuteho listku: email_id.pdf
-            allEmailsWithIds.append(idAndEmail)
-    print(allEmailsWithIds)
-    boolRemoveTicket = False
-            # porovnavanie email_id.pdf s nazvami suborov, ktore su stiahnute lokalne
+    allEmailsWithIdsPdf = []
+    allEmailsWithIdsPng = []
+    allIds.sort()
+    for i in range(len(allEmails)):
+        idAndEmailPdf = allEmails[i] + '_' + str(allIds[i]) + '.pdf'  # format nazvu stiahnuteho listku: email_id.pdf
+        allEmailsWithIdsPdf.append(idAndEmailPdf)
+        idAndEmailPng = allEmails[i] + '_' + str(allIds[i]) + '.png'  # format nazvu stiahnuteho listku: email_id.pdf
+        allEmailsWithIdsPng.append(idAndEmailPng)
+
+    boolRemoveTicket = True
     for item in os.listdir(os.path.dirname(os.path.realpath(__file__)) + '/static/tickets/'):
         if os.path.isfile(os.path.join(os.path.dirname(os.path.realpath(__file__)) + '/static/tickets/', item)):
-            for k in allEmailsWithIds:
-                print(k, item)
+            for k in allEmailsWithIdsPdf:
                 if k == item:
-                    boolRemoveTicket = True
-            if boolRemoveTicket == False:
+                    boolRemoveTicket = False
+            if boolRemoveTicket:
                 removeTicket = os.path.dirname(os.path.realpath(__file__)) + '/static/tickets/' + item
-                print(removeTicket)
                 os.remove(removeTicket)
+            boolRemoveTicket = True
 
-    return
+    for item in os.listdir(os.path.dirname(os.path.realpath(__file__)) + '/static/qr/'):
+        if os.path.isfile(os.path.join(os.path.dirname(os.path.realpath(__file__)) + '/static/qr/', item)):
+            for k in allEmailsWithIdsPng:
+                if k == item:
+                    boolRemoveTicket = False
+            if boolRemoveTicket:
+                removeTicket = os.path.dirname(os.path.realpath(__file__)) + '/static/qr/' + item
+                os.remove(removeTicket)
+            boolRemoveTicket = True
+
 
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
