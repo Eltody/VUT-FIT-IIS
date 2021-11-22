@@ -51,7 +51,7 @@
                                     <button type="button">Odstrániť</button>
                                     <h3>Vyberte vozidlo:</h3>
                                     <select name="vehicles" id="vehicles" class="search-select"></select>
-                                    <select name="stops" id="stops" class="search-select"></select>
+                                    <form id="stops" action="/smth"></form>
                                     <button type="submit">Aktualizovať</button>
                                 </div>
                             </div>
@@ -118,6 +118,7 @@
         <script>
             var tickets = {{data.tickets|tojson}};
             var vehicles = {{data.vehicles|tojson}};
+            var currentStop = "{{data.current}}";
 
             var ticketsSelect = document.getElementById('tickets');
             var vehiclesSelect = document.getElementById('vehicles');
@@ -134,12 +135,25 @@
                     option.innerHTML = vehicles[i][0];
                 vehiclesSelect.add(option);
             };
-            for (var j in vehicles[0][1]) {
-                var option = document.createElement('option');
-                    option.value = vehicles[0][1][j];
-                    option.innerHTML = vehicles[0][1][j];
-                vehiclesSelect.add(option);
+            vehiclesSelect.onchange = function() {
+                var id = vehiclesSelect.value.split(' ')[0];
+                for (var i in vehicles[id][1])
+                    var input = document.createElement("input");
+                        input.setAttribute("type", "checkbox");
+                        input.setAttribute("id", vehicles[id][1][i]);
+                        input.setAttribute("name", vehicles[id][1][i]);
+                        if (vehicles[id][1][i] == currentStop) {
+                            input.checked = true;
+                        };
+                    var label = document.createElement("label");
+                        label.setAttribute("for", vehicles[id][1][i]);
+                        label.innerHTML = vehicles[id][1][i];
+                    stopsSelect.appendChild(input);
+                    stopsSelect.appendChild(label);
             };
+            $('input[type="checkbox"]').on('change', function() {
+                $('input[type="checkbox"]').not(this).prop('checked', false);
+            });
         </script>
     </body>
 </html>
