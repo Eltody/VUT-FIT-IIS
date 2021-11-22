@@ -57,6 +57,19 @@
         <script>
             var data = {{data|tojson}}
             document.getElementsByClassName('pdf')[0].data = "https://drive.google.com/viewerng/viewer?embedded=true&url=http://92.52.58.251/static/tickets/" + data[0][0] + "_" + data[0][1] + ".pdf";
+            var div = document.getElementsByClassName('ticketsFlex')[0];
+            if (data[0][2] != null) {
+                var p = document.createElement("p");
+                    p.style.color = "white";
+                    p.style.fontSize = "18px";
+                    p.style.paddingTop = "10px";
+                    p.innerHTML = "Aktuálna poloha spoju: ";
+                    var em = document.createElement("em");
+                        em.style.fontWeight = "600";
+                        em.innerHTML = data[0][2];
+                    p.appendChild(em);
+                div.appendChild(p);
+            };
         </script>
         <script>
             var cookies = document.cookie.split('; ');
@@ -124,19 +137,3 @@
         </script>
     </body>
 </html>
-
-<!--
-            var location = "{{data.location}}"
-            var div = document.getElementsByClassName('ticketsFlex')[0];
-            if (location != null) {
-                var p = document.createElement("p");
-                    p.style.color = "white";
-                    p.style.fontSize = "18px";
-                    p.innerHTML = "Aktuálna poloha: ";
-                    var em = document.createElement("em");
-                        em.style.fontWeight = "600";
-                        em.innerHTML = locations[i];
-                    p.appendChild(em);
-                div.appendChild(p);
-            };
--->
