@@ -746,7 +746,7 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     numberOfTickets = symbols[4][0] + numberOfTickets
 
     pdf = PDF(orientation='L', format='A5')
-    pdf.add_font("OpenSans", "", os.path.dirname(os.path.realpath(__file__)) + 'OpenSans.ttf', uni=True)
+    pdf.add_font("OpenSans", "", os.path.dirname(os.path.realpath(__file__)) + '/OpenSans.ttf', uni=True)
     pdf.add_page()
     pdf.set_line_width(0.0)
     pdf.set_font('Times', 'B', size=17)
