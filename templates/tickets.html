@@ -83,10 +83,22 @@
         </script>
         <script>
             var email = "{{data.email}}"
-            var ids = {{data.ids|tojson}}
+            var data = {{data.ids|tojson}}
+            var ids = [];
+            var locations = [];
 
+            for (i in data) {
+               ids += data[i][0];
+               locations += data[i][1];
+            };
+            console.log(data, ids, locations);
             for (i in ids) {
                 var div = document.getElementsByClassName('ticketsFlex')[0];
+                if (locations[i] != null) {
+                    var p = document.createElement("p");
+                        p.innerHTML = ("Aktuálna poloha: " + locations[i]);
+                    div.appendChild(p);
+                };
                 var object = document.createElement("object");
                     object.classList.add("pdf");
                     object.data = "https://drive.google.com/viewerng/viewer?embedded=true&url=http://92.52.58.251/static/tickets/" + email + "_" + ids[i] + ".pdf";

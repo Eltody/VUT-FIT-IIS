@@ -42,6 +42,7 @@
             <header id="header">
                 <div class="container">
                     <div class="ticketsFlex">
+                        <div id="spacer"></div>
                         <h3 style="color: red; margin-bottom: 15px">Lístok si stiahnite a uschovajte!</h3>
                         <object class="pdf"></object>
                     </div>
@@ -92,17 +93,25 @@
             var pdf = document.getElementsByClassName("pdf");
             for (i in pdf) {
                 var width = Math.min(window.innerWidth * 0.8, 880);
-                pdf[i].style.marginBottom = (width * 0.05) + 'px';
                 pdf[i].width = width + 'px';
                 if (width > 840) {
-                    pdf[i].height = width * 0.75 + 'px';
+                    pdf[i].height = Math.min(width * 0.75, window.innerHeight * 0.7) + 'px';
                 } else if (width < 285 || width > 670) {
-                    pdf[i].height = width * 0.775 + 'px';
+                    pdf[i].height = Math.min(width * 0.775, window.innerHeight * 0.7) + 'px';
                 } else if (width > 310) {
-                    pdf[i].height = width * 0.85 + 'px';
+                    pdf[i].height = Math.min(width * 0.85, window.innerHeight * 0.7) + 'px';
                 } else {
-                    pdf[i].height = width * 0.9 + 'px';
+                    pdf[i].height = Math.min(width * 0.9, window.innerHeight * 0.7) + 'px';
                 };
+            };
+        </script>
+        <script>
+            var location = "{{data.location}}"
+            var div = document.getElementsByClassName('ticketsFlex')[0];
+            if (location != null) {
+                var p = document.createElement("p");
+                    p.innerHTML = ("Aktuálna poloha: " + location);
+                div.appendChild(p);
             };
         </script>
         <script>

@@ -1,9 +1,8 @@
-.idea/
-.venv/
-.idea\
-.templates\
+idea/
+venv/
+static/tickets/
+static/qr/
+static/OpenSans.pkl
 *.xml
 *.xml
 *.iml
-.static/tickets/
-.static/qr/
