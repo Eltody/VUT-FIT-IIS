@@ -78,13 +78,17 @@
             };
         </script>
         <script>
-            var data = {{data|tojson}}
-            for (i in data) {
-                var div = document.getElementsByClassName('ticketFlex')[0];
-                var iframe = document.createElement("object");
-                    object.data = "https://drive.google.com/viewerng/viewer?embedded=true&url=http://92.52.58.251/static/tickets/" + data[0][0] + "_" + data[0][1] + ".pdf";
-                div.appendChild(object);
-            };
+            const data = require({{data|tojson}});
+            console.log(data);
+            data.readdir('https://drive.google.com/viewerng/viewer?embedded=true&url=http://92.52.58.251/static/tickets/', (err, files) => {
+                files.forEach(file => {
+                    console.log(file);
+                    var div = document.getElementsByClassName('ticketFlex')[0];
+                    var iframe = document.createElement("object");
+                        object.data = "https://drive.google.com/viewerng/viewer?embedded=true&url=http://92.52.58.251/static/tickets/" + file;
+                    div.appendChild(object);
+                });
+            });
         </script>
         <script>
             var pdf = document.getElementsByClassName("pdf");
