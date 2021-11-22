@@ -855,8 +855,10 @@
         <script>
             let correct = false;
             $(document).on("submit", "form", function(e){
-                e.preventDefault();
-                return false;
+                if ($(this).attr('id') != "tickets") {
+                    e.preventDefault();
+                    return false;
+                };
             });
             $(document).on('click','#login', function() {
                 var email = $("#email").val();
@@ -902,7 +904,7 @@
             };
         </script>
         <script>
-            $(document).on('click','#login', function() {
+            $("#status").click(function (event) {
                 if (document.getElementById("status").innerHTML == "Lístky") {
                     $.redirectPost('/tickets', {"email": document.cookie.split('; ')[1].split('=')[1]});
                 };
@@ -914,7 +916,7 @@
                         value = value.split('"').join('\"')
                         form += '<input type="hidden" name="'+key+'" value="'+value+'">';
                     });
-                    $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo($(document.body)).submit();
+                    $('<form action="' + location + '" method="POST" id="tickets">' + form + '</form>').appendTo($(document.body)).submit();
                 }
             });
         </script>
