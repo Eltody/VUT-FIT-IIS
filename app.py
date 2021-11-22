@@ -19,6 +19,7 @@ except pymysql.Error as error:
 emails = []
 loginData = {}
 
+
 #############################################
 @app.route('/')
 def index():
@@ -47,26 +48,96 @@ def tickets():
     # ziskanie id cestujuceho
     cursor1 = connection.cursor()
     cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % user_email)
-    idOfUser = cursor1.fetchone()
+    idOfUser = cursor1.fetchall()
     cursor1.close()
-    idOfUser = idOfUser[0]
+    # idOfUser = idOfUser[0]
     print(idOfUser)
 
-    # ziskanie id jizdeniek
-    cursor1 = connection.cursor()
-    cursor1.execute(
-        "SELECT id FROM Jizdenka WHERE id_cestujuci_jizdenka='%s';" % idOfUser)
-    idOfTickets = cursor1.fetchall()
-    cursor1.close()
-
-    ids = []
-    for i in idOfTickets:
+    allIdsOfUsers = []
+    for i in idOfUser:
         for j in i:
-            ids.append(''.join(str(j)))
+            allIdsOfUsers.append(int(''.join(str(j))))
 
-    print(idOfTickets)
+    print(allIdsOfUsers)
+    allIdsOfTickets = []
+    tmp_data = []
+    for i in allIdsOfUsers:
+        # ziskanie id jizdeniek
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT id FROM Jizdenka WHERE id_cestujuci_jizdenka='%s';" % i)
+        idsOfTickets = cursor1.fetchall()
+        cursor1.close()
 
-    data = {'email': user_email, 'ids': ids}
+        tmp_allIdsOfTickets = []
+        for m in idsOfTickets:
+            for n in m:
+                tmp_allIdsOfTickets.append(''.join(str(n)))
+        print('ids of tickets')
+        print(tmp_allIdsOfTickets)
+        allIdsOfTickets.append([tmp_allIdsOfTickets])
+
+
+        print('user c.')
+        print(i)
+        # ziskanie id spojov
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT id_spoj_jizdenky FROM Jizdenka WHERE id_cestujuci_jizdenka='%s';" % i)
+        IdsOfConnections = cursor1.fetchall()
+        cursor1.close()
+
+        allIdsOfConnections = []
+        for m in IdsOfConnections:
+            for n in m:
+                allIdsOfConnections.append(''.join(str(n)))
+        print('ids of connections')
+        print(allIdsOfConnections)
+
+        idsOfVehicles = []
+        for e in allIdsOfConnections:
+            cursor1 = connection.cursor()
+            cursor1.execute(
+                "SELECT id_vozidla FROM Vozidlo_Spoj WHERE id_spoju='%s';" % e)
+            tmp_idsOfVehicles = cursor1.fetchone()
+            tmp_idsOfVehicles = tmp_idsOfVehicles[0]
+            idsOfVehicles.append([tmp_idsOfVehicles])
+            cursor1.close()
+
+        allIdsOfVehicles = []
+        for f in idsOfVehicles:
+            for g in f:
+                allIdsOfVehicles.append(''.join(str(g)))
+        print('ids of vehicles')
+        print(allIdsOfVehicles)
+
+        currentLocations = []
+        for h in allIdsOfVehicles:
+            cursor1 = connection.cursor()
+            cursor1.execute(
+                "SELECT aktualna_poloha FROM Vozidlo WHERE id='%s';" % h)
+            tmp_currectLocations = cursor1.fetchone()
+            tmp_currectLocations = tmp_currectLocations[0]
+            currentLocations.append([tmp_currectLocations])
+            cursor1.close()
+
+        allCurrentLocations = []
+        for k in currentLocations:
+            for l in k:
+                allCurrentLocations.append(''.join(str(l)))
+        print('all locations')
+        print(allCurrentLocations)
+
+        for y in range(len(allCurrentLocations)):
+            print(allCurrentLocations[y])
+            print(tmp_allIdsOfTickets[y])
+            currentLocation = allCurrentLocations[y]
+            currentId = tmp_allIdsOfTickets[y]
+            tmp_data.append([currentLocation, currentId])
+        print(tmp_allIdsOfTickets)
+
+    print(tmp_data)
+    data = {'email': user_email, 'ids': tmp_data}
     return render_template("tickets.html", data=data)
 
 
@@ -735,7 +806,8 @@ def purchase(signedInOrOneTime):
 
     if signedInOrOneTime == 'register' or signedInOrOneTime == 'signIn' or signedInOrOneTime == 'signedIn':
         # Generovanie PDF
-        generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1], timeToCity,
+        generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1],
+                    timeToCity,
                     carrier_name, user_email, idOfTicket)
 
         return tickets()
@@ -772,7 +844,6 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     qr.add_data(data)
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
-    print(user_email, idOfTicket)
     if type(idOfTicket) == tuple:
         idOfTicket = idOfTicket[0]
     if type(idOfTicket) == int:
@@ -864,10 +935,8 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.image(name=os.path.dirname(
         os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png', w=55)
 
-
     savePDFname = os.path.dirname(
         os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
-    print(savePDFname)
     pdf.output(savePDFname, 'F')
     return
 
