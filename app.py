@@ -5,6 +5,7 @@ import pymysql  # pip install pymysql
 import datetime  # pip install datetime
 import requests  # pip install requests
 import threading
+import os
 from fpdf import FPDF  # fpdf class
 
 app = Flask(__name__)
@@ -727,6 +728,12 @@ def purchase(signedInOrOneTime):
 
 def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCity, timeFrom, toCity, timeTo,
              carrier_name, user_email, idOfTicket):
+
+    cursor = connection.cursor()
+    cursor.execute("SELECT symbol from Symboly")
+    symbols = cursor.fetchall()
+    cursor.close()
+
     # GENEROVANIE PDF
 
     class PDF(FPDF):
@@ -738,7 +745,7 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     numberOfTickets = 'Počet miest: ' + numberOfTickets
 
     pdf = PDF(orientation='L', format='A5')
-    pdf.add_font("OpenSans", "", "OpenSans-VariableFont_wdth,wght.ttf", uni=True)
+    pdf.add_font("OpenSans", "", os.path.abspath('OpenSans.ttf'), uni=True)
     pdf.add_page()
     pdf.set_line_width(0.0)
     pdf.set_font('Times', 'B', size=17)
@@ -766,8 +773,8 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.cell(125.8, 20, ' ', 'B', 0, 'L', 0)  # middle horizontal line
     pdf.ln(20)
     pdf.cell(14)
-    str_ticket = 'Cestovný lístok'
-    pdf.set_font('Times', 'B', size=16)
+    str_ticket = symbols[2][0]
+    pdf.set_font('OpenSans', size=16)
     pdf.cell(0, 2, txt=str_ticket, ln=1)
     pdf.ln(-8)
     pdf.cell(85)
@@ -784,7 +791,8 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.cell(0, 2, txt=str_from, ln=1)
     pdf.ln(-2)
     pdf.cell(73)
-    str_time = 'Odchod - Príchod'
+    pdf.set_font('OpenSans', size=13)
+    str_time = 'Odchod - ' + symbols[3][0]
     pdf.cell(0, 2, txt=str_time, ln=1)
     pdf.ln(-12)
     pdf.cell(85)
@@ -816,8 +824,8 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.set_font('OpenSans', size=10)
     pdf.cell(0, 2, txt=numberOfTickets, ln=1)  # pocet miest
 
-    idOfTicket = str(idOfTicket[0])
-    savePDFname = 'static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
+    savePDFname = os.path.abspath('/static/tickets/'+ user_email + '_' + idOfTicket + '.pdf')
+    print(savePDFname)
     pdf.output(savePDFname, 'F')
     return
 
