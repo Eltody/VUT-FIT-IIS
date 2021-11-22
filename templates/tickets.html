@@ -78,7 +78,7 @@
             };
         </script>
         <script>
-            const data = require({{data|tojson}});
+            const data = require({{data}});
             console.log(data);
             data.readdir('https://drive.google.com/viewerng/viewer?embedded=true&url=http://92.52.58.251/static/tickets/', (err, files) => {
                 files.forEach(file => {
