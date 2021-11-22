@@ -1,3 +1,4 @@
+from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, request
 from fpdf import FPDF  # fpdf class
 import os
@@ -938,19 +939,22 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     return
 
 
-class databaseCheck(threading.Thread):
-    def run(self, *args, **kwargs):
-        while True:
-            try:
-                pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
-            except pymysql.Error as error:
-                webhookUrl = 'https://maker.ifttt.com/trigger/error/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
-                requests.post(webhookUrl, headers={'Content-Type': 'application/json'})
-                print("Cannot connect to database. Error: " + error)
-            time.sleep(1800)
+def databaseCheck():
+    try:
+        pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
+    except pymysql.Error as error:
+        webhookUrl = 'https://maker.ifttt.com/trigger/error/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
+        requests.post(webhookUrl, headers={'Content-Type': 'application/json'})
+        print("Cannot connect to database. Error: " + error)
 
+    for item in os.listdir(os.path.dirname(os.path.realpath(__file__)) + '/static/tickets/'):
+        if os.path.isfile(os.path.join(os.path.dirname(os.path.realpath(__file__)) + '/static/tickets/', item)):
+            print(item)
+
+    #os.remove(os.path.isfile(os.path.join(os.path.dirname(os.path.realpath(__file__)) + '/static/tickets/' + item)
 
 if __name__ == '__main__':
-    databaseCheck = databaseCheck()
-    databaseCheck.start()
+    scheduler = BackgroundScheduler()
+    job = scheduler.add_job(databaseCheck, 'interval', minutes=5)
+    scheduler.start()
     app.run(debug=True)
