@@ -19,6 +19,7 @@ except pymysql.Error as error:
     print("Cannot connect to database. Error: " + str(error))
 emails = []
 loginData = {}
+profileNameMainPage = ''
 
 
 #############################################
@@ -33,7 +34,7 @@ def index():
         cities.append(''.join(i))
     data = loginData.copy()
     loginData.clear()
-    return render_template("index.html", cities=cities, data=data)
+    return render_template("index.html", cities=cities, data=data, name=profileNameMainPage)
 
 
 @app.route('/profile')
@@ -126,6 +127,11 @@ def tickets():
 @app.route('/personal', methods=['GET', 'POST'])
 def personal():
     emailPersonal = request.form['email']
+
+    cursor = connection.cursor()
+    cursor.execute("SELECT symbol from Symboly")
+    symbols = cursor.fetchall()
+    cursor.close()
 
     # ziskanie id personalu z emailu
     cursor = connection.cursor()
@@ -228,7 +234,7 @@ def personal():
         cursor1.close()
         currentStop = currentStop[0]
 
-        vehicle = str(idOfVehicle) + ' | ' + cities[0] + ' ↔ ' + cities[-1]
+        vehicle = str(idOfVehicle) + ' | ' + cities[0] + ' ' + symbols[5][0] + ' ' + cities[-1]
         vehicles.append([vehicle, cities, currentStop])
 
     # tickets = [[id, email],[id, email]]
@@ -599,6 +605,7 @@ def preSignIn():
 @app.route('/signIn', methods=['GET', 'POST'])
 def signIn():
     global loginData
+    global profileNameMainPage
     user_email = str(request.form['lEmail'])
     password = str(request.form['lPassword'])
     # kontrola spravnosti prihlasovacich udajov z webu a DB
@@ -611,17 +618,20 @@ def signIn():
     for (meno, email, heslo) in cestujuci:
         if email == user_email and heslo == password:
             cestujuci.close()
-            loginData = {'message': 'login', 'email': user_email, 'name': meno, 'status': 'cestujuci'}
+            profileNameMainPage = meno
+            loginData = {'message': 'login', 'email': user_email, 'status': 'cestujuci'}
             return redirect(url_for('index'))
     for (meno, email, heslo) in administrator:
         if email == user_email and heslo == password:
             administrator.close()
-            loginData = {'message': 'login', 'email': user_email, 'name': meno, 'status': 'administrator'}
+            profileNameMainPage = meno
+            loginData = {'message': 'login', 'email': user_email, 'status': 'administrator'}
             return redirect(url_for('index'))
     for (meno, email, heslo) in personal:
         if email == user_email and heslo == password:
             personal.close()
-            loginData = {'message': 'login', 'email': user_email, 'name': meno, 'status': 'personal'}
+            profileNameMainPage = meno
+            loginData = {'message': 'login', 'email': user_email, 'status': 'personal'}
             return redirect(url_for('index'))
     cestujuci.close()
     administrator.close()
@@ -653,6 +663,7 @@ def signIn():
 @app.route('/registration', methods=['POST'])
 def registration():
     global loginData
+    global profileNameMainPage
     fname = request.form['fname']
     lname = request.form['lname']
     user_email = request.form['email']
@@ -679,8 +690,8 @@ def registration():
                    (fname, lname, user_email, password))
     connection.commit()
     cursor.close()
-
-    loginData = {'message': 'login', 'email': user_email, 'name': fname, 'status': 'cestujuci'}
+    profileNameMainPage = fname
+    loginData = {'message': 'login', 'email': user_email, 'status': 'cestujuci'}
     return redirect(url_for('index'))
 
 
@@ -717,7 +728,7 @@ def newSuggestStop():
     #    (, , , , , ))
     #connection.commit()
     #cursor1.close()
-
+    return
 
 @app.route('/carrier/addVehicle/<carrier_name>', methods=['GET', 'POST'])
 def addVehicle(carrier_name):
@@ -878,6 +889,7 @@ def editUser():
 @app.route('/validate/<regOrSignIn>', methods=['GET', 'POST'])
 def validate(regOrSignIn):
     global loginData
+    global profileNameMainPage
     user_email = request.form['email']
     if regOrSignIn == 'signIn':
         password = request.form['password']
@@ -891,19 +903,22 @@ def validate(regOrSignIn):
         for (meno, email, heslo) in cestujuci:
             if email == user_email and heslo == password:
                 cestujuci.close()
-                loginData = 'cestujuci+' + meno
+                profileNameMainPage = meno
+                loginData = 'cestujuci+' + profileNameMainPage
                 # loginData = json.dumps(loginData)
                 return loginData
         for (meno, email, heslo) in administrator:
             if email == user_email and heslo == password:
                 administrator.close()
-                loginData = 'administrator+' + meno
+                profileNameMainPage = meno
+                loginData = 'administrator+' + profileNameMainPage
                 # loginData = json.dumps(loginData)
                 return loginData
         for (meno, email, heslo) in personal:
             if email == user_email and heslo == password:
                 personal.close()
-                loginData = 'personal+' + meno
+                profileNameMainPage = meno
+                loginData = 'personal+' + profileNameMainPage
                 # loginData = json.dumps(loginData)
                 return loginData
         cestujuci.close()
