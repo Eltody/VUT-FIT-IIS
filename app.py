@@ -268,8 +268,8 @@ def personal():
 
 @app.route('/updatePosition', methods=['GET', 'POST'])
 def updatePosition():
-    idOfVehicle = request.form['vehicles']
-    updateTo = request.form.getlist('stops')
+    idOfVehicle = request.form['vehicle']
+    updateTo = request.form['stop']
     updateTo = updateTo[0]
 
     idOfVehicle = idOfVehicle.split(' ', 1)
