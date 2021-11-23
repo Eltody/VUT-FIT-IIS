@@ -149,13 +149,10 @@
             };
             if (c[0][0] === "name") {
                 if (c[2][1] === "personal") {
-                    document.getElementById("status").setAttribute("href", "/personal");
                     document.getElementById("status").innerHTML = "Editor";
                 } else if (c[2][1] === "carrier") {
-                    document.getElementById("status").setAttribute("href", "/carrier");
                     document.getElementById("status").innerHTML = "Editor";
                 } else if (c[2][1] === "administrator") {
-                    document.getElementById("status").setAttribute("href", "/administrator");
                     document.getElementById("status").innerHTML = "Editor";
                 };
                 document.getElementById("user").classList.remove("hidden");
