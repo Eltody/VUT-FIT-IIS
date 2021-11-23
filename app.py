@@ -264,6 +264,8 @@ def personal():
 
     return render_template("personal.html", data=data)
 
+
+# aktualizovanie polohy personalom, ktory sa nachadza v danom spoji
 @app.route('/updatePosition', methods=['GET', 'POST'])
 def updatePosition():
     idOfVehicle = request.form['vehicle']
@@ -275,6 +277,24 @@ def updatePosition():
     # aktualizacia polohy vozidla podla jeho id
     cursor1 = connection.cursor()
     cursor1.execute("UPDATE Vozidlo SET aktualna_poloha = '%s' WHERE id = '%s'" % (updateTo, idOfVehicle))
+    connection.commit()
+    cursor1.close()
+
+    return ""
+
+
+# funkcia pre vymazanie listku z DB, ktory vyberie prihlaseny personal (ked si zaziada cestujuci zrusit listok)
+@app.route('/deleteTicket', methods=['GET', 'POST'])
+def deleteTicket():
+    ticketToDelete = request.form['tickets']
+
+    ticketToDelete = ticketToDelete.split(' ', 1)
+    ticketToDelete = ticketToDelete[0]
+    print(ticketToDelete)
+
+    # odstranenie jizdenky podla id, ktore pride ako zvolena moznost od personalu, ktory na stranke vidi aj email usera
+    cursor1 = connection.cursor()
+    cursor1.execute("DELETE FROM Jizdenka WHERE id = '%s'" % ticketToDelete)
     connection.commit()
     cursor1.close()
 
