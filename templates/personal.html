@@ -52,7 +52,7 @@
                                     <select name="vehicles" id="vehicles" class="search-select">
                                         <option value="" disabled selected>Vyberte vozidlo</option>
                                     </select>
-                                    <form id="stops" action="/smth"></form>
+                                    <form id="stops" action="/updatePosition"></form>
                                     <button type="submit">Aktualizovať</button>
                                 </div>
                             </div>
@@ -119,7 +119,6 @@
         <script>
             var tickets = {{data.tickets|tojson}};
             var vehicles = {{data.vehicles|tojson}};
-            var currentStop = "{{data.currentStop}}";
 
             var ticketsSelect = document.getElementById('tickets');
             var vehiclesSelect = document.getElementById('vehicles');
@@ -145,20 +144,22 @@
                     console.log(vehicles, vehicles[i][0], id)
                     if (id == vehicles[i][0]) {
                         for (var j in vehicles[i][1]) {
-                            var input = document.createElement("input");
-                                input.setAttribute("type", "checkbox");
-                                input.setAttribute("id", vehicles[i][1][j]);
-                                input.setAttribute("name", vehicles[i][1][j]);
-                                input.classList.add("city");
-                                if (vehicles[i][1][j] == currentStop) {
-                                    input.checked = true;
-                                };
-                            var label = document.createElement("label");
-                                label.setAttribute("for", vehicles[i][1][j]);
-                                label.classList.add("city");
-                                label.innerHTML = vehicles[i][1][j];
-                            stopsSelect.appendChild(input);
-                            stopsSelect.appendChild(label);
+                            var div = document.createElement("div")
+                                var input = document.createElement("input");
+                                    input.setAttribute("type", "checkbox");
+                                    input.setAttribute("id", vehicles[i][1][j]);
+                                    input.setAttribute("name", vehicles[i][1][j]);
+                                    input.classList.add("city");
+                                    if (vehicles[i][1][j] == vehicles[i][2]) {
+                                        input.checked = true;
+                                    };
+                                var label = document.createElement("label");
+                                    label.setAttribute("for", vehicles[i][1][j]);
+                                    label.classList.add("city");
+                                    label.innerHTML = vehicles[i][1][j];
+                                div.appendChild(input);
+                                div.appendChild(label);
+                            stopsSelect.appendChild(div);
                         };
                     };
                 };
