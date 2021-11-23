@@ -962,6 +962,14 @@ h1, h2, h3, h4, h5, h6, figure {
     border-radius: 7px;
     color: black;
 }
+.qrScanner {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.qrScanner div{
+    width: 100%;
+}
 @media screen and (max-width: 1000px) {
     .editForm h3 {
         font-size: 22px;

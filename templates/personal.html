@@ -12,6 +12,7 @@
         <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
         <script src="https://kit.fontawesome.com/6079958bc1.js" crossorigin="anonymous"></script>
+        <script src="/static/html5-qr-code.js"></script>
     </head>
     <!-- Main body -->
     <body class="background" style="background-image: url('../../static/background.jpg');">
@@ -47,6 +48,11 @@
                         <div class="animate__animated animate__fadeIn animate__faster">
                             <div class="resultWrap">
                                 <div class="resultContent" id="content">
+                                    <div class="editForm qrScanner">
+                                        <h3>Verifikácia lístkov</h3>
+                                        <button id="showQR" onclick="showQR()" type="button">Spustiť</button>
+                                        <div id="reader" style="height: 0px; opacity: 0; z-index: -10"></div>
+                                    </div>
                                     <div class="editForm">
                                         <h3>Pridanie cestovného lístka</h3>
                                         <button id="showSearch" onclick="showSearch()" type="button">Pridať</button>
@@ -106,6 +112,8 @@
         </div>
         <div id="successfulDialog" class="hidden">
             <p style="color: green">Zmeny boli vykonané</p>
+        </div>
+        <div id="QRDialog" class="hidden">
         </div>
         <!-- Scripts -->
         <script>
@@ -270,9 +278,63 @@
             });
         </script>
         <script>
+            var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+            html5QrcodeScanner.render(onScanSuccess);
+
+            function onScanSuccess(decodedText, decodedResult) {
+                console.log(decodedText);
+                var pattern = /[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z\s]+;\s[0-9]+\s[a-zA-Z\s]+;\s[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z\s-]+;\s[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z\s-]+;\s+[0-9:]+\s[0-9.]+\s[ša-zA-Z]+\s+[0-9:]+\s[0-9.]+\s[ša-zA-Z]+;\s[a-zA-Z\s:]+[0-9][0-9]*/
+                console.log(pattern.test(decodedText));
+                if (pattern.test(decodedText)) {
+                    html5QrcodeScanner.clear();
+                    var name = decodedText.split('; ')[0];
+                    var connection = decodedText.split('; ')[1];
+                    var from = decodedText.split('; ')[2];
+                    var to = decodedText.split('; ')[3];
+                    var time = decodedText.split('; ')[4];
+                    var seats = decodedText.split('; ')[5];
+
+                    console.log(name);
+                    console.log(connection);
+                    console.log(from);
+                    console.log(to);
+                    console.log(time);
+
+                    var div = document.getElementById('QRDialog');
+                    var p = document.createElement("p");
+                        p.innerHTML = name;
+                    div.appendChild(p);
+
+                    $("#QRDialog").removeClass("hidden");
+                    $("#QRDialog").dialog({
+                        draggable: false,
+                        resizable: false,
+                        height: 150,
+                        width: 250,
+                        modal: true,
+                        buttons: {
+                            "Potvrdiť": function() {
+                                var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+                                html5QrcodeScanner.render(onScanSuccess);
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                    $(".ui-dialog-titlebar").hide();
+                };
+            };
+        </script>
+        <script>
             function showSearch() {
                 document.getElementById('showSearch').classList.add("hidden");
                 document.getElementById('searchForm').classList.remove("hidden");
+            };
+            function showQR() {
+                document.getElementById('showQR').classList.add("hidden");
+                document.getElementById('reader').classList.remove("hidden");
+                document.getElementById('reader').style.height = "auto";
+                document.getElementById('reader').style.opacity = "1";
+                document.getElementById('reader').style.zIndex = "10";
             };
             $(document).on('click','#submitTicket', function() {
                 $("#confirmDeleteDialog").removeClass("hidden");
