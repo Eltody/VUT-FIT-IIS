@@ -262,7 +262,18 @@ def personal():
 
     data = {'tickets': allTickets, 'vehicles': vehicles}
 
-    return render_template("personal.html", data=data)
+    # vypis vsetkych miest pre novy ticket ktory vytvara personal
+    cursor = connection.cursor()
+    cursor.execute("SELECT nazov_zastavky from Zastavky")
+    tmp = cursor.fetchall()
+    cursor.close()
+    cities = []
+    for i in tmp:
+        cities.append(''.join(i))
+    print(cities)
+
+    return render_template("personal.html", cities=cities, data=data)
+
 
 
 # aktualizovanie polohy personalom, ktory sa nachadza v danom spoji
