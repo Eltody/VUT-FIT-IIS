@@ -297,7 +297,7 @@ def updatePosition():
 # funkcia pre vymazanie listku z DB, ktory vyberie prihlaseny personal (ked si zaziada cestujuci zrusit listok)
 @app.route('/deleteTicket', methods=['GET', 'POST'])
 def deleteTicket():
-    ticketToDelete = request.form['tickets']
+    ticketToDelete = request.form['ticket']
 
     ticketToDelete = ticketToDelete.split(' ', 1)
     ticketToDelete = ticketToDelete[0]
