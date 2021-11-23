@@ -231,7 +231,7 @@ def personal():
         vehicle = str(idOfVehicle) + ' | ' + cities[0] + ' ↔ ' + cities[-1]
         vehicles.append([vehicle, cities, currentStop])
 
-# tickets = [[id, email],[id, email]]
+    # tickets = [[id, email],[id, email]]
     # ziskanie vsetkych id jizdeniek, ktore patria pod dany personal - spoje, cez ktore personal pracuje
     allTickets = []
     cursor1 = connection.cursor()
@@ -684,7 +684,41 @@ def registration():
     return redirect(url_for('index'))
 
 
-# DOPRAVCA
+# DOPRAVCA - navrhovanie novych zastavok
+@app.route('/loadStops', methods=['GET', 'POST'])
+def loadStops():
+    # ziskanie vsetkych zastavok, ich geografickych poloh a ich id
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id, nazov_zastavky, geograficka_poloha FROM Zastavky")
+    allStops = cursor1.fetchall()
+    cursor1.close()
+    allStops = list(allStops)
+    print(allStops)
+
+    # ziskanie vsetkych navrhov zastavok, ich geografickych poloh a ich id
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id, nazov, geograficka_poloha, id_dopravca_navrhy, stav  FROM NavrhZastavky")
+    allSuggestedStops = cursor1.fetchall()
+    cursor1.close()
+    allSuggestedStops = list(allSuggestedStops)
+    print(allSuggestedStops)
+
+    return ""
+
+# DOPRAVCA - ulozenie info o navrhu novej zastavky, ktore bude schvalovat administrator
+@app.route('/newSuggestStop', methods=['GET', 'POST'])
+def newSuggestStop():
+    # tu mi pridu data od Martina
+
+    # pridanie navrhu do DB
+    #cursor1 = connection.cursor()
+    #cursor1.execute(
+    #    "insert into `NavrhZastavky` (nazov, geograficka_poloha, id_dopravca_navrhy, stav, id_administrator_potvrdenie) VALUES (%s, %s, %s, %s, %s)",
+    #    (, , , , , ))
+    #connection.commit()
+    #cursor1.close()
+
+
 @app.route('/carrier/addVehicle/<carrier_name>', methods=['GET', 'POST'])
 def addVehicle(carrier_name):
     # prihlaseny bude Dopravca - Martin mi bude musiet poslat nazov dopravcu, akym nazvom je prihlaseny
@@ -786,12 +820,12 @@ def showMyVehicles(carrier_name):
     # https://swcarpentry.github.io/sql-novice-survey/09-create/index.html
 
 
-# ADMIN
-@app.route('/admin/editUsers/', methods=['GET', 'POST'])
-def editUsers():
+# ADMIN - zobrazenie vsetkych uctov
+@app.route('/loadUsers/', methods=['GET', 'POST'])
+def loadUsers():
     # popis fce: zobrazenie vsetkych uzivatelskych uctov cestujucich
 
-    # zobrazenie vsetkych uctov
+    # zobrazenie vsetkych uctov a ulozenie do 2D zoznamu
     allUsers = []
     cursor1 = connection.cursor()
     cursor1.execute("SELECT meno, priezvisko, email, heslo FROM Administrator")
@@ -822,7 +856,22 @@ def editUsers():
     # allUsers[2] - personal ucty
     # allUsers[3] - cestujuci ucty
 
-    # TODO po prichode info zo stranky aktualizovat info daneho uctu v DB (UPDATE)
+    return render_template("XXXXX.html", data=allUsers)
+
+# ADMIN - edit daneho uctu
+@app.route('/editUser/', methods=['GET', 'POST'])
+def editUser():
+    user_email = request.form['email']
+
+    # TODO ziskanie tabulky, ktoru budem editovat - ci administrator, dopravca, personal, cestujuci
+
+    # aktualizacia daneho uctu podla emailu
+    #cursor1 = connection.cursor()
+    #cursor1.execute("UPDATE DANA_TABULKA SET meno = '%s', priezvisko = '%s', email = '%s', heslo = '%s' WHERE email = '%s'" % (, , , , ))
+    #connection.commit()
+    #cursor1.close()
+
+    return ""
 
 
 # kontrola pri nakupe listka ci uzivatel klikol na registrovat alebo prihlasit
