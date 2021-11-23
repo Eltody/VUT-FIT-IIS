@@ -52,8 +52,9 @@
                                     <select name="vehicles" id="vehicles" class="search-select">
                                         <option value="" disabled selected>Vyberte vozidlo</option>
                                     </select>
-                                    <form id="stops" action="/updatePosition"></form>
-                                    <button type="submit">Aktualizovať</button>
+                                    <form id="stops" action="/updatePosition" method="POST">
+                                        <button type="submit">Aktualizovať</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -136,9 +137,7 @@
                 vehiclesSelect.add(option);
             };
             vehiclesSelect.onchange = function() {
-                while (stopsSelect.firstChild) {
-                    stopsSelect.removeChild(stopsSelect.firstChild);
-                };
+
                 var id = vehiclesSelect.value;
                 for (var i in vehicles) {
                     console.log(vehicles, vehicles[i][0], id)
