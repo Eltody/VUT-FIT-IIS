@@ -266,6 +266,22 @@ def personal():
 
     return render_template("personal.html", data=data)
 
+@app.route('/updatePosition', methods=['GET', 'POST'])
+def updatePosition():
+    idOfVehicle = request.form['vehicles']
+    updateTo = request.form.getlist('stops')
+    updateTo = updateTo[0]
+
+    idOfVehicle = idOfVehicle.split(' ', 1)
+    idOfVehicle = idOfVehicle[0]
+
+    # aktualizacia polohy vozidla podla jeho id
+    cursor1 = connection.cursor()
+    cursor1.execute("UPDATE Vozidlo SET aktualna_poloha = '%s' WHERE id = '%s'" % (updateTo, idOfVehicle))
+    connection.commit()
+    cursor1.close()
+
+    return
 
 @app.route('/carrier')
 def carrier():
