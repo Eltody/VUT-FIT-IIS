@@ -127,33 +127,6 @@ def tickets():
 def personal():
     emailPersonal = request.form['email']
 
-    cursor = connection.cursor()
-    cursor.execute("SELECT id from Jizdenka")
-    tmp = cursor.fetchall()
-    cursor.close()
-    tickets = []
-    for i in tmp:
-        tickets.append(''.join(str(i)))
-
-    cursor = connection.cursor()
-    cursor.execute("SELECT email from Cestujuci")
-    tmp = cursor.fetchall()
-    cursor.close()
-    passengers = []
-    for i in tmp:
-        passengers.append(''.join(i))
-
-    cursor = connection.cursor()
-    cursor.execute("SELECT id from Vozidlo")
-    tmp = cursor.fetchall()
-    cursor.close()
-    vehicles = []
-    for i in tmp:
-        vehicles.append(''.join(str(i)))
-
-
-
-
     # ziskanie id personalu z emailu
     cursor = connection.cursor()
     cursor.execute("SELECT id FROM Personal WHERE email='%s';" % emailPersonal)
@@ -258,11 +231,36 @@ def personal():
         vehicle = str(idOfVehicle) + ' | ' + cities[0] + ' ↔ ' + cities[-1]
         vehicles.append([vehicle, cities, currentStop])
 
+# tickets = [[id, email],[id, email]]
+    # ziskanie vsetkych id jizdeniek, ktore patria pod dany personal - spoje, cez ktore personal pracuje
+    allTickets = []
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Jizdenka WHERE id_personal_jizdenka='%s';" % idPersonal)
+    tmp_idsOfTickets = cursor1.fetchall()
+    cursor1.close()
 
+    allIdsTickets = []
+    for m in tmp_idsOfTickets:
+        for n in m:
+            allIdsTickets.append(''.join(str(n)))
 
-    tickets = ['ticket', 'ticket2']
-    # vehicles = [[id + timeFrom + TimeTo, [stop1, stop2]], [id, [stop1, stop2]]]
-    data = {'tickets': tickets, 'vehicles': vehicles}
+    for i in allIdsTickets:
+        # ziskanie id cestujuceho z jizdenky a nasledne zistenie jeho emailu
+        cursor1 = connection.cursor()
+        cursor1.execute("SELECT id_cestujuci_jizdenka FROM Jizdenka WHERE id='%s';" % i)
+        idPassenger = cursor1.fetchone()
+        cursor1.close()
+        idPassenger = idPassenger[0]
+
+        cursor1 = connection.cursor()
+        cursor1.execute("SELECT email FROM Cestujuci WHERE id='%s';" % idPassenger)
+        emailPassenger = cursor1.fetchone()
+        cursor1.close()
+        emailPassenger = emailPassenger[0]
+        dataToSend = str(i) + ' | ' + emailPassenger
+        allTickets.append(dataToSend)
+
+    data = {'tickets': allTickets, 'vehicles': vehicles}
 
     return render_template("personal.html", data=data)
 
