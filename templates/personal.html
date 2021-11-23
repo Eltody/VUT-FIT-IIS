@@ -119,7 +119,7 @@
         <script>
             var tickets = {{data.tickets|tojson}};
             var vehicles = {{data.vehicles|tojson}};
-            var currentStop = "{{data.current}}";
+            var currentStop = "{{data.currentStop}}";
 
             var ticketsSelect = document.getElementById('tickets');
             var vehiclesSelect = document.getElementById('vehicles');
@@ -137,23 +137,34 @@
                 vehiclesSelect.add(option);
             };
             vehiclesSelect.onchange = function() {
+                while (stopsSelect.firstChild) {
+                    stopsSelect.removeChild(stopsSelect.firstChild);
+                };
                 var id = vehiclesSelect.value;
-                console.log(id, vehicles[0][0]);
-                for (var i in vehicles)
-                    var input = document.createElement("input");
-                        input.setAttribute("type", "checkbox");
-                        input.setAttribute("id", vehicles[id][1][i]);
-                        input.setAttribute("name", vehicles[id][1][i]);
-                        if (vehicles[id][1][i] == currentStop) {
-                            input.checked = true;
+                for (var i in vehicles) {
+                    console.log(vehicles, vehicles[i][0], id)
+                    if (id == vehicles[i][0]) {
+                        for (var j in vehicles[i][1]) {
+                            var input = document.createElement("input");
+                                input.setAttribute("type", "checkbox");
+                                input.setAttribute("id", vehicles[i][1][j]);
+                                input.setAttribute("name", vehicles[i][1][j]);
+                                input.classList.add("city");
+                                if (vehicles[i][1][j] == currentStop) {
+                                    input.checked = true;
+                                };
+                            var label = document.createElement("label");
+                                label.setAttribute("for", vehicles[i][1][j]);
+                                label.classList.add("city");
+                                label.innerHTML = vehicles[i][1][j];
+                            stopsSelect.appendChild(input);
+                            stopsSelect.appendChild(label);
                         };
-                    var label = document.createElement("label");
-                        label.setAttribute("for", vehicles[id][1][i]);
-                        label.innerHTML = vehicles[id][1][i];
-                    stopsSelect.appendChild(input);
-                    stopsSelect.appendChild(label);
+                    };
+                };
+
             };
-            $('input[type="checkbox"]').on('change', function() {
+            $(document).on('click', 'input[type="checkbox"]', function() {
                 $('input[type="checkbox"]').not(this).prop('checked', false);
             });
         </script>
