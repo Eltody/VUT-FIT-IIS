@@ -160,6 +160,8 @@ def personal():
     idPersonal = cursor.fetchone()
     cursor.close()
     idPersonal = idPersonal[0]
+    print('id of personal')
+    print(idPersonal)
 
     # ziskanie ids spojov, na ktorych dany personal pracuje
     cursor1 = connection.cursor()
@@ -172,7 +174,9 @@ def personal():
     for m in tmp:
         for n in m:
             idsOfAllConnections.append(''.join(str(n)))
+    print('all ids of connections')
     print(idsOfAllConnections)
+
 
     vehicles = []
     allIdsAndTimesOfConnection = []
@@ -190,6 +194,7 @@ def personal():
         idOfVehicle = cursor1.fetchone()
         cursor1.close()
         idOfVehicle = idOfVehicle[0]
+        print('id of vehicle')
         print(idOfVehicle)
 
         # ziskanie vsetkych casov, cez ktore spoj premava
@@ -203,6 +208,8 @@ def personal():
         for m in tmp_allTimes:
             for n in m:
                 allTimes.append(''.join(str(n)))
+        print('casy prejazdu s danym spojom')
+        print(tmp_allTimes)
 
 
         # odstranenie ':' z casu
@@ -210,19 +217,20 @@ def personal():
             tmp2 = allTimes[k].replace(":", "")  # odstranenie ':' pre prevod na int
             tmp2 = int(tmp2)
             allTimesSplitted.append(tmp2)
+        print('casy bez ":" ')
+        print(allTimesSplitted)
 
         # sortovanie, aby boli spoje zoradene od najmensieho cisla po najvacsie pre zobrazenie
         allTimesSplitted.sort()
         fromTime = str(allTimesSplitted[0])
         toTime = str(allTimesSplitted[-1])
-        if allTimesSplitted[0] > 959:
-            fromTime = fromTime[:2] + ':' + fromTime[2:]
-        elif allTimesSplitted[0] <= 959:
-            fromTime = fromTime[:1] + ':' + fromTime[1:]
-        if allTimesSplitted[1] > 959:
-            toTime = toTime[:2] + ':' + toTime[2:]
-        elif allTimesSplitted[1] <= 959:
-            toTime = toTime[:1] + ':' + toTime[2:]
+        timesWithColon = []
+        for timeS in allTimesSplitted:
+            if timeS > 959:
+                fromTime = timeS[:2] + ':' + timeS[2:]
+            elif timeS <= 959:
+                fromTime = timeS[:1] + ':' + timeS[1:]
+
 
         fromTime = str(fromTime)
         toTime = str(toTime)
