@@ -45,15 +45,15 @@
                         <div class="animate__animated animate__fadeIn animate__faster">
                             <div class="resultWrap">
                                 <div class="resultContent" id="content">
-                                    <h3>Vyberte lístok:</h3>
+                                    <h3>Odstránenie lístka</h3>
                                     <select name="tickets" id="tickets" class="search-select"></select>
                                     <button type="button">Pridať</button>
                                     <button type="button">Odstrániť</button>
-                                    <select name="vehicles" id="vehicles" class="search-select">
-                                        <option value="" disabled selected>Vyberte vozidlo</option>
-                                    </select>
+                                    <h3>Aktualizácia polohy vozidla</h3>
                                     <form id="stops" action="/updatePosition" method="POST">
-                                        <button type="submit">Aktualizovať</button>
+                                        <select name="vehicles" id="vehicles" class="search-select">
+                                            <option value="" disabled selected>Vyberte vozidlo</option>
+                                        </select>
                                     </form>
                                 </div>
                             </div>
@@ -137,12 +137,15 @@
                 vehiclesSelect.add(option);
             };
             vehiclesSelect.onchange = function() {
-
+                while (stops.children.length > 2) {
+                    console.log(stops.children[1]);
+                    stops.removeChild(stops.children[1]);
+                };
                 var id = vehiclesSelect.value;
                 for (var i in vehicles) {
-                    console.log(vehicles, vehicles[i][0], id)
                     if (id == vehicles[i][0]) {
                         for (var j in vehicles[i][1]) {
+                            var button = document.getElementById('submitStop');
                             var div = document.createElement("div")
                                 var input = document.createElement("input");
                                     input.setAttribute("type", "checkbox");
@@ -159,11 +162,19 @@
                                     label.innerHTML = vehicles[i][1][j];
                                 div.appendChild(input);
                                 div.appendChild(label);
-                            stopsSelect.appendChild(div);
+                            if (button != null) {
+                                stopsSelect.insertBefore(div, button);
+                            } else {
+                                stopsSelect.appendChild(div);
+                                var buttonSubmit = document.createElement("button");
+                                    buttonSubmit.setAttribute("id", "submitStop");
+                                    buttonSubmit.setAttribute("type", "submit");
+                                    buttonSubmit.innerHTML = ("Aktualizovať polohu");
+                                stopsSelect.appendChild(buttonSubmit);
+                            };
                         };
                     };
                 };
-
             };
             $(document).on('click', 'input[type="checkbox"]', function() {
                 $('input[type="checkbox"]').not(this).prop('checked', false);
