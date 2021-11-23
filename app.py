@@ -792,14 +792,37 @@ def editUsers():
     # popis fce: zobrazenie vsetkych uzivatelskych uctov cestujucich
 
     # zobrazenie vsetkych uctov
+    allUsers = []
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT meno, priezvisko, email, heslo FROM Administrator")
+    tmp_allUsers = cursor1.fetchall()
+    cursor1.close()
+    allUsers.append(list(tmp_allUsers))
+
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT nazov, email, heslo FROM Dopravca")
+    tmp_allUsers = cursor1.fetchall()
+    cursor1.close()
+    allUsers.append(list(tmp_allUsers))
+
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT meno, priezvisko, email, heslo FROM Personal")
+    tmp_allUsers = cursor1.fetchall()
+    cursor1.close()
+    allUsers.append(list(tmp_allUsers))
+
     cursor1 = connection.cursor()
     cursor1.execute("SELECT meno, priezvisko, email, heslo FROM Cestujuci")
-    allUsers = cursor1.fetchall()
+    tmp_allUsers = cursor1.fetchall()
     cursor1.close()
+    allUsers.append(list(tmp_allUsers))
 
-    print(allUsers)
+    # allUsers[0] - administrator ucty
+    # allUsers[1] - dopravca ucty
+    # allUsers[2] - personal ucty
+    # allUsers[3] - cestujuci ucty
 
-    # TODO EDIT UZIVATELSKYCH INFO A PREPISANIE NOVYCH INFO DO DATABAZY
+    # TODO po prichode info zo stranky aktualizovat info daneho uctu v DB (UPDATE)
 
 
 # kontrola pri nakupe listka ci uzivatel klikol na registrovat alebo prihlasit
