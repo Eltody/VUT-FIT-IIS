@@ -270,7 +270,6 @@ def personal():
 def updatePosition():
     idOfVehicle = request.form['vehicle']
     updateTo = request.form['stop']
-    updateTo = updateTo[0]
 
     idOfVehicle = idOfVehicle.split(' ', 1)
     idOfVehicle = idOfVehicle[0]
@@ -281,7 +280,7 @@ def updatePosition():
     connection.commit()
     cursor1.close()
 
-    return
+    return ""
 
 @app.route('/carrier')
 def carrier():

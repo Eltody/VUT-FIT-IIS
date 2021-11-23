@@ -46,11 +46,15 @@
                             <div class="resultWrap">
                                 <div class="resultContent" id="content">
                                     <h3>Odstránenie lístka</h3>
-                                    <select name="tickets" id="tickets" class="search-select"></select>
+                                    <form id="ticket" action="/updatePosition" method="POST">
+                                        <select name="tickets" id="tickets" class="search-select">
+                                            <option value="" disabled selected>Vyberte lístok</option>
+                                        </select>
+                                    </form>
+                                    <h3>Pridanie lístka</h3>
                                     <button type="button">Pridať</button>
-                                    <button type="button">Odstrániť</button>
                                     <h3>Aktualizácia polohy vozidla</h3>
-                                    <form id="stops" action="/updatePosition" method="POST">
+                                    <form id="stops">
                                         <select name="vehicles" id="vehicles" class="search-select">
                                             <option value="" disabled selected>Vyberte vozidlo</option>
                                         </select>
@@ -136,9 +140,17 @@
                     option.innerHTML = vehicles[i][0];
                 vehiclesSelect.add(option);
             };
+            ticketsSelect.onchange = function() {
+                while (document.getElementById('ticket').children.length > 1) {
+                    document.getElementById('ticket').removeChild(document.getElementById('ticket').children);
+                };
+                var buttonSubmit = document.createElement("button");
+                    buttonSubmit.setAttribute("type", "submit");
+                    buttonSubmit.innerHTML = ("Odstrániť lístok");
+                document.getElementById('ticket').appendChild(buttonSubmit);
+            };
             vehiclesSelect.onchange = function() {
                 while (stops.children.length > 2) {
-                    console.log(stops.children[1]);
                     stops.removeChild(stops.children[1]);
                 };
                 var id = vehiclesSelect.value;
@@ -168,7 +180,7 @@
                                 stopsSelect.appendChild(div);
                                 var buttonSubmit = document.createElement("button");
                                     buttonSubmit.setAttribute("id", "submitStop");
-                                    buttonSubmit.setAttribute("type", "submit");
+                                    buttonSubmit.setAttribute("type", "button");
                                     buttonSubmit.innerHTML = ("Aktualizovať polohu");
                                 stopsSelect.appendChild(buttonSubmit);
                             };
@@ -178,6 +190,24 @@
             };
             $(document).on('click', 'input[type="checkbox"]', function() {
                 $('input[type="checkbox"]').not(this).prop('checked', false);
+            });
+        </script>
+        <script>
+            $(document).on('click','#submitStop', function() {
+                $.post('/updatePosition', {"vehicle": $('#vehicles').find(":selected").text(), "stop": $("#stops").find("input:checked").val()}, function(result) {});
+            });
+        </script>
+        <script>
+            $(form).on('submit', function() {
+                dialog.confirm({
+                    message: 'Do you really want to submit the form?',
+                    confirm: function() {
+                        return true;
+                    },
+                    cancel: function() {}
+                });
+
+                return false;
             });
         </script>
     </body>
