@@ -61,7 +61,7 @@ CREATE TABLE Zastavky(
     id INT(11) NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (id),
     nazov_zastavky VARCHAR (40),
-    geograficka_poloha VARCHAR(40)
+    geograficka_poloha VARCHAR(100)
 );
 CREATE TABLE Jizdenka(
     id INT(11) NOT NULL AUTO_INCREMENT,
@@ -79,22 +79,23 @@ CREATE TABLE Jizdenka(
 		ON DELETE CASCADE,
     CONSTRAINT PK_id_cestujuci_jizdenka
 		FOREIGN KEY (id_cestujuci_jizdenka) REFERENCES Cestujuci (id)
-		ON DELETE CASCADE
+		ON DELETE CASCADE,
+	stav VARCHAR(20),			-- zaplatena, nezaplatena
+	potvrdenie VARCHAR (20)		-- potvrdena, nepotvrdena
 );
 CREATE TABLE NavrhZastavky(
     id INT(11) NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (id),
-    id_zastavky_navrhy INTEGER,
+    nazov VARCHAR(50),
     id_dopravca_navrhy INTEGER,
-    id_administrator_navrh INTEGER,
-    CONSTRAINT PK_id_zastavky_navrhy
-		FOREIGN KEY (id_zastavky_navrhy) REFERENCES Zastavky (id)
-		ON DELETE CASCADE,
-    CONSTRAINT PK_id_dopravca_navrhy
+    id_administrator_potvrdenie INTEGER,
+    stav VARCHAR(20),					-- potvrdena, nepotvrdena
+    geograficka_poloha VARCHAR(100),
+    CONSTRAINT PK_id_dopravca_navrhy	-- id dopravcu, ktory zastavku navrhuje
 		FOREIGN KEY (id_dopravca_navrhy) REFERENCES Dopravca (id)
 		ON DELETE CASCADE,
-    CONSTRAINT PK_id_administrator_navrh
-		FOREIGN KEY (id_administrator_navrh) REFERENCES Administrator (id)
+    CONSTRAINT PK_id_administrator_potvrdenie					-- kym bol navrh potvrdeny, adminove id
+		FOREIGN KEY (id_administrator_potvrdenie) REFERENCES Administrator (id)
 		ON DELETE CASCADE
 );
 CREATE TABLE Vozidlo(
@@ -183,6 +184,9 @@ VALUES('Príchod');
 INSERT INTO Symboly(symbol)
 VALUES('Počet miest: ');
 
+INSERT INTO Symboly(symbol)
+VALUES('↔');
+
 INSERT INTO Administrator (meno, priezvisko, email, heslo)
 VALUES ('Admin', 'Admin', 'admin@admin.com', 'password');
 
@@ -201,30 +205,30 @@ VALUES ('Martin', 'Rakús', 'martin.rakus1@gmail.com', 'Matono12');
 INSERT INTO Cestujuci (meno, priezvisko, email, heslo)
 VALUES ('Tomáš', 'Zaťko', 'tomas.zatko.ms@gmail.com', 'Password1');
 
-INSERT INTO Zastavky (nazov_zastavky)
-VALUES ('Brno - ÚAN Zvonařka');
-INSERT INTO Zastavky (nazov_zastavky)
-VALUES ('Hradec Králové - Ter. HD');
-INSERT INTO Zastavky (nazov_zastavky)
-VALUES ('Jihlava - aut.nádr.');
-INSERT INTO Zastavky (nazov_zastavky)
-VALUES ('Kroměříž - aut.nádr.');
-INSERT INTO Zastavky (nazov_zastavky)
-VALUES ('Liberec - aut.nádr.');
-INSERT INTO Zastavky (nazov_zastavky)
-VALUES ('Olomouc - hl.nádr.');
-INSERT INTO Zastavky (nazov_zastavky)
-VALUES ('Ostrava - ÚAN');
-INSERT INTO Zastavky (nazov_zastavky)
-VALUES ('Pardubice - hl.nádr.');
-INSERT INTO Zastavky (nazov_zastavky)
-VALUES ('Plzeň - CAN');
-INSERT INTO Zastavky (nazov_zastavky)
-VALUES ('Praha - Hlavní nádraží');
-INSERT INTO Zastavky (nazov_zastavky)
-VALUES ('Zlín - aut.nádr.');
-INSERT INTO Zastavky (nazov_zastavky)
-VALUES ('Český Krumlov');
+INSERT INTO Zastavky (nazov_zastavky, geograficka_poloha)
+VALUES ('Brno - ÚAN Zvonařka', '49.18544111694895, 16.61618288458226');
+INSERT INTO Zastavky (nazov_zastavky, geograficka_poloha)
+VALUES ('Hradec Králové - Ter. HD', '50.21672012747056, 15.813392696254558');
+INSERT INTO Zastavky (nazov_zastavky, geograficka_poloha)
+VALUES ('Jihlava - aut.nádr.', '49.399605746806806, 15.58112626924421');
+INSERT INTO Zastavky (nazov_zastavky, geograficka_poloha)
+VALUES ('Kroměříž - aut.nádr.', '49.301279120575316, 17.40346965574991');
+INSERT INTO Zastavky (nazov_zastavky, geograficka_poloha)
+VALUES ('Liberec - aut.nádr.', '50.7639690274061, 15.046831782783297');
+INSERT INTO Zastavky (nazov_zastavky, geograficka_poloha)
+VALUES ('Olomouc - hl.nádr.', '49.58829230810149, 17.285827642269158');
+INSERT INTO Zastavky (nazov_zastavky, geograficka_poloha)
+VALUES ('Ostrava - ÚAN', '49.83069560941868, 18.280434025077234');
+INSERT INTO Zastavky (nazov_zastavky, geograficka_poloha)
+VALUES ('Pardubice - hl.nádr.', '50.034692610535, 15.75943068461215');
+INSERT INTO Zastavky (nazov_zastavky, geograficka_poloha)
+VALUES ('Plzeň - CAN', '49.74661449976352, 13.36276506925637');
+INSERT INTO Zastavky (nazov_zastavky, geograficka_poloha)
+VALUES ('Praha - Hlavní nádraží', '50.08951055240178, 14.443010915305246');
+INSERT INTO Zastavky (nazov_zastavky, geograficka_poloha)
+VALUES ('Zlín - aut.nádr.', '49.22601902662707, 17.659865640401723');
+INSERT INTO Zastavky (nazov_zastavky, geograficka_poloha)
+VALUES ('Český Krumlov', '48.8117388898195, 14.322524098060063');
 
 
 INSERT INTO Dopravca (nazov, email, heslo)
@@ -241,7 +245,7 @@ VALUES ('Veronika', 'Marková', 'markovav@gmail.com', 'novakovaV7891', '1'); -- 
 INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
 VALUES ('Eleonóra', 'Trúfalová', 'elitra@gmail.com', 'Mauricius2004', '1'); -- id_dopravca_personal (1: REGIOJET)
 INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
-VALUES ('Jakub', 'Davinič', 'davinjacob@seznam.cz', 'petrone14H', '1'); -- id_dopravca_personal (1: REGIOJET)
+VALUES ('Jakubť', 'Davinič', 'davinjacob@seznam.cz', 'petrone14H', '1'); -- id_dopravca_personal (1: REGIOJET)
 INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
 VALUES ('Robert', 'Štekláč', 'stekliR@gmail.com', 'monsterMan10', '2'); -- id_dopravca_personal (2: LEOEXPRESS)
 INSERT INTO Personal (meno, priezvisko, email, heslo, id_dopravca_personal)
