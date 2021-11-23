@@ -1,5 +1,5 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from fpdf import FPDF  # fpdf class
 import os
 import time
@@ -559,17 +559,17 @@ def signIn():
         if email == user_email and heslo == password:
             cestujuci.close()
             loginData = {'message': 'login', 'email': user_email, 'name': meno, 'status': 'cestujuci'}
-            return index()
+            return redirect(url_for('index'))
     for (meno, email, heslo) in administrator:
         if email == user_email and heslo == password:
             administrator.close()
             loginData = {'message': 'login', 'email': user_email, 'name': meno, 'status': 'administrator'}
-            return index()
+            return redirect(url_for('index'))
     for (meno, email, heslo) in personal:
         if email == user_email and heslo == password:
             personal.close()
             loginData = {'message': 'login', 'email': user_email, 'name': meno, 'status': 'personal'}
-            return index()
+            return redirect(url_for('index'))
     cestujuci.close()
     administrator.close()
     personal.close()
@@ -628,7 +628,7 @@ def registration():
     cursor.close()
 
     loginData = {'message': 'login', 'email': user_email, 'name': fname, 'status': 'cestujuci'}
-    return index()
+    return redirect(url_for('index'))
 
 
 # DOPRAVCA
