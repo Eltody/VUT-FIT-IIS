@@ -889,3 +889,108 @@ h1, h2, h3, h4, h5, h6, figure {
     align-items: center;
     justify-content: center;
 }
+.ui-dialog {
+    border-radius: 10px !important;
+}
+.ui-dialog-buttonset {
+    float: none;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+.ui-dialog-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5em 1em 0 1em !important;
+}
+#successfulDialog {
+    padding: 0 1em 0 1em !important;
+}
+.ui-dialog-content p {
+    padding: 0;
+}
+.ui-dialog-buttonpane {
+    padding: 0 !important;
+}
+.ui-dialog-buttonpane button {
+    margin: 0.5em 0 0.5em 0 !important;
+}
+.ui-widget-overlay {
+    background: black !important;
+    opacity: 0.25 !important;
+}
+
+.searchForm .search-select {
+    max-width: 400px;
+    margin-bottom: 5px !important;
+}
+.editForm {
+    border: none;
+    max-width: 700px;
+    width: -webkit-fill-available;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 1px 1px 15px #333;
+    margin-bottom: 15px;
+    padding: 15px 25px;
+}
+.editForm .search-select {
+    max-width: 400px;
+    margin-bottom: 20px;
+}
+.stop {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.stop div {
+    padding: 0 15px 10px 15px;
+}
+.editForm button {
+    margin-top: 5px;
+    max-width: 200px;
+    width: 80%;
+    height: inherit;
+    cursor: pointer;
+    background: rgba(128, 128, 128, 0.6);
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 1px 7px #333;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 7px;
+    color: black;
+}
+@media screen and (max-width: 1000px) {
+    .editForm h3 {
+        font-size: 22px;
+    }
+}
+@media screen and (max-width: 580px) {
+    .editForm h3 {
+        font-size: 20px;
+    }
+    .search-col button {
+        width: 48%;
+        font-size: 15px;
+    }
+    .editForm .search-select {
+        font-size: 13px;
+    }
+}
+@media screen and (max-width: 480px) {
+    .editForm h3 {
+        font-size: 16px;
+    }
+    .search-col button {
+        width: 48%;
+        font-size: 12px;
+    }
+    .editForm button {
+        font-size: 12px;
+    }
+    .editForm .search-select {
+        font-size: 10px;
+    }
+}

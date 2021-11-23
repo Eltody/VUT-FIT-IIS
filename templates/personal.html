@@ -8,7 +8,9 @@
         <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" type="text/css" href="/static/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"> </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
         <script src="https://kit.fontawesome.com/6079958bc1.js" crossorigin="anonymous"></script>
     </head>
     <!-- Main body -->
@@ -45,20 +47,46 @@
                         <div class="animate__animated animate__fadeIn animate__faster">
                             <div class="resultWrap">
                                 <div class="resultContent" id="content">
-                                    <h3>Odstránenie lístka</h3>
-                                    <form id="ticket" action="/updatePosition" method="POST">
-                                        <select name="tickets" id="tickets" class="search-select">
-                                            <option value="" disabled selected>Vyberte lístok</option>
-                                        </select>
-                                    </form>
-                                    <h3>Pridanie lístka</h3>
-                                    <button type="button">Pridať</button>
-                                    <h3>Aktualizácia polohy vozidla</h3>
-                                    <form id="stops">
-                                        <select name="vehicles" id="vehicles" class="search-select">
-                                            <option value="" disabled selected>Vyberte vozidlo</option>
-                                        </select>
-                                    </form>
+                                    <div class="editForm">
+                                        <h3>Pridanie cestovného lístka</h3>
+                                        <button id="showSearch" onclick="showSearch()" type="button">Pridať</button>
+                                        <form id="searchForm" action="/search/connections/bus" method="POST" class="hidden searchForm">
+                                            <div class="search-col" style="padding-bottom: 10px;">
+                                                <label for="fromCity">Odkiaľ:</label><br>
+                                                <select name="fromCity" id="fromCity" class="search-select"></select>
+                                            </div>
+                                            <div class="search-col">
+                                                <label for="toCity">Kam:</label><br>
+                                                <select name="toCity" id="toCity" class="search-select"></select>
+                                            </div>
+                                            <div class="search-col">
+                                                <label for="date">Dátum:</label><br>
+                                                <input style="max-width: 370px" type="datetime-local" name="date" id="date" class="search-select"/>
+                                            </div>
+                                            <div class="search-col" style="height: 40px;">
+                                                <button type="submit" class="buttonSearch"><a>Hľadať</a></button>
+                                                <button type="button" class="buttonSwap" onclick="swap()"><i class="fas fa-retweet"></i></button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="editForm">
+                                        <h3>Odstránenie cestovného lístka</h3>
+                                        <form id="ticket">
+                                            <select name="tickets" id="tickets" class="search-select">
+                                                <option value="" disabled selected>Vyberte lístok</option>
+                                            </select>
+                                            <br>
+                                        </form>
+                                    </div>
+                                    <div class="editForm" style="margin-bottom: 0">
+                                        <h3>Aktualizácia polohy vozidla</h3>
+                                        <form id="stops">
+                                            <select name="vehicles" id="vehicles" class="search-select">
+                                                <option value="" disabled selected>Vyberte vozidlo</option>
+                                            </select>
+                                            <div id="stop" class="stop"></div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -70,7 +98,49 @@
                 <p>Copyright © reserved, Website by <a href="mailto:martin.rakus1@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
             </footer>
         </div>
+        <div id="confirmDeleteDialog" class="hidden">
+            <p>Prajete si vymazať lístok?</p>
+        </div>
+        <div id="confirmDialog" class="hidden">
+            <p>Prajete si uložiť zmeny?</p>
+        </div>
+        <div id="successfulDialog" class="hidden">
+            <p style="color: green">Zmeny boli vykonané</p>
+        </div>
         <!-- Scripts -->
+        <script>
+            var cities = {{cities|tojson}};
+            cities = cities.sort(Intl.Collator().compare);
+            var fromCity = document.getElementById('fromCity');
+            var toCity = document.getElementById('toCity');
+            for (var i in cities) {
+                var option = document.createElement('option');
+                option.value = cities[i];
+                option.innerHTML = cities[i];
+                fromCity.add(option);
+            };
+            for (var i in cities) {
+                var option = document.createElement('option');
+                option.value = cities[i];
+                option.innerHTML = cities[i];
+                toCity.add(option);
+            };
+        </script>
+        <script>
+            var select = document.getElementById('toCity');
+            for (var i = 0; i < select.length; i++) {
+                if (select[i].childNodes[0].nodeValue === 'Praha - Hlavní nádraží'){
+                    select.selectedIndex = i;
+                };
+            };
+        </script>
+        <script>
+            function swap(){
+                var tmp = document.getElementById("fromCity").options.selectedIndex;
+                document.getElementById("fromCity").options.selectedIndex = document.getElementById("toCity").options.selectedIndex;
+                document.getElementById("toCity").options.selectedIndex = tmp;
+            };
+        </script>
         <script>
             var cookies = document.cookie.split('; ');
             var c = [];
@@ -103,6 +173,17 @@
             };
         </script>
         <script>
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = ('0'+(now.getMonth()+1)).slice(-2);
+            var day = ('0'+now.getDate()).slice(-2);
+            var hour = ('0'+now.getHours()).slice(-2);
+            var minutes = ('0'+now.getMinutes()).slice(-2);
+            document.getElementById('date').setAttribute("min", year + "-01-01T00:00:00");
+            document.getElementById('date').setAttribute("max", year+1 + "-12-31T23:59:59");
+            document.getElementById('date').setAttribute("value", year + "-" + month + "-" + day + "T" + hour + ":" + minutes);
+        </script>
+        <script>
             $("#status").click(function (event) {
                 if (document.getElementById("status").innerHTML == "Lístky") {
                     $.redirectPost('/tickets', {"email": document.cookie.split('; ')[1].split('=')[1]});
@@ -127,7 +208,7 @@
 
             var ticketsSelect = document.getElementById('tickets');
             var vehiclesSelect = document.getElementById('vehicles');
-            var stopsSelect = document.getElementById('stops');
+            var stopsSelect = document.getElementById('stop');
             for (var i in tickets) {
                 var option = document.createElement('option');
                     option.value = tickets[i];
@@ -141,17 +222,18 @@
                 vehiclesSelect.add(option);
             };
             ticketsSelect.onchange = function() {
-                while (document.getElementById('ticket').children.length > 1) {
-                    document.getElementById('ticket').removeChild(document.getElementById('ticket').children);
+                var button = document.getElementById('submitTicket');
+                if (button == null) {
+                    var buttonSubmit = document.createElement("button");
+                        buttonSubmit.setAttribute("id", "submitTicket");
+                        buttonSubmit.setAttribute("type", "button");
+                        buttonSubmit.innerHTML = ("Odstrániť lístok");
+                    document.getElementById('ticket').appendChild(buttonSubmit);
                 };
-                var buttonSubmit = document.createElement("button");
-                    buttonSubmit.setAttribute("type", "submit");
-                    buttonSubmit.innerHTML = ("Odstrániť lístok");
-                document.getElementById('ticket').appendChild(buttonSubmit);
             };
             vehiclesSelect.onchange = function() {
-                while (stops.children.length > 2) {
-                    stops.removeChild(stops.children[1]);
+                while (document.getElementById('stop').children.length > 0) {
+                    document.getElementById('stop').removeChild(document.getElementById('stop').childNodes[0]);
                 };
                 var id = vehiclesSelect.value;
                 for (var i in vehicles) {
@@ -174,15 +256,13 @@
                                     label.innerHTML = vehicles[i][1][j];
                                 div.appendChild(input);
                                 div.appendChild(label);
-                            if (button != null) {
-                                stopsSelect.insertBefore(div, button);
-                            } else {
-                                stopsSelect.appendChild(div);
+                            stopsSelect.appendChild(div);
+                            if (button == null) {
                                 var buttonSubmit = document.createElement("button");
                                     buttonSubmit.setAttribute("id", "submitStop");
                                     buttonSubmit.setAttribute("type", "button");
                                     buttonSubmit.innerHTML = ("Aktualizovať polohu");
-                                stopsSelect.appendChild(buttonSubmit);
+                                stopsSelect.parentNode.appendChild(buttonSubmit);
                             };
                         };
                     };
@@ -193,21 +273,81 @@
             });
         </script>
         <script>
-            $(document).on('click','#submitStop', function() {
-                $.post('/updatePosition', {"vehicle": $('#vehicles').find(":selected").text(), "stop": $("#stops").find("input:checked").val()}, function(result) {});
-            });
-        </script>
-        <script>
-            $(form).on('submit', function() {
-                dialog.confirm({
-                    message: 'Do you really want to submit the form?',
-                    confirm: function() {
-                        return true;
-                    },
-                    cancel: function() {}
+            function showSearch() {
+                document.getElementById('showSearch').classList.add("hidden");
+                document.getElementById('searchForm').classList.remove("hidden");
+            };
+            $(document).on('click','#submitTicket', function() {
+                $("#confirmDeleteDialog").removeClass("hidden");
+                $("#confirmDeleteDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            $.post('/deleteTicket', {"ticket": $('#tickets').find(":selected").text()}, function(result) {});
+                            $("#tickets option[value='" + $('#tickets').find(":selected").text() +"']").remove()
+                            $(this).dialog("close");
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
                 });
-
-                return false;
+                $(".ui-dialog-titlebar").hide();
+            });
+            $(document).on('click','#submitStop', function() {
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            if (typeof $("#stops").find("input:checked").val() === 'undefined') {
+                                var stop = " ";
+                            } else {
+                                var stop = $("#stops").find("input:checked").val()
+                            };
+                            $.post('/updatePosition', {"vehicle": $('#vehicles').find(":selected").text(), "stop": stop}, function(result) {});
+                            $(this).dialog( "close" );
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
             });
         </script>
     </body>
