@@ -131,7 +131,7 @@
         <script>
             var message = "{{data.message}}";
             var email = "{{data.email}}";
-            var name = "{{data.name}}";
+            var name = {{name|tojson}};
             var status = "{{data.status}}";
             if (message !== '') {
                 expiry = new Date();
