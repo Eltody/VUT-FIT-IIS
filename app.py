@@ -160,8 +160,6 @@ def personal():
     idPersonal = cursor.fetchone()
     cursor.close()
     idPersonal = idPersonal[0]
-    print('id of personal')
-    print(idPersonal)
 
     # ziskanie ids spojov, na ktorych dany personal pracuje
     cursor1 = connection.cursor()
@@ -174,18 +172,15 @@ def personal():
     for m in tmp:
         for n in m:
             idsOfAllConnections.append(''.join(str(n)))
-    print('all ids of connections')
-    print(idsOfAllConnections)
 
 
     vehicles = []
     allIdsAndTimesOfConnection = []
+    sameVehicle = []
     for i in idsOfAllConnections:
         allTimesSplitted = []
         tmp_fromAndToTime = []
-        cityFrom = []
-        print('spoj cislo:')
-        print(i)
+        cities = []
 
         # ziskanie ids z konkretneho spoju
         cursor1 = connection.cursor()
@@ -194,8 +189,9 @@ def personal():
         idOfVehicle = cursor1.fetchone()
         cursor1.close()
         idOfVehicle = idOfVehicle[0]
-        print('id of vehicle')
-        print(idOfVehicle)
+        if idOfVehicle in sameVehicle:
+            continue
+        sameVehicle.append(idOfVehicle)
 
         # ziskanie vsetkych casov, cez ktore spoj premava
         cursor1 = connection.cursor()
@@ -208,8 +204,6 @@ def personal():
         for m in tmp_allTimes:
             for n in m:
                 allTimes.append(''.join(str(n)))
-        print('casy prejazdu s danym spojom')
-        print(tmp_allTimes)
 
 
         # odstranenie ':' z casu
@@ -217,26 +211,29 @@ def personal():
             tmp2 = allTimes[k].replace(":", "")  # odstranenie ':' pre prevod na int
             tmp2 = int(tmp2)
             allTimesSplitted.append(tmp2)
-        print('casy bez ":" ')
-        print(allTimesSplitted)
 
         # sortovanie, aby boli spoje zoradene od najmensieho cisla po najvacsie pre zobrazenie
         allTimesSplitted.sort()
-        fromTime = str(allTimesSplitted[0])
-        toTime = str(allTimesSplitted[-1])
         timesWithColon = []
         for timeS in allTimesSplitted:
             if timeS > 959:
-                fromTime = timeS[:2] + ':' + timeS[2:]
+                timeS = str(timeS)
+                tmp_time = timeS[:2] + ':' + timeS[2:]
+                timesWithColon.append(tmp_time)
             elif timeS <= 959:
-                fromTime = timeS[:1] + ':' + timeS[1:]
-
+                timeS = str(timeS)
+                tmp_time = timeS[:1] + ':' + timeS[1:]
+                timesWithColon.append(tmp_time)
+        fromTime = str(timesWithColon[0])
+        toTime = str(timesWithColon[-1])
 
         fromTime = str(fromTime)
         toTime = str(toTime)
+
         tmp_fromAndToTime.append(fromTime)
         tmp_fromAndToTime.append(toTime)
-        for t in tmp_fromAndToTime:
+
+        for t in timesWithColon:
             cursor1 = connection.cursor()
             cursor1.execute("SELECT id_zastavky FROM Spoj_Zastavka WHERE id_spoju='%s' and cas_prejazdu='%s';" % (
                     i, t))
@@ -249,19 +246,23 @@ def personal():
                 "SELECT nazov_zastavky FROM Zastavky WHERE id='%s';" % idOfStop)
             city = cursor1.fetchone()
             cursor1.close()
-            cityFrom.append(city[0])
+            cities.append(city[0])
 
-        vehicle = str(idOfVehicle) + ' | ' + cityFrom[0] + ' <---> ' + cityFrom[1]
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT aktualna_poloha FROM Vozidlo WHERE id='%s';" % idOfVehicle)
+        currentStop = cursor1.fetchone()
+        cursor1.close()
+        currentStop = currentStop[0]
 
-    # id vozidla, cas zastavok a zastavky
-    allStops = ['Brno', 'Ostrava']
-    vehicles.append([vehicle, allStops])
-    vehicle = str(idOfVehicle) + ' | ' + cityFrom[0] + ' <---> ' + cityFrom[1]
-    vehicles.append([vehicle, allStops])
-    print(vehicles)
+        vehicle = str(idOfVehicle) + ' | ' + cities[0] + ' ↔ ' + cities[-1]
+        vehicles.append([vehicle, cities, currentStop])
+
+
+
     tickets = ['ticket', 'ticket2']
     # vehicles = [[id + timeFrom + TimeTo, [stop1, stop2]], [id, [stop1, stop2]]]
-    data = {'tickets': tickets, 'vehicles': vehicles, 'currentStop': 'Brno'}
+    data = {'tickets': tickets, 'vehicles': vehicles}
 
     return render_template("personal.html", data=data)
 
