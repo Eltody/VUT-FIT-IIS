@@ -723,9 +723,10 @@ def registration():
 
 
 # DOPRAVCA - navrhovanie novych zastavok
+# tato funkcia zobrazi vsetky zastavky, ktore existuju a aj ich data aby ich mohol pr
 @app.route('/loadStops', methods=['GET', 'POST'])
 def loadStops():
-    # ziskanie vsetkych zastavok, ich geografickych poloh a ich id
+    # ziskanie vsetkych zastavok, aby dopravca nahodou nepridal zastavku, ktora uz existuje
     cursor1 = connection.cursor()
     cursor1.execute("SELECT id, nazov_zastavky, geograficka_poloha FROM Zastavky")
     allStops = cursor1.fetchall()
@@ -735,7 +736,7 @@ def loadStops():
 
     # ziskanie vsetkych navrhov zastavok, ich geografickych poloh a ich id
     cursor1 = connection.cursor()
-    cursor1.execute("SELECT id, nazov, geograficka_poloha, id_dopravca_navrhy, stav  FROM NavrhZastavky")
+    cursor1.execute("SELECT id, nazov, geograficka_poloha, id_dopravca_navrhy, stav FROM NavrhZastavky WHERE stav='potvrdena';")
     allSuggestedStops = cursor1.fetchall()
     cursor1.close()
     allSuggestedStops = list(allSuggestedStops)
@@ -746,7 +747,7 @@ def loadStops():
 # DOPRAVCA - ulozenie info o navrhu novej zastavky, ktore bude schvalovat administrator
 @app.route('/newSuggestStop', methods=['GET', 'POST'])
 def newSuggestStop():
-    # tu mi pridu data od Martina
+    #TODO tu mi pridu data od Martina - potrebujem z formularu NAZOV, GEO.POLOHU, MENO DOPRAVCU KTORY TO NAVRHUJE
 
     # pridanie navrhu do DB
     #cursor1 = connection.cursor()
@@ -770,7 +771,6 @@ def addVehicle(carrier_name):
     descriptionOfBus = request.form['descriptionOfBus']
     actualLocation = ' '
 
-    # TODO v db zmenit v Dopravca: meno a priezvisko len na nazov a zmenit to aj vo funkcii search
     # vyhladam nazov dopravcu v DB a zistim tak id dopravcu
     cursor1 = connection.cursor()
     cursor1.execute("SELECT id FROM Dopravca WHERE nazov='%s';" % carrierName)
@@ -790,6 +790,21 @@ def addVehicle(carrier_name):
         (numberOfSeats, descriptionOfBus, actualLocation, idOfCarrier))
     connection.commit()
     cursor1.close()
+
+    # pridanie info do DB, ze vozidlo este nema prideleny ziadny spoj
+    idOfConnection = 0  # zatial nepriradeny k ziadnemu spoju - to spravi Dopravca az pridanim spoju a zvolenim tohto vozidla
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Vozidlo WHERE id_dopravca_vozidlo='%s';" % idOfCarrier)
+    idOfVehicle = cursor1.fetchall()
+    cursor1.close()
+    idOfVehicle = idOfVehicle[-1][0]  # ziskanie posledneho vytvoreneho id vozidla daneho dopravcu
+
+    cursor1 = connection.cursor()
+    cursor1.execute("insert into `Vozidlo_Spoj` (id_vozidla, id_spoju) VALUES (%s, %s)",(idOfVehicle, idOfConnection))
+    connection.commit()
+    cursor1.close()
+
+    return
 
 
 # DOPRAVCA
