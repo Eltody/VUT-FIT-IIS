@@ -204,10 +204,12 @@
                                         strong4.innerHTML = data[i][9];
                                     p10.appendChild(strong4);
                                 div3.appendChild(p10);
+                                if (data[i][6] != "0") {
                                     var a2 = document.createElement("a");
                                     a2.setAttribute("onclick", "buy(this); return false;");
                                     a2.setAttribute("href", "#");
                                     a2.setAttribute("id", "button" + data[i][2] + data[i][7]);
+                                    a2.setAttribute("name", data[i][6]);
                                     var i4 = document.createElement("i");
                                         i4.classList.add("fas");
                                         i4.classList.add("fa-shopping-basket");
@@ -216,6 +218,7 @@
                                         p12.innerHTML = " Do košíka";
                                     a2.appendChild(p12);
                                 div3.appendChild(a2);
+                                };
                         divFooter.appendChild(div3);
                     divMain.appendChild(divFooter);
                     results.appendChild(divMain);
@@ -328,7 +331,7 @@
                 var c = [];
                 for (var i = 0; i < cookies.length; i++) {
                     c.push(cookies[i].split('='));
-                }
+                };
                 if ((typeof document.getElementById("formBuyButtons" + buy2) === 'undefined' || document.getElementById("formBuyButtons" + buy2) === null)
                   && (typeof document.getElementById("formBuy" + buy2) === 'undefined' || document.getElementById("formBuy" + buy2) === null)) {
                     elem.style.background = "white";
@@ -417,10 +420,11 @@
                                         input.readOnly = true;
                                     amountDiv.appendChild(input);
                                     var iPlus = document.createElement("i");
-                                        iPlus.setAttribute("onclick", "add(); return false;");
+                                        iPlus.setAttribute("onclick", "add(this); return false;");
                                         iPlus.style.cursor = "pointer";
                                         iPlus.classList.add("fas");
                                         iPlus.classList.add("fa-plus-square");
+                                        iPlus.setAttribute("name", elem.getAttribute("name"));
                                     amountDiv.appendChild(iPlus);
                                 formBuyButtons.appendChild(amountDiv);
                                 var dataStorage = document.createElement("input");
@@ -465,10 +469,11 @@
                                     input.readOnly = true;
                                 amountDiv.appendChild(input);
                                 var iPlus = document.createElement("i");
-                                    iPlus.setAttribute("onclick", "add(); return false;");
+                                    iPlus.setAttribute("onclick", "add(this); return false;");
                                     iPlus.style.cursor = "pointer";
                                     iPlus.classList.add("fas");
                                     iPlus.classList.add("fa-plus-square");
+                                    iPlus.setAttribute("name", elem.getAttribute("name"));
                                 amountDiv.appendChild(iPlus);
                             purchaseForm.appendChild(amountDiv);
                             var emailStorage = document.createElement("input");
@@ -537,7 +542,88 @@
                             buy2 = null;
                         };
                     } else if (personal == true) {
-
+                        var formBuy = document.createElement("form");
+                            formBuy.classList.add("purchaseNotLoggedForm");
+                            formBuy.setAttribute("action", "/purchase/oneTime");
+                            formBuy.setAttribute("method", "POST");
+                            formBuy.setAttribute("id", "formBuy" + buy2);
+                            var formBuyForm = document.createElement("div");
+                                var labelFName = document.createElement("label");
+                                    labelFName.setAttribute("for", "fname");
+                                    labelFName.innerHTML = "Meno:";
+                                var inputFName = document.createElement("input");
+                                    inputFName.setAttribute("type", "text");
+                                    inputFName.setAttribute("id", "fname");
+                                    inputFName.setAttribute("name", "fname");
+                                    inputFName.required = true;
+                                var labelLName = document.createElement("label");
+                                    labelLName.setAttribute("for", "lname");
+                                    labelLName.innerHTML = "Priezvisko:";
+                                var inputLName = document.createElement("input");
+                                    inputLName.setAttribute("type", "text");
+                                    inputLName.setAttribute("id", "lname");
+                                    inputLName.setAttribute("name", "lname");
+                                    inputLName.required = true;
+                                var labelEmail = document.createElement("label");
+                                    labelEmail.setAttribute("for", "email");
+                                    labelEmail.innerHTML = "Email:";
+                                var inputEmail = document.createElement("input");
+                                    inputEmail.setAttribute("type", "email");
+                                    inputEmail.setAttribute("id", "email");
+                                    inputEmail.setAttribute("name", "email");
+                                    inputEmail.required = true;
+                                formBuyForm.appendChild(labelFName);
+                                formBuyForm.appendChild(inputFName);
+                                formBuyForm.appendChild(labelLName);
+                                formBuyForm.appendChild(inputLName);
+                                formBuyForm.appendChild(labelEmail);
+                                formBuyForm.appendChild(inputEmail);
+                            formBuy.appendChild(formBuyForm);
+                            var formBuyButtons = document.createElement("div");
+                                var amountDiv = document.createElement("div");
+                                amountDiv.style.flexDirection = "row";
+                                    var iPassenger = document.createElement("i");
+                                        iPassenger.style.paddingRight = "15px";
+                                        iPassenger.classList.add("fas");
+                                        iPassenger.classList.add("fa-user");
+                                    amountDiv.appendChild(iPassenger);
+                                    var iMinus = document.createElement("i");
+                                        iMinus.setAttribute("onclick", "sub(); return false;");
+                                        iMinus.style.cursor = "pointer";
+                                        iMinus.classList.add("fas");
+                                        iMinus.classList.add("fa-minus-square");
+                                    amountDiv.appendChild(iMinus);
+                                    var input = document.createElement("input");
+                                        input.setAttribute("type", "text");
+                                        input.setAttribute("name", "number");
+                                        input.setAttribute("id", "number");
+                                        input.setAttribute("value", "1");
+                                        input.readOnly = true;
+                                    amountDiv.appendChild(input);
+                                    var iPlus = document.createElement("i");
+                                        iPlus.setAttribute("onclick", "add(this); return false;");
+                                        iPlus.style.cursor = "pointer";
+                                        iPlus.classList.add("fas");
+                                        iPlus.classList.add("fa-plus-square");
+                                        iPlus.setAttribute("name", elem.getAttribute("name"));
+                                    amountDiv.appendChild(iPlus);
+                                formBuyButtons.appendChild(amountDiv);
+                                var dataStorage = document.createElement("input");
+                                    dataStorage.style.display = "none";
+                                    dataStorage.setAttribute("type", "text");
+                                    dataStorage.setAttribute("name", "data");
+                                    dataStorage.setAttribute("id", "data");
+                                    dataStorage.setAttribute("value", document.getElementById(buy2).getAttribute("name"));
+                                formBuyButtons.appendChild(dataStorage);
+                                    var purchaseButton = document.createElement("button");
+                                    purchaseButton.setAttribute("type", "submit");
+                                    purchaseButton.setAttribute("id", "oneTime");
+                                    var a = document.createElement("a");
+                                        a.innerHTML = "Kúpiť";
+                                    purchaseButton.appendChild(a);
+                                formBuyButtons.appendChild(purchaseButton);
+                            formBuy.appendChild(formBuyButtons);
+                        buy.appendChild(formBuy);
                     } else {
                         var buy = elem.parentNode.parentNode.parentNode;
                         if (buy2 != buy.id) {
@@ -566,10 +652,11 @@
                                         input.readOnly = true;
                                     amountDiv.appendChild(input);
                                     var iPlus = document.createElement("i");
-                                        iPlus.setAttribute("onclick", "add(); return false;");
+                                        iPlus.setAttribute("onclick", "add(this); return false;");
                                         iPlus.style.cursor = "pointer";
                                         iPlus.classList.add("fas");
                                         iPlus.classList.add("fa-plus-square");
+                                        iPlus.setAttribute("name", elem.getAttribute("name"));
                                     amountDiv.appendChild(iPlus);
                                 purchaseForm.appendChild(amountDiv);
                                 var emailStorage = document.createElement("input");
@@ -612,10 +699,11 @@
                     number.setAttribute("value", count-1);
                 };
             };
-            function add() {
+            function add(elem) {
                 var number = document.getElementById("number");
                 var count = parseInt(number.getAttribute("value"));
-                if (count + 1 < 11) {
+                var max = Math.min(elem.getAttribute("name"), 10);
+                if (count + 1 <= max) {
                     number.setAttribute("value", count+1);
                 };
             };
@@ -684,7 +772,7 @@
                                 input.readOnly = true;
                             amountDiv.appendChild(input);
                             var iPlus = document.createElement("i");
-                                iPlus.setAttribute("onclick", "add(); return false;");
+                                iPlus.setAttribute("onclick", "add(this); return false;");
                                 iPlus.style.cursor = "pointer";
                                 iPlus.classList.add("fas");
                                 iPlus.classList.add("fa-plus-square");
@@ -804,7 +892,7 @@
                                 input.readOnly = true;
                             amountDiv.appendChild(input);
                             var iPlus = document.createElement("i");
-                                iPlus.setAttribute("onclick", "add(); return false;");
+                                iPlus.setAttribute("onclick", "add(this); return false;");
                                 iPlus.style.cursor = "pointer";
                                 iPlus.classList.add("fas");
                                 iPlus.classList.add("fa-plus-square");
@@ -896,7 +984,7 @@
                                 input.readOnly = true;
                             amountDiv.appendChild(input);
                             var iPlus = document.createElement("i");
-                                iPlus.setAttribute("onclick", "add(); return false;");
+                                iPlus.setAttribute("onclick", "add(this); return false;");
                                 iPlus.style.cursor = "pointer";
                                 iPlus.classList.add("fas");
                                 iPlus.classList.add("fa-plus-square");
