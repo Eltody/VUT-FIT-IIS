@@ -25,6 +25,7 @@ profileNameMainPage = ''
 #############################################
 @app.route('/')
 def index():
+    global profileNameMainPage
     cursor = connection.cursor()
     cursor.execute("SELECT nazov_zastavky from Zastavky")
     tmp = cursor.fetchall()

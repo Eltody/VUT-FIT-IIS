@@ -101,7 +101,7 @@
             </header>
             <!-- Footer -->
             <footer id="footer">
-                <p>Copyright © reserved, Website by <a href="mailto:martin.rakus1@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
+                <p>Copyright © reserved, Website by <a href="mailto:cp.poriadne.sk@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
             </footer>
         </div>
         <div id="confirmDeleteDialog" class="hidden">
@@ -156,16 +156,16 @@
                 c.push(cookies[i].split('='));
             };
             if (c[0][0] === "name") {
-                if (c[2][1] === "personal") {
-                    document.getElementById("status").innerHTML = "Editor";
-                } else if (c[2][1] === "carrier") {
-                    document.getElementById("status").innerHTML = "Editor";
-                } else if (c[2][1] === "administrator") {
+                if (c[2][1] != "personal") {
+                    location.replace("/");
+                } else {
                     document.getElementById("status").innerHTML = "Editor";
                 };
                 document.getElementById("user").classList.remove("hidden");
                 document.getElementById("login").classList.add("hidden");
                 document.getElementById("user").innerHTML = c[0][1];
+            } else {
+                location.replace("/");
             };
             function signOut() {
                 document.cookie = "name=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
@@ -284,7 +284,6 @@
             function onScanSuccess(decodedText, decodedResult) {
                 console.log(decodedText);
                 var pattern = /[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z\s]+;\s[0-9]+\s[a-zA-Z\s]+;\s[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z\s-]+;\s[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z\s-]+;\s+[0-9:]+\s[0-9.]+\s[ša-zA-Z]+\s+[0-9:]+\s[0-9.]+\s[ša-zA-Z]+;\s[a-zA-Z\s:]+[0-9][0-9]*/
-                console.log(pattern.test(decodedText));
                 if (pattern.test(decodedText)) {
                     html5QrcodeScanner.clear();
                     var name = decodedText.split('; ')[0];
@@ -293,12 +292,6 @@
                     var to = decodedText.split('; ')[3];
                     var time = decodedText.split('; ')[4];
                     var seats = decodedText.split('; ')[5];
-
-                    console.log(name);
-                    console.log(connection);
-                    console.log(from);
-                    console.log(to);
-                    console.log(time);
 
                     var div = document.getElementById('QRDialog');
                     var p = document.createElement("p");
