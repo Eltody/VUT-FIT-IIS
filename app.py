@@ -413,7 +413,7 @@ def search(boolLoadMore, lastConnectionOnWeb):
                         carrier_name = cursor1.fetchone()  # ziskanie id_dopravcu_spoje
                         cursor1.close()
 
-                        # ziskanie poctu volnych dostupnych miest v danom spoji dan0ho vozidla
+                        # ziskanie poctu volnych dostupnych miest v danom spoji daneho vozidla
                         cursor1 = connection.cursor()
                         cursor1.execute("SELECT id_vozidla FROM Vozidlo_Spoj WHERE id_spoju='%s';" % row1[1])
                         id_vozidla = cursor1.fetchone()
@@ -423,6 +423,12 @@ def search(boolLoadMore, lastConnectionOnWeb):
                         availableSeats = cursor1.fetchone()
                         cursor1.close()
 
+                        # ziskanie popisu vozidla aktualneho spoju
+                        cursor1 = connection.cursor()
+                        cursor1.execute("SELECT popis_vozidla FROM Vozidlo WHERE id='%s';" % id_vozidla)
+                        vehicleDescription = cursor1.fetchone()
+                        cursor1.close()
+                        # TODO POSIELAT VEHICLEDESCRIPTION
                         fromCityTime = row1[0]
                         toCityTime = row2[0]
                         connectionNumber = row1[1]  # cislo spoju
@@ -572,12 +578,14 @@ def search(boolLoadMore, lastConnectionOnWeb):
                                 for j in i:
                                     reservedNumberOfSeats.append(int(''.join(str(j))))
                             reservedNumberOfSeats = sum(reservedNumberOfSeats)
+                            print(availableSeats, reservedNumberOfSeats)
                             availableSeats -= reservedNumberOfSeats
-
+                            if availableSeats < 0:
+                                availableSeats = 0
                             possibleBusConnections.append(
                                 [connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name,
                                  availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection,
-                                 allCitiesOfConnection, tmp_timeFromCity])
+                                 allCitiesOfConnection, tmp_timeFromCity, vehicleDescription])
                             counterOfConnections += 1
                             possibleBusConnections.sort(key=lambda y: y[
                                 11])  # sortovanie, aby boli spoje zoradene od najmensieho cisla po najvacsie pre zobrazenie
@@ -593,11 +601,12 @@ def search(boolLoadMore, lastConnectionOnWeb):
                                     reservedNumberOfSeats.append(int(''.join(str(j))))
                             reservedNumberOfSeats = sum(reservedNumberOfSeats)
                             availableSeats -= reservedNumberOfSeats
-
+                            if availableSeats < 0:
+                                availableSeats = 0
                             laterPossibleBusConnections.append(
                                 [connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name,
                                  availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection,
-                                 allCitiesOfConnection, tmp_timeFromCity])
+                                 allCitiesOfConnection, tmp_timeFromCity, vehicleDescription])
                             counterOfConnections += 1
                             laterPossibleBusConnections.sort(key=lambda y: y[
                                 11])  # sortovanie, aby boli spoje zoradene od najmensieho cisla po najvacsie pre zobrazenie
