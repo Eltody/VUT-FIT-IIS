@@ -560,6 +560,20 @@ def search(boolLoadMore, lastConnectionOnWeb):
                                                 1:-1]  # posielanie len medzizastavok - vymazanie prveho a posledneho prvku - zaciatok cesty a ciel
                         # zaverecne appendovanie dat do zoznamov
                         if tmp_timeFromCity > timeFromDate and not nextDay:  # porovnanie casu odchodu a zvoleneho casu uzivatelom pre najblizsie spoje
+                            # zistenie, kolko volnych miest dany spoj este ponuka na predaj
+                            cursor1 = connection.cursor()
+                            cursor1.execute(
+                                "SELECT pocet_miest FROM Jizdenka WHERE datum='%s' and id_spoj_jizdenky='%s';" % (
+                                dateAndDayOfConnection, connectionNumber))
+                            tmp_reservedNumberOfSeats = cursor1.fetchall()
+                            cursor1.close()
+                            reservedNumberOfSeats = []
+                            for i in tmp_reservedNumberOfSeats:
+                                for j in i:
+                                    reservedNumberOfSeats.append(int(''.join(str(j))))
+                            reservedNumberOfSeats = sum(reservedNumberOfSeats)
+                            availableSeats -= reservedNumberOfSeats
+
                             possibleBusConnections.append(
                                 [connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name,
                                  availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection,
@@ -568,6 +582,18 @@ def search(boolLoadMore, lastConnectionOnWeb):
                             possibleBusConnections.sort(key=lambda y: y[
                                 11])  # sortovanie, aby boli spoje zoradene od najmensieho cisla po najvacsie pre zobrazenie
                         if nextDay:  # pre dalsie spoje, na dalsi den - rovnake spoje, len datum o cislo vyssi a od zaciatku dna 00:00 vsetky, nie len najblizsie v dany den
+                            # zistenie, kolko volnych miest dany spoj este ponuka na predaj
+                            cursor1 = connection.cursor()
+                            cursor1.execute("SELECT pocet_miest FROM Jizdenka WHERE datum='%s' and id_spoj_jizdenky='%s';" % (dateAndDayOfConnection, connectionNumber))
+                            tmp_reservedNumberOfSeats = cursor1.fetchall()
+                            cursor1.close()
+                            reservedNumberOfSeats = []
+                            for i in tmp_reservedNumberOfSeats:
+                                for j in i:
+                                    reservedNumberOfSeats.append(int(''.join(str(j))))
+                            reservedNumberOfSeats = sum(reservedNumberOfSeats)
+                            availableSeats -= reservedNumberOfSeats
+
                             laterPossibleBusConnections.append(
                                 [connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name,
                                  availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection,
