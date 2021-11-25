@@ -452,7 +452,18 @@ def carrier():
         allTimesSplitted.sort()
         timesWithColon = []
         for timeS in allTimesSplitted:
-            if timeS > 959:
+            if timeS <= 9:
+                timeS = str(timeS)
+                tmp_time = timeS[:0] + '0' + timeS[:3]
+                tmp_time = tmp_time[:0] + '0' + tmp_time[:2]
+                tmp_time = tmp_time[:1] + ':' + tmp_time[1:]
+                timesWithColon.append(tmp_time)
+            elif timeS <= 59:
+                timeS = str(timeS)
+                tmp_time = timeS[:0] + '0' + timeS[:4]
+                tmp_time = tmp_time[:1] + ':' + tmp_time[1:]
+                timesWithColon.append(tmp_time)
+            elif timeS > 959:
                 timeS = str(timeS)
                 tmp_time = timeS[:2] + ':' + timeS[2:]
                 timesWithColon.append(tmp_time)
@@ -489,11 +500,7 @@ def carrier():
             cities.append(city)
 
         oneConnection = str(i) + ' | ' + cities[0][0] + ' ' + symbols[6][0] + ' ' + cities[-1][0]
-        print(oneConnection)
-        print(tmp)
         allConnections.append([oneConnection, tmp])
-
-    print(allConnections)
 
     data = {'vehicles': allVehicles, 'connections': allConnections,
             'personal': allPersonal}  # TODO doplnit navrhy zastavok
