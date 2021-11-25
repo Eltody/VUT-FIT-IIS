@@ -488,6 +488,7 @@
                                 var password = '';
                             };
                             $(this).dialog("close");
+                            $.post('/editPersonalInfo', {"carrier": Cookies.get("email") , "id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids + password}, function(result) {});
                             $("#successfulDialog").dialog({
                                 draggable: false,
                                 resizable: false,
@@ -592,7 +593,7 @@
                     document.getElementById("vehicleAddForm").remove();
                 };
             };
-            $(document).on('click','#submitVehicle', function() {
+            function submitVehicle() {
                 $("#confirmDialog").removeClass("hidden");
                 $("#confirmDialog").dialog({
                     draggable: false,
@@ -624,7 +625,7 @@
                     }
                 });
                 $(".ui-dialog-titlebar").hide();
-            });
+            };
             $(document).on('click','#deleteVehicle', function() {
                 while (document.getElementById("confirmVehicleDeleteDialog").childNodes.length > 2) {
                     document.getElementById("confirmVehicleDeleteDialog").lastChild.remove();
