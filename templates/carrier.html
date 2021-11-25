@@ -50,27 +50,33 @@
                                 <div class="resultContent" id="content">
                                     <div class="editForm">
                                         <h3>Úprava personálu</h3>
-                                        <form id="personal">
+                                        <button id="addPersonal" type="button" onclick="addPersonal()">Pridať nového zamestnanca</button>
+                                        <br><br>
+                                        <form id="personal" class="searchForm">
                                             <select name="personals" id="personals" class="search-select">
-                                                <option value="" disabled selected>Vyberte zamestnanca</option>
+                                                <option value="none" disabled selected>Vyberte zamestnanca pre úpravu</option>
                                             </select>
                                             <br>
                                         </form>
                                     </div>
                                     <div class="editForm">
                                         <h3>Úprava vozidiel</h3>
+                                        <button id="addVehicle" type="button" onclick="addVehicle()">Pridať nové vozidlo</button>
+                                        <br><br>
                                         <form id="vehicle" class="searchForm">
                                             <select name="vehicles" id="vehicles" class="search-select">
-                                                <option value="" disabled selected>Vyberte vozidlo</option>
+                                                <option value="none" disabled selected>Vyberte vozidlo pre úpravu</option>
                                             </select>
                                             <br>
                                         </form>
                                     </div>
                                     <div class="editForm" style="margin-bottom: 0">
                                         <h3>Úprava spojov</h3>
+                                        <button id="addConnection" type="button" onclick="addConnections()">Pridať nový spoj</button>
+                                        <br><br>
                                         <form id="connection">
                                             <select name="connections" id="connections" class="search-select">
-                                                <option value="" disabled selected>Vyberte spoj</option>
+                                                <option value="none" disabled selected>Vyberte spoj pre úpravu</option>
                                             </select>
                                             <div id="stop" class="stop"></div>
                                         </form>
@@ -90,7 +96,7 @@
             <p>Prajete si vymazať vozidlo?</p>
         </div>
         <div id="confirmPersonalDeleteDialog" class="hidden">
-            <p>Prajete si vymazať účet zamestnanca?</p>
+            <p>Prajete si vymazať účet?</p>
         </div>
         <div id="confirmConnectionDeleteDialog" class="hidden">
             <p>Prajete si vymazať spoj?</p>
@@ -158,9 +164,14 @@
             var vehiclesSelect = document.getElementById('vehicles');
             var connectionsSelect = document.getElementById('connections');
             for (var i in personals) {
+                var connectionsIds = "";
                 var option = document.createElement('option');
-                    option.value = personals[i];
-                    option.innerHTML = personals[i];
+                    option.value = personals[i][0];
+                    for (j in personals[i][4]) {
+                        connectionsIds = connectionsIds.concat(" ", personals[i][4][j]);
+                    };
+                    option.setAttribute("name", connectionsIds);
+                    option.innerHTML = personals[i][0] + " | " + personals[i][1] + " " + personals[i][2];
                 personalsSelect.add(option);
             };
             for (var i in vehicles) {
@@ -181,13 +192,113 @@
                 connectionsSelect.add(option);
             };
             personalsSelect.onchange = function() {
-                var button = document.getElementById('submitPersonal');
-                if (button == null) {
-                    var buttonSubmit = document.createElement("button");
-                        buttonSubmit.setAttribute("id", "submitPersonal");
-                        buttonSubmit.setAttribute("type", "button");
-                        buttonSubmit.innerHTML = ("Odstrániť personál");
-                    document.getElementById('personal').appendChild(buttonSubmit);
+                while (document.getElementById('personal').children.length > 2) {
+                    document.getElementById('personal').removeChild(document.getElementById('personal').lastChild);
+                };
+                var id = personalsSelect.value;
+                for (var i in personals) {
+                    if (id == personals[i][0]) {
+                        var div1 = document.createElement("div");
+                        div1.setAttribute("id", "personalForm");
+                        div1.classList.add("editorForm");
+                            var div = document.createElement("div");
+                                var inputFName = document.createElement("input");
+                                    inputFName.setAttribute("id", "fName");
+                                    inputFName.setAttribute("name", "fName");
+                                    inputFName.value = personals[i][1];
+                                    inputFName.style.textAlign = "center";
+                                    inputFName.style.width = "95%";
+                                    inputFName.style.maxWidth = "300px";
+                                    inputFName.style.marginBottom = "5px";
+                                var labelFName = document.createElement("label");
+                                    labelFName.setAttribute("for", "fName");
+                                    labelFName.innerHTML = "Meno";
+                                div.appendChild(labelFName);
+                                div.appendChild(inputFName);
+                            div1.appendChild(div);
+                            var div = document.createElement("div");
+                                var inputLName = document.createElement("input");
+                                    inputLName.setAttribute("id", "lName");
+                                    inputLName.setAttribute("name", "lName");
+                                    inputLName.value = personals[i][2];
+                                    inputLName.style.textAlign = "center";
+                                    inputLName.style.width = "95%";
+                                    inputLName.style.maxWidth = "300px";
+                                    inputLName.style.marginBottom = "5px";
+                                var labelLName = document.createElement("label");
+                                    labelLName.setAttribute("for", "lName");
+                                    labelLName.innerHTML = "Priezvisko";
+                                div.appendChild(labelLName);
+                                div.appendChild(inputLName);
+                            div1.appendChild(div);
+                            var div = document.createElement("div");
+                                var inputEmail = document.createElement("input");
+                                    inputEmail.setAttribute("id", "email");
+                                    inputEmail.setAttribute("name", "email");
+                                    inputEmail.value = personals[i][3];
+                                    inputEmail.style.textAlign = "center";
+                                    inputEmail.style.width = "95%";
+                                    inputEmail.style.maxWidth = "300px";
+                                    inputEmail.style.marginBottom = "5px";
+                                var labelEmail = document.createElement("label");
+                                    labelEmail.setAttribute("for", "email");
+                                    labelEmail.innerHTML = "Email";
+                                div.appendChild(labelEmail);
+                                div.appendChild(inputEmail);
+                            div1.appendChild(div);
+                        document.getElementById('personal').appendChild(div1);
+                        var id = personalsSelect.value;
+                        var labelIds = document.createElement("label");
+                            labelIds.setAttribute("id", "labelIds");
+                            labelIds.innerHTML = "Spoje";
+                        var div = document.createElement("div")
+                        div.setAttribute("id", "ids");
+                        div.style.marginBottom = "10px";
+                        for (var i in personals) {
+                            if (id == personals[i][0]) {
+                                for (var j in personals[i][5]) {
+                                    var input = document.createElement("input");
+                                        input.setAttribute("type", "number");
+                                        input.setAttribute("id", j);
+                                        input.setAttribute("max", "9999");
+                                        input.setAttribute("value", personals[i][5][j]);
+                                        input.style.textAlign = "center";
+                                        input.style.margin = "0 5px";
+                                        input.style.width = "30px";
+                                    div.appendChild(input);
+                                };
+                                var input = document.createElement("input");
+                                    input.setAttribute("type", "number");
+                                    input.setAttribute("id", ++j);
+                                    input.setAttribute("max", "9999");
+                                    input.setAttribute("oninput", "addInput(this)");
+                                    input.style.textAlign = "center";
+                                    input.style.margin = "0 5px";
+                                    input.style.width = "30px";
+                                div.appendChild(input);
+                            };
+                        };
+                        document.getElementById('personal').appendChild(labelIds);
+                        document.getElementById('personal').appendChild(div);
+
+                        var div = document.createElement("div");
+                        div.setAttribute("id", "personalButtons");
+                        div.classList.add("search-col");
+                            var buttonSubmit = document.createElement("button");
+                                buttonSubmit.setAttribute("id", "submitPersonal");
+                                buttonSubmit.setAttribute("type", "button");
+                                buttonSubmit.style.float = "left";
+                                buttonSubmit.innerHTML = ("Upraviť popis");
+                            div.appendChild(buttonSubmit);
+                            var buttonSubmit = document.createElement("button");
+                                buttonSubmit.setAttribute("id", "deletePersonal");
+                                buttonSubmit.setAttribute("type", "button");
+                                buttonSubmit.style.float = "right";
+                                buttonSubmit.style.color = "red"
+                                buttonSubmit.innerHTML = ("Odstrániť účet");
+                            div.appendChild(buttonSubmit);
+                        document.getElementById('personal').appendChild(div);
+                    };
                 };
             };
             vehiclesSelect.onchange = function() {
@@ -211,6 +322,7 @@
                         document.getElementById("textArea").style.height = (document.getElementById("textArea").scrollHeight)+"px";
 
                         var div = document.createElement("div");
+                        div.setAttribute("id", "vehicleButtons");
                         div.classList.add("search-col");
                             var buttonSubmit = document.createElement("button");
                                 buttonSubmit.setAttribute("id", "submitVehicle");
@@ -234,6 +346,84 @@
             });
         </script>
         <script>
+            $(document).on('click','#submitPersonal', function() {
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            var ids = "";
+                            var i = 0;
+                            while (i < $("#ids").children().last().attr('id')) {
+                                ids = ids.concat(" ", $("#" + i).val());
+                                i++;
+                            };
+                            $("#successfulDialog").removeClass("hidden");
+                            $.post('/editPersonalInfo', {"id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids}, function(result) {});
+                            $(this).dialog("close");
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            });
+            $(document).on('click','#deletePersonal', function() {
+                $("#confirmPersonalDeleteDialog").removeClass("hidden");
+                $("#confirmPersonalDeleteDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Potvrdiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            $.post('/deletePersonal', {"id": $('#personal').find(":selected").val()}, function(result) {});
+                            $('#personalForm').remove();
+                            $('#labelIds').remove();
+                            $('#ids').remove();
+                            $('#personalButtons').remove();
+                            $('#personals').val('none');
+                            $("#personals option[value='" + parseInt($('#personal').find(":selected").val()) + "']").remove()
+                            $(this).dialog( "close" );
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            });
             $(document).on('click','#submitVehicle', function() {
                 $("#confirmDialog").removeClass("hidden");
                 $("#confirmDialog").dialog({
@@ -280,8 +470,8 @@
                             $("#successfulDialog").removeClass("hidden");
                             $.post('/deleteVehicle', {"id": $('#vehicles').find(":selected").val(), "connections": $('#vehicles').find(":selected").attr('name')}, function(result) {});
                             $('#textArea').remove();
-                            $('#submitVehicle').remove();
-                            $('#deleteVehicle').remove();
+                            $('#vehicleButtons').remove();
+                            $('#vehicles').val('none');
                             $("#vehicles option[value='" + parseInt($('#vehicles').find(":selected").val()) + "']").remove()
                             $(this).dialog( "close" );
                             $("#successfulDialog").dialog({
@@ -304,6 +494,21 @@
                 });
                 $(".ui-dialog-titlebar").hide();
             });
+        </script>
+        <script>
+            function addInput(elem) {
+                var input = document.createElement("input");
+                    input.setAttribute("type", "number");
+                    var id = elem.getAttribute("id");
+                    input.setAttribute("id", ++id);
+                    input.setAttribute("max", "9999");
+                    input.setAttribute("oninput", "addInput(this)");
+                    input.style.textAlign = "center";
+                    input.style.margin = "0 5px";
+                    input.style.width = "30px";
+                elem.parentNode.appendChild(input);
+                elem.setAttribute("oninput", "")
+            };
         </script>
     </body>
 </html>
