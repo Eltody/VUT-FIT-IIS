@@ -502,9 +502,19 @@ def carrier():
         oneConnection = str(i) + ' | ' + cities[0][0] + ' ' + symbols[6][0] + ' ' + cities[-1][0]
         allConnections.append([oneConnection, cities])
 
+    # ziskanie vsetkych nazvov zastavok pre dropdown menu pre vytvorenie noveho spoju - priprava
+    cursor = connection.cursor()
+    cursor.execute("SELECT nazov_zastavky from Zastavky")
+    tmp = cursor.fetchall()
+    cursor.close()
+    allNamesOfCities = []
+    for n in tmp:
+        allNamesOfCities.append(''.join(n))
+
+
     data = {'vehicles': allVehicles, 'connections': allConnections,
             'personal': allPersonal}  # TODO doplnit navrhy zastavok
-    return render_template("carrier.html", data=data)
+    return render_template("carrier.html", data=data, cities=allNamesOfCities)
     # martin mi z vehicles posiela id a text vo formularoch pre editVehicleInfo
     # vymazanie vozidla - funkcia deleteVehicle, posiela len id a pole spojov cez ktore prechadza connections
     # /editPersonalInfo pre zmenu info o zamestnancovi - id, fname, lname, email, ids
