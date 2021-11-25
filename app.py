@@ -323,6 +323,11 @@ def deleteTicket():
 def carrier():
     carrierName = request.form['email']
 
+    cursor = connection.cursor()
+    cursor.execute("SELECT symbol from Symboly")
+    symbols = cursor.fetchall()
+    cursor.close()
+
     # vyhladam nazov dopravcu v DB a zistim tak id dopravcu
     cursor1 = connection.cursor()
     cursor1.execute("SELECT id FROM Dopravca WHERE email='%s';" % carrierName)
@@ -404,10 +409,94 @@ def carrier():
         tmp_allPersonalInfo.append(allConnectionsOfPersonal)
         allPersonal.append(tmp_allPersonalInfo)
 
-    data = {'vehicles': allVehicles, 'connections': 'connections', 'personal': allPersonal}
+    allIdsOfConnectionsCarrier = []
+
+# ziskanie vsetkych spojov, ktore poskytuje dany dopravca
+    # ziskanie vsetkych len id spojov
+    cursor1 = connection.cursor()
+    cursor1.execute(
+        "SELECT id FROM Spoj WHERE id_dopravca_spoje='%s';" % idOfCarrier)
+    tmp_allIdsOfConnections = cursor1.fetchall()
+    cursor1.close()
+    tmp_allIdsOfConnectionsCarrier = list(tmp_allIdsOfConnections)
+
+    for m in tmp_allIdsOfConnectionsCarrier:
+        for n in m:
+            allIdsOfConnectionsCarrier.append(n)
+
+    allConnections = []
+    for i in allIdsOfConnectionsCarrier:
+        allTimesSplitted = []
+        tmp_fromAndToTime = []
+        cities = []
+
+        # ziskanie vsetkych casov, cez ktore spoj premava
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT cas_prejazdu FROM Spoj_Zastavka WHERE id_spoju='%s';" % i)
+        tmp_allTimes = cursor1.fetchall()
+        cursor1.close()
+
+        allTimes = []
+        for m in tmp_allTimes:
+            for n in m:
+                allTimes.append(''.join(str(n)))
+
+        # odstranenie ':' z casu
+        for k in range(len(allTimes)):
+            tmp2 = allTimes[k].replace(":", "")  # odstranenie ':' pre prevod na int
+            tmp2 = int(tmp2)
+            allTimesSplitted.append(tmp2)
+
+        # sortovanie, aby boli spoje zoradene od najmensieho cisla po najvacsie pre zobrazenie
+        allTimesSplitted.sort()
+        timesWithColon = []
+        for timeS in allTimesSplitted:
+            if timeS > 959:
+                timeS = str(timeS)
+                tmp_time = timeS[:2] + ':' + timeS[2:]
+                timesWithColon.append(tmp_time)
+            elif timeS <= 959:
+                timeS = str(timeS)
+                tmp_time = timeS[:1] + ':' + timeS[1:]
+                timesWithColon.append(tmp_time)
+        fromTime = str(timesWithColon[0])
+        toTime = str(timesWithColon[-1])
+
+        fromTime = str(fromTime)
+        toTime = str(toTime)
+
+        tmp_fromAndToTime.append(fromTime)
+        tmp_fromAndToTime.append(toTime)
+
+        for t in timesWithColon:
+            cursor1 = connection.cursor()
+            cursor1.execute("SELECT id_zastavky FROM Spoj_Zastavka WHERE id_spoju='%s' and cas_prejazdu='%s';" % (
+                i, t))
+            idOfStop = cursor1.fetchone()
+            cursor1.close()
+            idOfStop = idOfStop[0]
+
+            cursor1 = connection.cursor()
+            cursor1.execute(
+                "SELECT nazov_zastavky FROM Zastavky WHERE id='%s';" % idOfStop)
+            city = cursor1.fetchone()
+            cursor1.close()
+            city = list(city)
+            city.append(t)
+            cities.append(city)
+
+        oneConnection = str(i) + ' | ' + cities[0][0] + ' ' + symbols[6][0] + ' ' + cities[-1][0]
+        allConnections.append([oneConnection, cities])
+
+    print(allConnections)
+
+    data = {'vehicles': allVehicles, 'connections': allConnections, 'personal': allPersonal} #TODO doplnit navrhy zastavok
     return render_template("carrier.html", data=data)
     # martin mi z vehicles posiela id a text vo formularoch pre editVehicleInfo
     # vymazanie vozidla - funkcia deleteVehicle, posiela len id a pole spojov cez ktore prechadza connections
+    # /editPersonalInfo pre zmenu info o zamestnancovi - fname, lname, email, ids
+    # /deletePersonal, posiela mi id daneho zamestnanca
 
 
 @app.route('/administrator', methods=['GET', 'POST'])
