@@ -8,8 +8,11 @@
         <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" type="text/css" href="/static/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"> </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
         <script src="https://kit.fontawesome.com/6079958bc1.js" crossorigin="anonymous"></script>
+        <script src="/static/html5-qr-code.js"></script>
     </head>
     <!-- Main body -->
     <body class="background" style="background-image: url('../../static/background.jpg');">
@@ -41,13 +44,58 @@
             <!-- Header -->
             <header id="header">
                 <div class="container">
-
+                    <div class="resultFlex">
+                        <div class="animate__animated animate__fadeIn animate__faster">
+                            <div class="resultWrap">
+                                <div class="resultContent" id="content">
+                                    <div class="editForm">
+                                        <h3>Úprava personálu</h3>
+                                        <form id="personal">
+                                            <select name="personals" id="personals" class="search-select">
+                                                <option value="" disabled selected>Vyberte zamestnanca</option>
+                                            </select>
+                                            <br>
+                                        </form>
+                                    </div>
+                                    <div class="editForm">
+                                        <h3>Úprava vozidiel</h3>
+                                        <form id="vehicle">
+                                            <select name="vehicles" id="vehicles" class="search-select">
+                                                <option value="" disabled selected>Vyberte vozidlo</option>
+                                            </select>
+                                            <br>
+                                        </form>
+                                    </div>
+                                    <div class="editForm" style="margin-bottom: 0">
+                                        <h3>Úprava spojov</h3>
+                                        <form id="connection">
+                                            <select name="connections" id="connections" class="search-select">
+                                                <option value="" disabled selected>Vyberte spoj</option>
+                                            </select>
+                                            <div id="stop" class="stop"></div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </header>
             <!-- Footer -->
             <footer id="footer">
-                <p>Copyright © reserved, Website by <a href="mailto:martin.rakus1@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
+                <p>Copyright © reserved, Website by <a href="mailto:cp.poriadne.sk@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
             </footer>
+        </div>
+        <div id="confirmDeleteDialog" class="hidden">
+            <p>Prajete si vymazať lístok?</p>
+        </div>
+        <div id="confirmDialog" class="hidden">
+            <p>Prajete si uložiť zmeny?</p>
+        </div>
+        <div id="successfulDialog" class="hidden">
+            <p style="color: green">Zmeny boli vykonané</p>
+        </div>
+        <div id="QRDialog" class="hidden">
         </div>
         <!-- Scripts -->
         <script>
@@ -57,16 +105,16 @@
                 c.push(cookies[i].split('='));
             };
             if (c[0][0] === "name") {
-                if (c[2][1] === "personal") {
-                    document.getElementById("status").innerHTML = "Editor";
-                } else if (c[2][1] === "carrier") {
-                    document.getElementById("status").innerHTML = "Editor";
-                } else if (c[2][1] === "administrator") {
+                if (c[2][1] != "personal") {
+                    location.replace("/");
+                } else {
                     document.getElementById("status").innerHTML = "Editor";
                 };
                 document.getElementById("user").classList.remove("hidden");
                 document.getElementById("login").classList.add("hidden");
                 document.getElementById("user").innerHTML = c[0][1];
+            } else {
+                location.replace("/");
             };
             function signOut() {
                 document.cookie = "name=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
@@ -83,7 +131,7 @@
                 if (document.getElementById("status").innerHTML == "Lístky") {
                     $.redirectPost('/tickets', {"email": document.cookie.split('; ')[1].split('=')[1]});
                 } else if (document.getElementById("status").innerHTML == "Editor") {
-                    $.redirectPost('/' + document.cookie.split('; ')[2].split('=')[1], {"email": document.cookie.split('; ')[1].split('=')[1]});
+                    $.redirectPost('/' + document.cookie.split('; ')[0].split('=')[1], {"email": document.cookie.split('; ')[1].split('=')[1]});
                 };
             });
             $.extend({
@@ -95,6 +143,155 @@
                     });
                     $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo($(document.body)).submit();
                 }
+            });
+        </script>
+        <script>
+            var personals = {{data.personal|tojson}};
+            var vehicles = {{data.vehicles|tojson}};
+            var connections = {{data.connections|tojson}};
+
+            var personalsSelect = document.getElementById('personals');
+            var vehiclesSelect = document.getElementById('vehicles');
+            var connections = document.getElementById('connections');
+            for (var i in personal) {
+                var option = document.createElement('option');
+                    option.value = personal[i];
+                    option.innerHTML = personal[i];
+                ticketsSelect.add(option);
+            };
+            for (var i in vehicles) {
+                var option = document.createElement('option');
+                    option.value = vehicles[i][0];
+                    option.innerHTML = vehicles[i][0];
+                vehiclesSelect.add(option);
+            };
+            ticketsSelect.onchange = function() {
+                var button = document.getElementById('submitTicket');
+                if (button == null) {
+                    var buttonSubmit = document.createElement("button");
+                        buttonSubmit.setAttribute("id", "submitTicket");
+                        buttonSubmit.setAttribute("type", "button");
+                        buttonSubmit.innerHTML = ("Odstrániť lístok");
+                    document.getElementById('ticket').appendChild(buttonSubmit);
+                };
+            };
+            vehiclesSelect.onchange = function() {
+                while (document.getElementById('stop').children.length > 0) {
+                    document.getElementById('stop').removeChild(document.getElementById('stop').childNodes[0]);
+                };
+                var id = vehiclesSelect.value;
+                for (var i in vehicles) {
+                    if (id == vehicles[i][0]) {
+                        for (var j in vehicles[i][1]) {
+                            var button = document.getElementById('submitStop');
+                            var div = document.createElement("div")
+                                var input = document.createElement("input");
+                                    input.setAttribute("type", "checkbox");
+                                    input.setAttribute("id", vehicles[i][1][j]);
+                                    input.setAttribute("name", "stops");
+                                    input.setAttribute("value", vehicles[i][1][j]);
+                                    input.classList.add("city");
+                                    if (vehicles[i][1][j] == vehicles[i][2]) {
+                                        input.checked = true;
+                                    };
+                                var label = document.createElement("label");
+                                    label.setAttribute("for", vehicles[i][1][j]);
+                                    label.classList.add("city");
+                                    label.innerHTML = vehicles[i][1][j];
+                                div.appendChild(input);
+                                div.appendChild(label);
+                            stopsSelect.appendChild(div);
+                            if (button == null) {
+                                var buttonSubmit = document.createElement("button");
+                                    buttonSubmit.setAttribute("id", "submitStop");
+                                    buttonSubmit.setAttribute("type", "button");
+                                    buttonSubmit.innerHTML = ("Aktualizovať polohu");
+                                stopsSelect.parentNode.appendChild(buttonSubmit);
+                            };
+                        };
+                    };
+                };
+            };
+            $(document).on('click', 'input[type="checkbox"]', function() {
+                $('input[type="checkbox"]').not(this).prop('checked', false);
+            });
+        </script>
+        <script>
+            function showSearch() {
+                document.getElementById('showSearch').classList.add("hidden");
+                document.getElementById('searchForm').classList.remove("hidden");
+            };
+            $(document).on('click','#submitTicket', function() {
+                $("#confirmDeleteDialog").removeClass("hidden");
+                $("#confirmDeleteDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            $.post('/deleteTicket', {"ticket": $('#tickets').find(":selected").text()}, function(result) {});
+                            $("#tickets option[value='" + $('#tickets').find(":selected").text() +"']").remove()
+                            $(this).dialog("close");
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            });
+            $(document).on('click','#submitStop', function() {
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            if (typeof $("#stops").find("input:checked").val() === 'undefined') {
+                                var stop = " ";
+                            } else {
+                                var stop = $("#stops").find("input:checked").val()
+                            };
+                            $.post('/updatePosition', {"vehicle": $('#vehicles').find(":selected").text(), "stop": stop}, function(result) {});
+                            $(this).dialog( "close" );
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
             });
         </script>
     </body>
