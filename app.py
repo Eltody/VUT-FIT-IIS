@@ -26,6 +26,7 @@ profileNameMainPage = ''
 @app.route('/')
 def index():
     global profileNameMainPage
+    global loginData
     cursor = connection.cursor()
     cursor.execute("SELECT nazov_zastavky from Zastavky")
     tmp = cursor.fetchall()
@@ -33,6 +34,8 @@ def index():
     cities = []
     for i in tmp:
         cities.append(''.join(i))
+    if isinstance(loginData, str):
+        loginData = {'message': ''}
     data = loginData.copy()
     loginData.clear()
     return render_template("index.html", cities=cities, data=data, name=profileNameMainPage)
