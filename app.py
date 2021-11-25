@@ -159,6 +159,7 @@ def personal():
     vehicles = []
     allIdsAndTimesOfConnection = []
     sameVehicle = []
+    print(idsOfAllConnections)
     for i in idsOfAllConnections:
         allTimesSplitted = []
         tmp_fromAndToTime = []
@@ -170,6 +171,8 @@ def personal():
             "SELECT id_vozidla FROM Vozidlo_Spoj WHERE id_spoju='%s';" % i)
         idOfVehicle = cursor1.fetchone()
         cursor1.close()
+        if idOfVehicle is None:
+            continue
         idOfVehicle = idOfVehicle[0]
         if idOfVehicle in sameVehicle:
             continue
@@ -479,7 +482,6 @@ def carrier():
 
         tmp_fromAndToTime.append(fromTime)
         tmp_fromAndToTime.append(toTime)
-        tmp = []
         for t in timesWithColon:
             cursor1 = connection.cursor()
             cursor1.execute("SELECT id_zastavky FROM Spoj_Zastavka WHERE id_spoju='%s' and cas_prejazdu='%s';" % (
@@ -493,10 +495,7 @@ def carrier():
                 "SELECT nazov_zastavky FROM Zastavky WHERE id='%s';" % idOfStop)
             city = cursor1.fetchone()
             cursor1.close()
-            #tmp_city = city[0]
             city = list(city)
-            #tmp.append(tmp_city)
-            #tmp.append(t)
             city.append(t)
             cities.append(city)
 
@@ -508,8 +507,65 @@ def carrier():
     return render_template("carrier.html", data=data)
     # martin mi z vehicles posiela id a text vo formularoch pre editVehicleInfo
     # vymazanie vozidla - funkcia deleteVehicle, posiela len id a pole spojov cez ktore prechadza connections
-    # /editPersonalInfo pre zmenu info o zamestnancovi - fname, lname, email, ids
+    # /editPersonalInfo pre zmenu info o zamestnancovi - id, fname, lname, email, ids
     # /deletePersonal, posiela mi id daneho zamestnanca
+    # /deleteConnection posiela mi id - je to string ktory treba splitnut a vybrat z toho to id
+
+# funkcia pre upravu popisu vozidla
+@app.route('/editVehicleInfo', methods=['GET', 'POST'])
+def editVehicleInfo():
+    idOfVehicle = request.form['id']
+    newDescriptionOfVehicle = request.form['text']
+    print(idOfVehicle, newDescriptionOfVehicle)
+
+    # aktualizacia popisu konkretneho vozidla
+    cursor1 = connection.cursor()
+    cursor1.execute("UPDATE Vozidlo SET popis_vozidla = '%s' WHERE id = '%s'" % (newDescriptionOfVehicle, idOfVehicle))
+    connection.commit()
+    cursor1.close()
+
+    return ''
+
+# funkcia pre upravu popisu vozidla
+@app.route('/deleteVehicle', methods=['GET', 'POST'])
+def deleteVehicle():
+    idOfVehicle = request.form['id']
+    connectionsOfVehicle = request.form['connections']
+    listOfAllConnectionsToDelete = connectionsOfVehicle.split(' ')
+    listOfAllConnectionsToDelete.remove('')
+
+    for i in listOfAllConnectionsToDelete:
+        # odstranenie zaznamu z tabulky Personal_Spoj
+        cursor1 = connection.cursor()
+        cursor1.execute("DELETE FROM Personal_Spoj WHERE id_spoju = '%s'" % i)
+        connection.commit()
+        cursor1.close()
+
+        # odstranenie zaznamu z tabulky Spoj
+        cursor1 = connection.cursor()
+        cursor1.execute("DELETE FROM Spoj WHERE id = '%s'" % i)
+        connection.commit()
+        cursor1.close()
+
+        # odstranenie zaznamu z tabulky Spoj_Zastavka
+        cursor1 = connection.cursor()
+        cursor1.execute("DELETE FROM Spoj_Zastavka WHERE id_spoju = '%s'" % i)
+        connection.commit()
+        cursor1.close()
+
+        # odstranenie zaznamu z tabulky Vozidlo_Spoj
+        cursor1 = connection.cursor()
+        cursor1.execute("DELETE FROM Vozidlo_Spoj WHERE id_spoju = '%s'" % i)
+        connection.commit()
+        cursor1.close()
+
+    # odstranenie konkretneho vozidla, podla id
+    cursor1 = connection.cursor()
+    cursor1.execute("DELETE FROM Vozidlo WHERE id = '%s'" % idOfVehicle)
+    connection.commit()
+    cursor1.close()
+
+    return ''
 
 
 @app.route('/administrator', methods=['GET', 'POST'])
