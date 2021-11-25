@@ -366,7 +366,17 @@ def carrier():
         for m in tmp_allConnectionsOfVehicle:
             for n in m:
                 allIdsOfConnections.append(n)
-        allVehicles.append([tmp_allInfoOfVehicle, allIdsOfConnections])
+        print(allIdsOfConnections)
+        tmp_allInfoOfVehicle.append(allIdsOfConnections)
+        allVehicles.append(tmp_allInfoOfVehicle)
+    print(allVehicles)
+    print('vypis')
+    print(allVehicles[0][0])    # id vozidla
+    print(allVehicles[0][1])    # pocet miest
+    print(allVehicles[0][2])    # popis vozidla
+    print(allVehicles[0][3])    # akt.poloha
+    print(allVehicles[0][4])    # pole spojov
+
 
     data = {'vehicles': allVehicles, 'connections': 'connections', 'personal': 'personal'}
     return render_template("carrier.html", data=data)
