@@ -339,7 +339,7 @@
                     width: 250,
                     modal: true,
                     buttons: {
-                        "Uložiť": function() {
+                        "Potvrdiť": function() {
                             $("#successfulDialog").removeClass("hidden");
                             $.post('/deleteTicket', {"ticket": $('#tickets').find(":selected").text()}, function(result) {});
                             $("#tickets option[value='" + $('#tickets').find(":selected").text() +"']").remove()

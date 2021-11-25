@@ -59,7 +59,7 @@
                                     </div>
                                     <div class="editForm">
                                         <h3>Úprava vozidiel</h3>
-                                        <form id="vehicle">
+                                        <form id="vehicle" class="searchForm">
                                             <select name="vehicles" id="vehicles" class="search-select">
                                                 <option value="" disabled selected>Vyberte vozidlo</option>
                                             </select>
@@ -86,16 +86,20 @@
                 <p>Copyright © reserved, Website by <a href="mailto:cp.poriadne.sk@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
             </footer>
         </div>
-        <div id="confirmDeleteDialog" class="hidden">
-            <p>Prajete si vymazať lístok?</p>
+        <div id="confirmVehicleDeleteDialog" class="hidden">
+            <p>Prajete si vymazať vozidlo?</p>
+        </div>
+        <div id="confirmPersonalDeleteDialog" class="hidden">
+            <p>Prajete si vymazať účet zamestnanca?</p>
+        </div>
+        <div id="confirmConnectionDeleteDialog" class="hidden">
+            <p>Prajete si vymazať spoj?</p>
         </div>
         <div id="confirmDialog" class="hidden">
             <p>Prajete si uložiť zmeny?</p>
         </div>
         <div id="successfulDialog" class="hidden">
             <p style="color: green">Zmeny boli vykonané</p>
-        </div>
-        <div id="QRDialog" class="hidden">
         </div>
         <!-- Scripts -->
         <script>
@@ -105,7 +109,7 @@
                 c.push(cookies[i].split('='));
             };
             if (c[0][0] === "name") {
-                if (c[2][1] != "personal") {
+                if (c[2][1] != "carrier") {
                     location.replace("/");
                 } else {
                     document.getElementById("status").innerHTML = "Editor";
@@ -152,63 +156,76 @@
 
             var personalsSelect = document.getElementById('personals');
             var vehiclesSelect = document.getElementById('vehicles');
-            var connections = document.getElementById('connections');
-            for (var i in personal) {
+            var connectionsSelect = document.getElementById('connections');
+            for (var i in personals) {
                 var option = document.createElement('option');
-                    option.value = personal[i];
-                    option.innerHTML = personal[i];
-                ticketsSelect.add(option);
+                    option.value = personals[i];
+                    option.innerHTML = personals[i];
+                personalsSelect.add(option);
             };
             for (var i in vehicles) {
+                var connectionsIds = "";
                 var option = document.createElement('option');
                     option.value = vehicles[i][0];
-                    option.innerHTML = vehicles[i][0];
+                    for (j in vehicles[i][4]) {
+                        connectionsIds = connectionsIds.concat(" ", vehicles[i][4][j]);
+                    };
+                    option.setAttribute("name", connectionsIds);
+                    option.innerHTML = "Vozidlo č. " + vehicles[i][0];
                 vehiclesSelect.add(option);
             };
-            ticketsSelect.onchange = function() {
-                var button = document.getElementById('submitTicket');
+            for (var i in connections) {
+                var option = document.createElement('option');
+                    option.value = connections[i][0];
+                    option.innerHTML = connections[i][0];
+                connectionsSelect.add(option);
+            };
+            personalsSelect.onchange = function() {
+                var button = document.getElementById('submitPersonal');
                 if (button == null) {
                     var buttonSubmit = document.createElement("button");
-                        buttonSubmit.setAttribute("id", "submitTicket");
+                        buttonSubmit.setAttribute("id", "submitPersonal");
                         buttonSubmit.setAttribute("type", "button");
-                        buttonSubmit.innerHTML = ("Odstrániť lístok");
-                    document.getElementById('ticket').appendChild(buttonSubmit);
+                        buttonSubmit.innerHTML = ("Odstrániť personál");
+                    document.getElementById('personal').appendChild(buttonSubmit);
                 };
             };
             vehiclesSelect.onchange = function() {
-                while (document.getElementById('stop').children.length > 0) {
-                    document.getElementById('stop').removeChild(document.getElementById('stop').childNodes[0]);
+                while (document.getElementById('vehicle').children.length > 2) {
+                    document.getElementById('vehicle').removeChild(document.getElementById('vehicle').lastChild);
                 };
                 var id = vehiclesSelect.value;
                 for (var i in vehicles) {
                     if (id == vehicles[i][0]) {
-                        for (var j in vehicles[i][1]) {
-                            var button = document.getElementById('submitStop');
-                            var div = document.createElement("div")
-                                var input = document.createElement("input");
-                                    input.setAttribute("type", "checkbox");
-                                    input.setAttribute("id", vehicles[i][1][j]);
-                                    input.setAttribute("name", "stops");
-                                    input.setAttribute("value", vehicles[i][1][j]);
-                                    input.classList.add("city");
-                                    if (vehicles[i][1][j] == vehicles[i][2]) {
-                                        input.checked = true;
-                                    };
-                                var label = document.createElement("label");
-                                    label.setAttribute("for", vehicles[i][1][j]);
-                                    label.classList.add("city");
-                                    label.innerHTML = vehicles[i][1][j];
-                                div.appendChild(input);
-                                div.appendChild(label);
-                            stopsSelect.appendChild(div);
-                            if (button == null) {
-                                var buttonSubmit = document.createElement("button");
-                                    buttonSubmit.setAttribute("id", "submitStop");
-                                    buttonSubmit.setAttribute("type", "button");
-                                    buttonSubmit.innerHTML = ("Aktualizovať polohu");
-                                stopsSelect.parentNode.appendChild(buttonSubmit);
-                            };
-                        };
+                        var div = document.createElement("div");
+                            var textArea = document.createElement("textarea");
+                                textArea.setAttribute("id", "textArea");
+                                textArea.setAttribute("name", "stops");
+                                textArea.innerHTML = vehicles[i][2];
+                                textArea.style.textAlign = "center";
+                                textArea.style.width = "95%";
+                                textArea.style.marginBottom = "5px";
+                                textArea.borderRadius = "7px";
+                            div.appendChild(textArea);
+                        document.getElementById('vehicle').appendChild(div);
+                        document.getElementById("textArea").style.height = (document.getElementById("textArea").scrollHeight)+"px";
+
+                        var div = document.createElement("div");
+                        div.classList.add("search-col");
+                            var buttonSubmit = document.createElement("button");
+                                buttonSubmit.setAttribute("id", "submitVehicle");
+                                buttonSubmit.setAttribute("type", "button");
+                                buttonSubmit.style.float = "left";
+                                buttonSubmit.innerHTML = ("Upraviť popis");
+                            div.appendChild(buttonSubmit);
+                            var buttonSubmit = document.createElement("button");
+                                buttonSubmit.setAttribute("id", "deleteVehicle");
+                                buttonSubmit.setAttribute("type", "button");
+                                buttonSubmit.style.float = "right";
+                                buttonSubmit.style.color = "red"
+                                buttonSubmit.innerHTML = ("Odstrániť vozidlo");
+                            div.appendChild(buttonSubmit);
+                        document.getElementById('vehicle').appendChild(div);
                     };
                 };
             };
@@ -217,13 +234,9 @@
             });
         </script>
         <script>
-            function showSearch() {
-                document.getElementById('showSearch').classList.add("hidden");
-                document.getElementById('searchForm').classList.remove("hidden");
-            };
-            $(document).on('click','#submitTicket', function() {
-                $("#confirmDeleteDialog").removeClass("hidden");
-                $("#confirmDeleteDialog").dialog({
+            $(document).on('click','#submitVehicle', function() {
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
                     draggable: false,
                     resizable: false,
                     height: 150,
@@ -232,8 +245,7 @@
                     buttons: {
                         "Uložiť": function() {
                             $("#successfulDialog").removeClass("hidden");
-                            $.post('/deleteTicket', {"ticket": $('#tickets').find(":selected").text()}, function(result) {});
-                            $("#tickets option[value='" + $('#tickets').find(":selected").text() +"']").remove()
+                            $.post('/editVehicleInfo', {"id": $('#vehicles').find(":selected").val(), "text": $('#textArea').val()}, function(result) {});
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({
                                 draggable: false,
@@ -255,23 +267,22 @@
                 });
                 $(".ui-dialog-titlebar").hide();
             });
-            $(document).on('click','#submitStop', function() {
-                $("#confirmDialog").removeClass("hidden");
-                $("#confirmDialog").dialog({
+            $(document).on('click','#deleteVehicle', function() {
+                $("#confirmVehicleDeleteDialog").removeClass("hidden");
+                $("#confirmVehicleDeleteDialog").dialog({
                     draggable: false,
                     resizable: false,
                     height: 150,
                     width: 250,
                     modal: true,
                     buttons: {
-                        "Uložiť": function() {
+                        "Potvrdiť": function() {
                             $("#successfulDialog").removeClass("hidden");
-                            if (typeof $("#stops").find("input:checked").val() === 'undefined') {
-                                var stop = " ";
-                            } else {
-                                var stop = $("#stops").find("input:checked").val()
-                            };
-                            $.post('/updatePosition', {"vehicle": $('#vehicles').find(":selected").text(), "stop": stop}, function(result) {});
+                            $.post('/deleteVehicle', {"id": $('#vehicles').find(":selected").val(), "connections": $('#vehicles').find(":selected").attr('name')}, function(result) {});
+                            $('#textArea').remove();
+                            $('#submitVehicle').remove();
+                            $('#deleteVehicle').remove();
+                            $("#vehicles option[value='" + parseInt($('#vehicles').find(":selected").val()) + "']").remove()
                             $(this).dialog( "close" );
                             $("#successfulDialog").dialog({
                                 draggable: false,
