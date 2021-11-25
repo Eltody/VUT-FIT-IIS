@@ -94,6 +94,7 @@
         </div>
         <div id="confirmVehicleDeleteDialog" class="hidden">
             <p>Prajete si vymazať vozidlo?</p>
+            <br>
         </div>
         <div id="confirmPersonalDeleteDialog" class="hidden">
             <p>Prajete si vymazať účet?</p>
@@ -341,6 +342,21 @@
                     };
                 };
             };
+            connectionsSelect.onchange = function() {
+                while (document.getElementById('connection').children.length > 2) {
+                    document.getElementById('connection').removeChild(document.getElementById('connection').lastChild);
+                };
+                var id = connectionsSelect.value;
+                for (var i in connections) {
+                    if (id == connections[i][0]) {
+                        var buttonSubmit = document.createElement("button");
+                            buttonSubmit.setAttribute("id", "deleteConnection");
+                            buttonSubmit.setAttribute("type", "button");
+                            buttonSubmit.innerHTML = ("Odstrániť spoj");
+                        document.getElementById('connection').appendChild(buttonSubmit);
+                    };
+                };
+            };
             $(document).on('click', 'input[type="checkbox"]', function() {
                 $('input[type="checkbox"]').not(this).prop('checked', false);
             });
@@ -458,11 +474,26 @@
                 $(".ui-dialog-titlebar").hide();
             });
             $(document).on('click','#deleteVehicle', function() {
+                while (document.getElementById("confirmVehicleDeleteDialog").childNodes.length > 2) {
+                    document.getElementById("confirmVehicleDeleteDialog").lastChild.remove();
+                };
+                if ($('#vehicles').find(":selected").attr("name").split(" ").length > 1) {
+                    var list = document.createElement("p");
+                        if ($('#vehicles').find(":selected").attr("name").split(" ").length == 2) {
+                            list.innerHTML = "Vymazaný bude aj nasledujúci spoj: ";
+                        } else {
+                            list.innerHTML = "Vymazané budú aj nasledujúce spoje: ";
+                        };
+                        var strong = document.createElement("strong");
+                            strong.innerHTML = $('#vehicles').find(":selected").attr("name");
+                        list.appendChild(strong);
+                    document.getElementById("confirmVehicleDeleteDialog").appendChild(document.createElement("br"));
+                    document.getElementById("confirmVehicleDeleteDialog").appendChild(list);
+                };
                 $("#confirmVehicleDeleteDialog").removeClass("hidden");
                 $("#confirmVehicleDeleteDialog").dialog({
                     draggable: false,
                     resizable: false,
-                    height: 150,
                     width: 250,
                     modal: true,
                     buttons: {
