@@ -482,7 +482,7 @@
                             };
                             $(this).dialog("close");
                             var email = cookie();
-                            $.post('/addPersonal', {"carrier": email, "fname": $('#addFName').val(), "lname": $('#addLName').val(), "email": $('#addEmail').val(), "ids": ids, "password": ($('#password').val())}, function(result) {});
+                            $.post('/addPersonal', {"carrier": email, "fname": $('#addFName').val(), "lname": $('#addLName').val(), "email": $('#addEmail').val(), "ids": ids, "password": $('#password').val()}, function(result) {});
                             $("#successfulDialog").dialog({
                                 draggable: false,
                                 resizable: false,
