@@ -63,7 +63,7 @@
                                         <h3>Úprava vozidiel</h3>
                                         <button id="addVehicle" type="button" onclick="addVehicle()">Pridať nové vozidlo</button>
                                         <br><br>
-                                        <form id="vehicle" class="searchForm">
+                                        <form id="vehicle" class="searchForm" onsubmit="submitVehicle(this)">
                                             <select name="vehicles" id="vehicles" class="search-select">
                                                 <option value="none" disabled selected>Vyberte vozidlo pre úpravu</option>
                                             </select>
@@ -329,7 +329,7 @@
                         div.classList.add("search-col");
                             var buttonSubmit = document.createElement("button");
                                 buttonSubmit.setAttribute("id", "submitVehicle");
-                                buttonSubmit.setAttribute("type", "button");
+                                buttonSubmit.setAttribute("type", "submit");
                                 buttonSubmit.style.float = "left";
                                 buttonSubmit.innerHTML = ("Upraviť popis");
                             div.appendChild(buttonSubmit);
@@ -482,14 +482,14 @@
                     buttons: {
                         "Uložiť": function() {
                             $("#successfulDialog").removeClass("hidden");
-                            if ($('#fName').val() != null) {
-                                var password = $('#fName').val();
+                            if ($('#password').val() != null) {
+                                var password = $('#password').val();
                             } else {
                                 var password = '';
                             };
                             $(this).dialog("close");
                             var email = cookie();
-                            $.post('/editPersonalInfo', {"carrier": email, "id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids, "password": password}, function(result) {});
+                            $.post('/editPersonalInfo', {"carrier": email, "id": , "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids, "password": password}, function(result) {});
                             $("#successfulDialog").dialog({
                                 draggable: false,
                                 resizable: false,
