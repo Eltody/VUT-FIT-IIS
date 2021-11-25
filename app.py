@@ -351,13 +351,9 @@ def carrier():
         cursor1 = connection.cursor()
         cursor1.execute(
             "SELECT id, pocet_miest, popis_vozidla, aktualna_poloha FROM Vozidlo WHERE id='%s';" % i)
-        tmp_allInfoOfVehicle = cursor1.fetchall()
+        tmp_allInfoOfVehicle = cursor1.fetchone()
         cursor1.close()
         tmp_allInfoOfVehicle = list(tmp_allInfoOfVehicle)
-        allInfoOfVehicle = []
-        for m in tmp_allInfoOfVehicle:
-            for n in m:
-                allInfoOfVehicle.append(n)
 
         # ziskam spoje, cez ktore prechadza konkretne vozidlo
         cursor1 = connection.cursor()
@@ -370,9 +366,8 @@ def carrier():
         for m in tmp_allConnectionsOfVehicle:
             for n in m:
                 allIdsOfConnections.append(n)
-        allVehicles.append([allInfoOfVehicle, allIdsOfConnections])
+        allVehicles.append([tmp_allInfoOfVehicle, allIdsOfConnections])
 
-    print(allVehicles)
     data = {'vehicles': allVehicles, 'connections': 'connections', 'personal': 'personal'}
     return render_template("carrier.html", data=data)
 
