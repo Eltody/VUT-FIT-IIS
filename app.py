@@ -651,9 +651,11 @@ def signIn():
     cestujuci = connection.cursor()
     administrator = connection.cursor()
     personal = connection.cursor()
+    carrier = connection.cursor()
     cestujuci.execute("SELECT meno, email, heslo FROM Cestujuci")
     administrator.execute("SELECT meno, email, heslo FROM Administrator")
     personal.execute("SELECT meno, email, heslo FROM Personal")
+    carrier.execute("SELECT nazov, email, heslo FROM Dopravca")
     for (meno, email, heslo) in cestujuci:
         if email == user_email and heslo == password:
             cestujuci.close()
@@ -672,9 +674,16 @@ def signIn():
             profileNameMainPage = meno
             loginData = {'message': 'login', 'email': user_email, 'status': 'personal'}
             return redirect(url_for('index'))
+    for (nazov, email, heslo) in carrier:
+        if email == user_email and heslo == password:
+            carrier.close()
+            profileNameMainPage = meno
+            loginData = {'message': 'login', 'email': user_email, 'status': 'carrier'}
+            return redirect(url_for('index'))
     cestujuci.close()
     administrator.close()
     personal.close()
+    carrier.close()
 
     #    if user_email == emails[0]:
     #        if user_email == emails[1]:
@@ -951,9 +960,11 @@ def validate(regOrSignIn):
         cestujuci = connection.cursor()
         administrator = connection.cursor()
         personal = connection.cursor()
+        carrier = connection.cursor()
         cestujuci.execute("SELECT meno, email, heslo FROM Cestujuci")
         administrator.execute("SELECT meno, email, heslo FROM Administrator")
         personal.execute("SELECT meno, email, heslo FROM Personal")
+        carrier.execute("SELECT nazov, email, heslo FROM Dopravca")
         for (meno, email, heslo) in cestujuci:
             if email == user_email and heslo == password:
                 cestujuci.close()
@@ -975,9 +986,16 @@ def validate(regOrSignIn):
                 loginData = 'personal+' + profileNameMainPage
                 # loginData = json.dumps(loginData)
                 return loginData
+        for (nazov, email, heslo) in carrier:
+            if email == user_email and heslo == password:
+                carrier.close()
+                profileNameMainPage = meno
+                loginData = 'carrier+' + profileNameMainPage
+                return loginData
         cestujuci.close()
         administrator.close()
         personal.close()
+        carrier.close()
         data = 'log'
         # data = json.dumps(data)
         return data
