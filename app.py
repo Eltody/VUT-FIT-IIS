@@ -340,8 +340,16 @@ def carrier():
         "SELECT id, pocet_miest, popis_vozidla, aktualna_poloha FROM Vozidlo WHERE id_dopravca_vozidlo='%s';" % idOfCarrier)
     allVehicles = cursor1.fetchall()
     cursor1.close()
+    allVehicles = list(allVehicles)
 
     print(allVehicles)
+
+    # ziskanie id spojov, ktorymi spoj prechadza
+    cursor1 = connection.cursor()
+    cursor1.execute(
+        "SELECT id, pocet_miest, popis_vozidla, aktualna_poloha FROM Vozidlo WHERE id_dopravca_vozidlo='%s';" % idOfCarrier)
+    allVehicles = cursor1.fetchall()
+    cursor1.close()
 
     data = {'vehicles': allVehicles, 'connections': 'connections', 'personal': 'personal'}
     return render_template("carrier.html", data=data)
