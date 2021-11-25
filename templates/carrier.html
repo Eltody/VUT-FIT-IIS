@@ -488,8 +488,8 @@
                                 var password = '';
                             };
                             $(this).dialog("close");
-
-                            $.post('/editPersonalInfo', {"carrier": $.cookie("email") , "id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids, "password": password}, function(result) {});
+                            var email = cookie();
+                            $.post('/editPersonalInfo', {"carrier": email, "id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids, "password": password}, function(result) {});
                             $("#successfulDialog").dialog({
                                 draggable: false,
                                 resizable: false,
@@ -719,6 +719,9 @@
                 e.preventDefault();
                 return false;
             });
+            function cookie() {
+                return document.cookie.split('; ')[1].split('=')[1];
+            };
         </script>
         <script>
             function addInput(elem) {
