@@ -677,7 +677,7 @@ def signIn():
     for (nazov, email, heslo) in carrier:
         if email == user_email and heslo == password:
             carrier.close()
-            profileNameMainPage = meno
+            profileNameMainPage = nazov
             loginData = {'message': 'login', 'email': user_email, 'status': 'carrier'}
             return redirect(url_for('index'))
     cestujuci.close()
