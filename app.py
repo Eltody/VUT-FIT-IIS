@@ -323,7 +323,28 @@ def deleteTicket():
 
 @app.route('/carrier', methods=['GET', 'POST'])
 def carrier():
-    return render_template("carrier.html")
+    carrierName = request.form['email']
+
+    # vyhladam nazov dopravcu v DB a zistim tak id dopravcu
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Dopravca WHERE email='%s';" % carrierName)
+    idOfCarrier = cursor1.fetchone()
+    cursor1.close()
+    idOfCarrier = idOfCarrier[0]  # ziskanie z listu len prvy prvok - integer (id dopravcu)
+
+    print(idOfCarrier)
+
+    # ziskanie vsetkych vozidiel, pre edit a mazanie dopravcom
+    cursor1 = connection.cursor()
+    cursor1.execute(
+        "SELECT id, pocet_miest, popis_vozidla, aktualna_poloha FROM Vozidlo WHERE id_dopravca_vozidlo='%s';" % idOfCarrier)
+    allVehicles = cursor1.fetchall()
+    cursor1.close()
+
+    print(allVehicles)
+
+    data = {'vehicles': allVehicles, 'connections': 'connections', 'personal': 'personal'}
+    return render_template("carrier.html", data=data)
 
 
 @app.route('/administrator', methods=['GET', 'POST'])
