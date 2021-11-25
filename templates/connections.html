@@ -518,6 +518,7 @@
                     if (signIn == false && personal == false) {
                         var buy = elem.parentNode.parentNode.parentNode;
                         if (buy2 != buy.id) {
+                            buy2 = buy.id;
                             var purchaseButtons = document.createElement("div");
                                 purchaseButtons.setAttribute("id", "formBuyButtons" + buy.id);
                                 purchaseButtons.classList.add("purchaseButtons");
@@ -543,7 +544,6 @@
                                     buttonOneTime.setAttribute("href", "#");
                                 purchaseButtons.appendChild(buttonOneTime);
                             buy.appendChild(purchaseButtons);
-                            buy2 = buy.id;
                         } else {
                             buy2 = null;
                         };
@@ -633,6 +633,7 @@
                     } else {
                         var buy = elem.parentNode.parentNode.parentNode;
                         if (buy2 != buy.id) {
+                            buy2 = buy.id;
                             var purchaseForm = document.createElement("form");
                                 purchaseForm.classList.add("purchaseForm");
                                 purchaseForm.setAttribute("action", "/purchase/signedIn");
@@ -689,7 +690,6 @@
                                     purchaseButton.appendChild(a);
                                 purchaseForm.appendChild(purchaseButton);
                             buy.appendChild(purchaseForm);
-                            buy2 = buy.id;
                         } else {
                             buy2 = null;
                         };
