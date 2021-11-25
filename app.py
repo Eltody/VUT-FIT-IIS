@@ -633,6 +633,26 @@ def addPersonal():
     return ""
 
 
+# funkcia pre vymazanie uctu personalu
+@app.route('/deletePersonal', methods=['GET', 'POST'])
+def deletePersonal():
+    idOfPersonal = request.form['id']
+
+    # odstranenie vsetkych zaznamov v spojoch, ktore obsluhoval personal - spoje samostatne ostavaju v tabulke ale nemmusia uz mat ziadny personal
+    cursor1 = connection.cursor()
+    cursor1.execute("DELETE FROM Personal_Spoj WHERE id_personalu = '%s'" % idOfPersonal)
+    connection.commit()
+    cursor1.close()
+
+    # odstranenie uctu personalu dopravcom
+    cursor1 = connection.cursor()
+    cursor1.execute("DELETE FROM Personal WHERE id = '%s'" % idOfPersonal)
+    connection.commit()
+    cursor1.close()
+
+    return ''
+
+
 # addVehicle fce na pridanie vozidla
 # seats, text, carrier
 
