@@ -458,19 +458,12 @@
                     document.getElementById("personalAddForm").remove();
                 };
             };
-            function submitPersonal(elem) {
+            function submitAddPersonal(elem) {
                 var ids = "";
                 var i = 0;
-                if (elem.getAttribute('id') == "personalAddForm") {
-                    while (i < document.getElementById("addIds").lastChild.getAttribute('id')) {
-                        ids = ids.concat(" ", document.getElementById("addIds").childNodes.item(i).value);
-                        i++;
-                    };
-                } else {
-                    while (i < document.getElementById("ids").lastChild.getAttribute('id')) {
-                        ids = ids.concat(" ", document.getElementById("ids").childNodes.item(i).value);
-                        i++;
-                    };
+                while (i < document.getElementById("addIds").lastChild.getAttribute('id')) {
+                    ids = ids.concat(" ", document.getElementById("addIds").childNodes.item(i).value);
+                    i++;
                 };
                 $("#confirmDialog").removeClass("hidden");
                 $("#confirmDialog").dialog({
@@ -489,7 +482,52 @@
                             };
                             $(this).dialog("close");
                             var email = cookie();
-                            $.post('/editPersonalInfo', {"carrier": email, "id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids, "password": password}, function(result) {});
+                            $.post('/addPersonal', {"carrier": email, "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids, "password": ($('#password').val()}, function(result) {});
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            };
+            function submitPersonal(elem) {
+                var ids = "";
+                var i = 0;
+                while (i < document.getElementById("ids").lastChild.getAttribute('id')) {
+                    ids = ids.concat(" ", document.getElementById("ids").childNodes.item(i).value);
+                    i++;
+                };
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            if ($('#password').val() != null) {
+                                var password = $('#password').val();
+                            } else {
+                                var password = '';
+                            };
+                            $(this).dialog("close");
+                            var email = cookie();
+                            $.post('/editPersonalInfo', {"carrier": email, "id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids}, function(result) {});
                             $("#successfulDialog").dialog({
                                 draggable: false,
                                 resizable: false,
@@ -594,7 +632,7 @@
                     document.getElementById("vehicleAddForm").remove();
                 };
             };
-            function submitVehicle() {
+            function submitVehicle(elem) {
                 $("#confirmDialog").removeClass("hidden");
                 $("#confirmDialog").dialog({
                     draggable: false,
