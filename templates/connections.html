@@ -345,18 +345,21 @@
                                 buttonLogin.innerHTML = "Prihlásiť sa";
                                 buttonLogin.setAttribute("onclick", "login(this); return false;");
                                 buttonLogin.setAttribute("id", "buttonLogin");
+                                buttonLogin.setAttribute("name", elem.getAttribute("name"));
                                 buttonLogin.setAttribute("href", "#");
                             purchaseButtons.appendChild(buttonLogin);
                             var buttonRegister = document.createElement("a");
                                 buttonRegister.innerHTML = "Registrovať";
                                 buttonRegister.setAttribute("onclick", "register(this); return false;");
                                 buttonRegister.setAttribute("id", "buttonRegister");
+                                buttonRegister.setAttribute("name", elem.getAttribute("name"));
                                 buttonRegister.setAttribute("href", "#");
                             purchaseButtons.appendChild(buttonRegister);
                             var buttonOneTime = document.createElement("a");
                                 buttonOneTime.innerHTML = "Jednorazový nákup";
                                 buttonOneTime.setAttribute("onclick", "oneTime(this); return false;");
                                 buttonOneTime.setAttribute("id", "buttonOneTime");
+                                buttonOneTime.setAttribute("name", elem.getAttribute("name"));
                                 buttonOneTime.setAttribute("href", "#");
                             purchaseButtons.appendChild(buttonOneTime);
                         buy.appendChild(purchaseButtons);
@@ -512,7 +515,7 @@
                     if (typeof remove2 !== 'undefined' && remove2 !== null) {
                         remove2.remove();
                     }
-                    if (signIn == false && personal == dalse) {
+                    if (signIn == false && personal == false) {
                         var buy = elem.parentNode.parentNode.parentNode;
                         if (buy2 != buy.id) {
                             var purchaseButtons = document.createElement("div");
@@ -522,18 +525,21 @@
                                     buttonLogin.innerHTML = "Prihlásiť sa";
                                     buttonLogin.setAttribute("onclick", "login(this); return false;");
                                     buttonLogin.setAttribute("id", "buttonLogin");
+                                    buttonLogin.setAttribute("name", elem.getAttribute("name"));
                                     buttonLogin.setAttribute("href", "#");
                                 purchaseButtons.appendChild(buttonLogin);
                                 var buttonRegister = document.createElement("a");
                                     buttonRegister.innerHTML = "Registrovať";
                                     buttonRegister.setAttribute("onclick", "register(this); return false;");
                                     buttonRegister.setAttribute("id", "buttonRegister");
+                                    buttonRegister.setAttribute("name", elem.getAttribute("name"));
                                     buttonRegister.setAttribute("href", "#");
                                 purchaseButtons.appendChild(buttonRegister);
                                 var buttonOneTime = document.createElement("a");
                                     buttonOneTime.innerHTML = "Jednorazový nákup";
                                     buttonOneTime.setAttribute("onclick", "oneTime(this); return false;");
                                     buttonOneTime.setAttribute("id", "buttonOneTime");
+                                    buttonOneTime.setAttribute("name", elem.getAttribute("name"));
                                     buttonOneTime.setAttribute("href", "#");
                                 purchaseButtons.appendChild(buttonOneTime);
                             buy.appendChild(purchaseButtons);
@@ -776,6 +782,7 @@
                                 iPlus.style.cursor = "pointer";
                                 iPlus.classList.add("fas");
                                 iPlus.classList.add("fa-plus-square");
+                                iPlus.setAttribute("name", elem.getAttribute("name"));
                             amountDiv.appendChild(iPlus);
                         formBuyButtons.appendChild(amountDiv);
                         var dataStorage = document.createElement("input");
@@ -896,6 +903,7 @@
                                 iPlus.style.cursor = "pointer";
                                 iPlus.classList.add("fas");
                                 iPlus.classList.add("fa-plus-square");
+                                iPlus.setAttribute("name", elem.getAttribute("name"));
                             amountDiv.appendChild(iPlus);
                         formBuyButtons.appendChild(amountDiv);
                         var dataStorage = document.createElement("input");
@@ -988,6 +996,7 @@
                                 iPlus.style.cursor = "pointer";
                                 iPlus.classList.add("fas");
                                 iPlus.classList.add("fa-plus-square");
+                                iPlus.setAttribute("name", elem.getAttribute("name"));
                             amountDiv.appendChild(iPlus);
                         formBuyButtons.appendChild(amountDiv);
                         var dataStorage = document.createElement("input");
@@ -1043,9 +1052,9 @@
                         expiry = new Date();
                         expiry.setTime(expiry.getTime()+(3600*1000));
                         var result = result.split("+");
-                        document.cookie = "name="+result[1]+"; expires=" + expiry.toGMTString();
-                        document.cookie = "email="+email+"; expires=" + expiry.toGMTString();
-                        document.cookie = "status="+result[0]+"; expires=" + expiry.toGMTString();
+                        document.cookie = "name="+result[1]+"; expires=" + expiry.toGMTString() + "; path=/";
+                        document.cookie = "email="+email+"; expires=" + expiry.toGMTString() + "; path=/";
+                        document.cookie = "status="+result[0]+"; expires=" + expiry.toGMTString() + "; path=/";
                         submitForm();
                     };
                 });
@@ -1073,7 +1082,7 @@
                 submitForm();
             });
             function submitForm() {
-                document.getElementById("formBuy" + buy2).submit();
+                document.getElementById("formBuy" + buy2);
             };
         </script>
         <script>
