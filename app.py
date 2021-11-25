@@ -585,10 +585,56 @@ def editPersonalInfo():
     connection.commit()
     cursor1.close()
 
-    # TODO skontrolovat, ci sa zmenili jej spoje, na ktorych pracuje a update, pripadne delete
+    # TODO skontrolovat, ci sa zmenili jej spoje (z toho pola co mi posiela martin a z toho co je v DB debinovane), na ktorych pracuje a update, pripadne delete
     # TODO ale co ak na spoji nebude zrazu ziadny personal? take spoje by sa asi nemali zobrazovat, asi ze?
 
     return ''
+
+# funkcia pre pridanie noveho uctu personalu
+@app.route('/addPersonal', methods=['GET', 'POST'])
+def addPersonal():
+    fname = request.form['fname']
+    lname = request.form['lname']
+    email = request.form['email']
+    password = request.form['password']
+    allIdsOfConnectionsPersonal = request.form['ids']
+    carrierEmail = request.form['carrier']
+    allIdsOfConnectionsPersonal = allIdsOfConnectionsPersonal.split(' ')
+    allIdsOfConnectionsPersonal.remove('')
+
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Dopravca WHERE email='%s';" % carrierEmail)
+    idOfCarrier = cursor1.fetchone()  # ziskanie id_dopravcu_spoje
+    cursor1.close()
+    idOfCarrier = idOfCarrier[0]
+
+    # vytvorenie noveho uctu do Personal
+    cursor = connection.cursor()
+    cursor.execute("insert into `Personal` (meno, priezvisko, email, heslo, id_dopravca_personal) VALUES (%s, %s, %s, %s, %s)",
+            (fname, lname, email, password, idOfCarrier))
+    connection.commit()
+    cursor.close()
+
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Personal WHERE email='%s';" % email)
+    idOfNewPersonal = cursor1.fetchone()
+    cursor1.close()
+    idOfNewPersonal = idOfNewPersonal[0]
+
+    # namapovanie id spojov na konkretneho noveho uzivatela
+    for i in allIdsOfConnectionsPersonal:
+        cursor = connection.cursor()
+        cursor.execute(
+            "insert into `Personal_Spoj` (id_personalu, id_spoju) VALUES (%s, %s)",
+            (idOfNewPersonal, i))
+        connection.commit()
+        cursor.close()
+
+    return ""
+
+
+# addVehicle fce na pridanie vozidla
+# seats, text, carrier
 
 @app.route('/administrator', methods=['GET', 'POST'])
 def administrator():
@@ -1047,8 +1093,8 @@ def newSuggestStop():
     return
 
 
-@app.route('/carrier/addVehicle/<carrier_name>', methods=['GET', 'POST'])
-def addVehicle(carrier_name):
+@app.route('/carrier/addVehicleCarrier/<carrier_name>', methods=['GET', 'POST'])
+def addVehicleCarrier(carrier_name):
     # prihlaseny bude Dopravca - Martin mi bude musiet poslat nazov dopravcu, akym nazvom je prihlaseny
     # podla nazvu Dopravcu si vyhladam jeho id v DB
     # Dopravca si chce pridat nove vozidlo
@@ -1094,44 +1140,6 @@ def addVehicle(carrier_name):
     cursor1.close()
 
     return
-
-
-# DOPRAVCA
-@app.route('/carrier/addPersonal/<carrier_name>', methods=['GET', 'POST'])
-def addPersonal(carrier_name):
-    # popis fce: pridanie personalu do DB pre daneho dopravcu
-
-    carrierName = carrier_name
-    fname = request.form['fname']
-    lname = request.form['lname']
-    user_email = request.form['email']
-    password = request.form['password']
-
-    # vyhladam nazov dopravcu v DB a zistim tak id dopravcu
-    cursor1 = connection.cursor()
-    cursor1.execute("SELECT id FROM Dopravca WHERE nazov='%s';" % carrierName)
-    idOfCarrier = cursor1.fetchone()
-    cursor1.close()
-    idOfCarrier = idOfCarrier[0]  # ziskanie z listu len prvy prvok - integer (id dopravcu)
-
-    print(idOfCarrier)
-    print(carrierName)
-    print(fname)
-    print(lname)
-    print(user_email)
-    print(password)
-
-    # pridanie personalu do DB pre daneho dopravcu
-    cursor1 = connection.cursor()
-    cursor1.execute(
-        "insert into `Personal` (meno, priezvisko, email, heslo, id_dopravca_personal) VALUES (%s, %s, %s, %s)",
-        (fname, lname, user_email, password, idOfCarrier))
-    connection.commit()
-    cursor1.close()
-
-    # TODO EDIT A MAZANIE UZIVALELSKYCH UCTOV PERSONALU DANEHO DOPRAVCU
-    # https://swcarpentry.github.io/sql-novice-survey/09-create/index.html
-
 
 # DOPRAVCA
 @app.route('/carrier/showMyVehicles/<carrier_name>', methods=['GET', 'POST'])
