@@ -274,7 +274,11 @@
                                 };
                                 var input = document.createElement("input");
                                     input.setAttribute("type", "number");
-                                    input.setAttribute("id", ++j);
+                                    if (j == null) {
+                                        input.setAttribute("id", "0");
+                                    } else {
+                                        input.setAttribute("id", ++j);
+                                    };
                                     input.setAttribute("max", "9999");
                                     input.setAttribute("oninput", "addInput(this)");
                                     input.style.textAlign = "center";
@@ -366,7 +370,7 @@
                     var form = document.createElement("form");
                     form.classList.add("searchForm");
                     form.setAttribute("id", "personalAddForm");
-                    form.setAttribute("onSubmit", "submitAddPersonal(this)");
+                    form.setAttribute("onSubmit", "submitAddPersonal()");
                         var div1 = document.createElement("div");
                             div1.classList.add("editorForm");
                                 var div = document.createElement("div");
@@ -458,7 +462,7 @@
                     document.getElementById("personalAddForm").remove();
                 };
             };
-            function submitAddPersonal(elem) {
+            function submitAddPersonal() {
                 var ids = "";
                 var i = 0;
                 while (i < document.getElementById("addIds").lastChild.getAttribute('id')) {
@@ -475,6 +479,7 @@
                     buttons: {
                         "Uložiť": function() {
                             $("#successfulDialog").removeClass("hidden");
+                            $('#personalAddForm').remove();
                             if ($('#password').val() != null) {
                                 var password = $('#password').val();
                             } else {
@@ -510,6 +515,7 @@
                     ids = ids.concat(" ", document.getElementById("ids").childNodes.item(i).value);
                     i++;
                 };
+                console.log(ids);
                 $("#confirmDialog").removeClass("hidden");
                 $("#confirmDialog").dialog({
                     draggable: false,
@@ -632,7 +638,7 @@
                                 labelIds.innerHTML = "Spoje";
                             var buttonSubmit = document.createElement("button");
                                 buttonSubmit.setAttribute("type", "submit");
-                                buttonSubmit.innerHTML = ("Vytvoriť účet");
+                                buttonSubmit.innerHTML = ("Vytvoriť vozidlo");
                             form.appendChild(buttonSubmit);
                         document.getElementById('addVehicle').parentNode.insertBefore(form, document.getElementById('addVehicle').nextSibling);
                 } else {
@@ -650,6 +656,7 @@
                     buttons: {
                         "Uložiť": function() {
                             $("#successfulDialog").removeClass("hidden");
+                            $('#vehicleAddForm').remove();
                             var email = cookie();
                             $.post('/addVehicle', {"carrier": email, "seats": $('#addSeats').val(), "text": $('#addDescription').val()}, function(result) {});
                             $(this).dialog("close");
@@ -764,11 +771,10 @@
                     var form = document.createElement("form");
                     form.classList.add("searchForm");
                     form.setAttribute("id", "connectionAddForm");
-                    form.setAttribute("onSubmit", "submitAddPersonal(this)");
+                    form.setAttribute("onSubmit", "submitAddConnection()");
                         var div1 = document.createElement("div");
                             div1.classList.add("editorForm");
-                                var div = document.createElement("div");
-                                    var div3 = document.createElement("div");
+                                var div3 = document.createElement("div");
                                     div3.style.display = "flex";
                                     div3.style.flexDirection = "row";
                                         var div2 = document.createElement("div");
@@ -777,6 +783,7 @@
                                         div2.style.margin = "0 5px";
                                             var selectFromCity = document.createElement("select");
                                                 selectFromCity.setAttribute("name", "fromCity");
+                                                selectFromCity.setAttribute("id", "fromCity");
                                             var labelFromCity = document.createElement("label");
                                                 labelFromCity.setAttribute("for", "fromCity");
                                                 labelFromCity.innerHTML = "Z";
@@ -784,6 +791,7 @@
                                         div2.appendChild(selectFromCity);
                                     div3.appendChild(div2);
                                         var div2 = document.createElement("div");
+                                        div2.setAttribute("name", "0");
                                         div2.style.display = "flex";
                                         div2.style.flexDirection = "column";
                                         div2.style.margin = "0 5px";
@@ -801,8 +809,14 @@
                                         div2.appendChild(inputTimeFrom);
                                     div3.appendChild(div2);
                                 div1.appendChild(div3);
-                                var div = document.createElement("div");
-                                    var div3 = document.createElement("div");
+                                var buttonStop = document.createElement("button");
+                                    buttonStop.setAttribute("onclick", "addStop()");
+                                    buttonStop.setAttribute("id", "insertBefore");
+                                    buttonStop.setAttribute("name", "0");
+                                    buttonStop.setAttribute("type", "button");
+                                    buttonStop.innerHTML = ("Pridať medzizastávku");
+                                div1.appendChild(buttonStop);
+                                var div3 = document.createElement("div");
                                     div3.style.display = "flex";
                                     div3.style.flexDirection = "row";
                                         var div2 = document.createElement("div");
@@ -811,6 +825,7 @@
                                         div2.style.margin = "0 5px";
                                             var selectToCity = document.createElement("select");
                                                 selectToCity.setAttribute("name", "toCity");
+                                                selectToCity.setAttribute("id", "toCity");
                                             var labelToCity = document.createElement("label");
                                                 labelToCity.setAttribute("for", "toCity");
                                                 labelToCity.innerHTML = "Do";
@@ -835,6 +850,28 @@
                                         div2.appendChild(inputTimeTo);
                                     div3.appendChild(div2);
                                 div1.appendChild(div3);
+                                var div = document.createElement("div");
+                                div.style.display = "flex";
+                                div.style.flexDirection = "column";
+                                    var selectVehicle = document.createElement("select");
+                                        selectVehicle.setAttribute("name", "vehicle");
+                                    var labelVehicle = document.createElement("label");
+                                        labelVehicle.setAttribute("for", "vehicle");
+                                        labelVehicle.innerHTML = "Vozidlo";
+                                    div.appendChild(labelVehicle);
+                                    div.appendChild(selectVehicle);
+                                div1.appendChild(div);
+                                var div = document.createElement("div");
+                                div.style.display = "flex";
+                                div.style.flexDirection = "column";
+                                    var selectPersonal = document.createElement("select");
+                                        selectPersonal.setAttribute("name", "personal");
+                                    var labelPersonal = document.createElement("label");
+                                        labelPersonal.setAttribute("for", "personal");
+                                        labelPersonal.innerHTML = "Personál";
+                                    div.appendChild(labelPersonal);
+                                    div.appendChild(selectPersonal);
+                                div1.appendChild(div);
                             form.appendChild(div1);
                             var buttonSubmit = document.createElement("button");
                                 buttonSubmit.setAttribute("type", "submit");
@@ -844,6 +881,106 @@
                 } else {
                     document.getElementById("connectionAddForm").remove();
                 };
+                var cities = {{cities|tojson}};
+                cities = cities.sort(Intl.Collator().compare);
+                var fromCity = document.getElementById('fromCity');
+                var toCity = document.getElementById('toCity');
+                for (var i in cities) {
+                    var option = document.createElement('option');
+                        option.value = cities[i];
+                        option.innerHTML = cities[i];
+                    fromCity.add(option);
+                    var option = document.createElement('option');
+                        option.value = cities[i];
+                        option.innerHTML = cities[i];
+                    toCity.add(option);
+                };
+            };
+            function addStop() {
+                var id = parseInt(document.getElementById('insertBefore').getAttribute("name"));
+                document.getElementById('insertBefore').name = id;
+                id = id + 1;
+                console.log(id);
+                var div3 = document.createElement("div");
+                    div3.style.display = "flex";
+                    div3.style.flexDirection = "row";
+                        var div2 = document.createElement("div");
+                        div2.style.display = "flex";
+                        div2.style.flexDirection = "column";
+                        div2.style.margin = "0 5px";
+                            var selectCity = document.createElement("select");
+                                selectCity.setAttribute("id", "city");
+                                selectCity.setAttribute("name", "city");
+                            var labelCity = document.createElement("label");
+                                labelCity.setAttribute("for", "city");
+                                labelCity.innerHTML = "Medzizastávka";
+                        div2.appendChild(labelCity);
+                        div2.appendChild(selectCity);
+                    div3.appendChild(div2);
+                        var div2 = document.createElement("div");
+                        div2.style.display = "flex";
+                        div2.style.flexDirection = "column";
+                        div2.style.margin = "0 5px";
+                            var inputTime = document.createElement("input");
+                                inputTime.setAttribute("id", "0");
+                                inputTime.setAttribute("name", "time0");
+                                inputTime.setAttribute("type", "time");
+                                inputTime.style.textAlign = "center";
+                                inputTime.style.marginBottom = "5px";
+                                inputTime.required = true;
+                            var labelTime = document.createElement("label");
+                                labelTime.setAttribute("for", "time0");
+                                labelTime.innerHTML = "Čas";
+                        div2.appendChild(labelTime);
+                        div2.appendChild(inputTime);
+                    div3.appendChild(div2);
+                document.getElementById('insertBefore').parentNode.insertBefore(div3, document.getElementById('insertBefore'));
+
+                var cities = {{cities|tojson}};
+                cities = cities.sort(Intl.Collator().compare);
+                var city = document.getElementById('city');
+                for (var i in cities) {
+                    var option = document.createElement('option');
+                        option.value = cities[i];
+                        option.innerHTML = cities[i];
+                    city.add(option);
+                };
+            };
+            function submitAddConnection() {
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            $('#vehicleAddForm').remove();
+                            var email = cookie();
+                            var stops = [];
+                            $.post('/addConnection', {"fromCity": $('#fromCity').find(":selected").val(), "fromCityTime": $('#timeFrom').val(), "toCity": $('#fromCity').find(":selected").val(), "toCityTime": $('#timeTo').val(), "stops": stops}, function(result) {});
+                            $(this).dialog("close");
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
             };
             $(document).on('click','#deleteConnection', function() {
                 $("#confirmConnectionDeleteDialog").removeClass("hidden");
@@ -889,24 +1026,6 @@
                 return document.cookie.split('; ')[1].split('=')[1];
             };
         </script>
-<!--        <script>
-            var cities = ;
-            cities = cities.sort(Intl.Collator().compare);
-            var fromCity = document.getElementById('fromCity');
-            var toCity = document.getElementById('toCity');
-            for (var i in cities) {
-                var option = document.createElement('option');
-                option.value = cities[i];
-                option.innerHTML = cities[i];
-                fromCity.add(option);
-            };
-            for (var i in cities) {
-                var option = document.createElement('option');
-                option.value = cities[i];
-                option.innerHTML = cities[i];
-                toCity.add(option);
-            };
-        </script> -->
         <script>
             function addInput(elem) {
                 var input = document.createElement("input");
