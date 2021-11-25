@@ -411,7 +411,7 @@ def carrier():
 
     allIdsOfConnectionsCarrier = []
 
-# ziskanie vsetkych spojov, ktore poskytuje dany dopravca
+    # ziskanie vsetkych spojov, ktore poskytuje dany dopravca
     # ziskanie vsetkych len id spojov
     cursor1 = connection.cursor()
     cursor1.execute(
@@ -468,7 +468,7 @@ def carrier():
 
         tmp_fromAndToTime.append(fromTime)
         tmp_fromAndToTime.append(toTime)
-
+        tmp = []
         for t in timesWithColon:
             cursor1 = connection.cursor()
             cursor1.execute("SELECT id_zastavky FROM Spoj_Zastavka WHERE id_spoju='%s' and cas_prejazdu='%s';" % (
@@ -482,16 +482,21 @@ def carrier():
                 "SELECT nazov_zastavky FROM Zastavky WHERE id='%s';" % idOfStop)
             city = cursor1.fetchone()
             cursor1.close()
+            tmp_city = city[0]
             city = list(city)
-            city.append(t)
+            tmp.append(tmp_city)
+            tmp.append(t)
             cities.append(city)
 
         oneConnection = str(i) + ' | ' + cities[0][0] + ' ' + symbols[6][0] + ' ' + cities[-1][0]
-        allConnections.append([oneConnection, cities])
+        print(oneConnection)
+        print(tmp)
+        allConnections.append([oneConnection, tmp])
 
     print(allConnections)
 
-    data = {'vehicles': allVehicles, 'connections': allConnections, 'personal': allPersonal} #TODO doplnit navrhy zastavok
+    data = {'vehicles': allVehicles, 'connections': allConnections,
+            'personal': allPersonal}  # TODO doplnit navrhy zastavok
     return render_template("carrier.html", data=data)
     # martin mi z vehicles posiela id a text vo formularoch pre editVehicleInfo
     # vymazanie vozidla - funkcia deleteVehicle, posiela len id a pole spojov cez ktore prechadza connections
@@ -770,7 +775,7 @@ def search(boolLoadMore, lastConnectionOnWeb):
                             cursor1 = connection.cursor()
                             cursor1.execute(
                                 "SELECT pocet_miest FROM Jizdenka WHERE datum='%s' and id_spoj_jizdenky='%s';" % (
-                                dateAndDayOfConnection, connectionNumber))
+                                    dateAndDayOfConnection, connectionNumber))
                             tmp_reservedNumberOfSeats = cursor1.fetchall()
                             cursor1.close()
                             reservedNumberOfSeats = []
