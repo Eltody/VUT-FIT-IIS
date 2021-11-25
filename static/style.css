@@ -910,6 +910,11 @@ h1, h2, h3, h4, h5, h6, figure {
 .ui-dialog-content p {
     padding: 0;
 }
+.ui-dialog-content a {
+    padding: 0;
+    height: 40vh;
+    text-align: justify;
+}
 .ui-dialog-buttonpane {
     padding: 0 !important;
 }

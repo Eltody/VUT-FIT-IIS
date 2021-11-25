@@ -7,7 +7,9 @@
         <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" type="text/css" href="/static/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"> </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
         <script src="https://kit.fontawesome.com/6079958bc1.js" crossorigin="anonymous"></script>
     </head>
     <body class="background" style="background-image: url('../../static/background.jpg');">
@@ -52,6 +54,9 @@
                 <p>Copyright © reserved, Website by <a href="mailto:cp.poriadne.sk@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
             </footer>
         </div>
+        <div id="detailsDialog" class="hidden">
+            <a id="details"></a>
+        </div>
         <!-- Scripts -->
         <script>
             $(function() {
@@ -76,6 +81,9 @@
                     divMain.setAttribute("id", data[i][2] + data[i][7]);
                         var div1 = document.createElement("div");
                             div1.classList.add("resultConHead");
+                            div1.setAttribute("onclick", "showDetails(this)");
+                            div1.setAttribute("name", data[i][12]);
+                            div1.style.cursor = "pointer";
                             var a1 = document.createElement("a");
                             a1.innerHTML = data[i][2];
                                 var span1 = document.createElement("span");
@@ -1107,6 +1115,23 @@
                     $('<form action="' + location + '" method="POST" id="tickets">' + form + '</form>').appendTo($(document.body)).submit();
                 }
             });
+        </script>
+        <script>
+            function showDetails(elem) {
+                document.getElementById("details").innerHTML = elem.getAttribute("name");
+                $("#detailsDialog").removeClass("hidden");
+                $("#detailsDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    modal: true,
+                    buttons: {
+                        "Zatvoriť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            };
         </script>
     </body>
 </html>
