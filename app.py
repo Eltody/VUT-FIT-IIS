@@ -332,20 +332,47 @@ def carrier():
     cursor1.close()
     idOfCarrier = idOfCarrier[0]  # ziskanie z listu len prvy prvok - integer (id dopravcu)
 
-    print(idOfCarrier)
-
-    # ziskanie vsetkych vozidiel, pre edit a mazanie dopravcom
+    # ziskanie vsetkych len id vozidiel
     cursor1 = connection.cursor()
     cursor1.execute(
-        "SELECT id, pocet_miest, popis_vozidla, aktualna_poloha FROM Vozidlo WHERE id_dopravca_vozidlo='%s';" % idOfCarrier)
-    allVehicles = cursor1.fetchall()
+        "SELECT id FROM Vozidlo WHERE id_dopravca_vozidlo='%s';" % idOfCarrier)
+    tmp_allIdsOfVehicles = cursor1.fetchall()
     cursor1.close()
-    allVehicles = list(allVehicles)
+    tmp_allIdsOfVehicles = list(tmp_allIdsOfVehicles)
+    allIdsOfVehicles = []
+    for m in tmp_allIdsOfVehicles:
+        for n in m:
+            allIdsOfVehicles.append(n)
+
+    allVehicles = []
+    for i in allIdsOfVehicles:
+        tmp_allVehiclesdata = []
+        # ziskam info o konkretnom vozidle
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT id, pocet_miest, popis_vozidla, aktualna_poloha FROM Vozidlo WHERE id='%s';" % i)
+        tmp_allInfoOfVehicle = cursor1.fetchall()
+        cursor1.close()
+        tmp_allInfoOfVehicle = list(tmp_allInfoOfVehicle)
+        allInfoOfVehicle = []
+        for m in tmp_allInfoOfVehicle:
+            for n in m:
+                allInfoOfVehicle.append(n)
+
+        # ziskam spoje, cez ktore prechadza konkretne vozidlo
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT id_spoju FROM Vozidlo_Spoj WHERE id_vozidla='%s';" % i)
+        tmp_allConnectionsOfVehicle = cursor1.fetchall()
+        cursor1.close()
+        tmp_allConnectionsOfVehicle = list(tmp_allConnectionsOfVehicle)
+        allIdsOfConnections = []
+        for m in tmp_allConnectionsOfVehicle:
+            for n in m:
+                allIdsOfConnections.append(n)
+        allVehicles.append([allInfoOfVehicle, allIdsOfConnections])
+
     print(allVehicles)
-
-
-
-
     data = {'vehicles': allVehicles, 'connections': 'connections', 'personal': 'personal'}
     return render_template("carrier.html", data=data)
 
