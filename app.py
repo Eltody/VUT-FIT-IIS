@@ -493,14 +493,15 @@ def carrier():
                 "SELECT nazov_zastavky FROM Zastavky WHERE id='%s';" % idOfStop)
             city = cursor1.fetchone()
             cursor1.close()
-            tmp_city = city[0]
+            #tmp_city = city[0]
             city = list(city)
-            tmp.append(tmp_city)
-            tmp.append(t)
+            #tmp.append(tmp_city)
+            #tmp.append(t)
+            city.append(t)
             cities.append(city)
 
         oneConnection = str(i) + ' | ' + cities[0][0] + ' ' + symbols[6][0] + ' ' + cities[-1][0]
-        allConnections.append([oneConnection, tmp])
+        allConnections.append([oneConnection, cities])
 
     data = {'vehicles': allVehicles, 'connections': allConnections,
             'personal': allPersonal}  # TODO doplnit navrhy zastavok
@@ -616,7 +617,6 @@ def search(boolLoadMore, lastConnectionOnWeb):
                         cursor1.execute("SELECT popis_vozidla FROM Vozidlo WHERE id='%s';" % id_vozidla)
                         vehicleDescription = cursor1.fetchone()
                         cursor1.close()
-                        # TODO POSIELAT VEHICLEDESCRIPTION
                         fromCityTime = row1[0]
                         toCityTime = row2[0]
                         connectionNumber = row1[1]  # cislo spoju
@@ -1316,8 +1316,6 @@ def purchase(signedInOrOneTime):
             "insert into `Jizdenka_Zastavky` (id_jizdenka, id_zastavka) VALUES (%s, %s)", (idOfTicket, idOfCity))
         connection.commit()
         cursor1.close()
-
-    # TODO odcitanie poctu miest z daneho spoju
 
     if signedInOrOneTime == 'register' or signedInOrOneTime == 'signIn' or signedInOrOneTime == 'signedIn':
         # Generovanie PDF
