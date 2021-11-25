@@ -568,6 +568,28 @@ def deleteVehicle():
     return ''
 
 
+# funkcia pre upravu uctu personalu
+@app.route('/editPersonalInfo', methods=['GET', 'POST'])
+def editPersonalInfo():
+    idOfPersonal = request.form['id']
+    fname = request.form['fname']
+    lname = request.form['lname']
+    email = request.form['email']
+    idsOfConnections = request.form['ids']
+    idsOfConnections = idsOfConnections.split(' ')
+    idsOfConnections.remove('')
+
+    # aktualizacia uctu konkretneho personalu dopravcu
+    cursor1 = connection.cursor()
+    cursor1.execute("UPDATE Personal SET meno = '%s', priezvisko = '%s', email = '%s' WHERE id = '%s'" % (fname, lname, email, idOfPersonal))
+    connection.commit()
+    cursor1.close()
+
+    # TODO skontrolovat, ci sa zmenili jej spoje, na ktorych pracuje a update, pripadne delete
+    # TODO ale co ak na spoji nebude zrazu ziadny personal? take spoje by sa asi nemali zobrazovat, asi ze?
+
+    return ''
+
 @app.route('/administrator', methods=['GET', 'POST'])
 def administrator():
     return render_template("administrator.html")
