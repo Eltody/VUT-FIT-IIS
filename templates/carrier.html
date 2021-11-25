@@ -489,7 +489,7 @@
                             };
                             $(this).dialog("close");
 
-                            $.post('/editPersonalInfo', {"carrier": Cookies.get("email") , "id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids, "password": password}, function(result) {});
+                            $.post('/editPersonalInfo', {"carrier": $.cookie("email") , "id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids, "password": password}, function(result) {});
                             $("#successfulDialog").dialog({
                                 draggable: false,
                                 resizable: false,
