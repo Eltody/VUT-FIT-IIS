@@ -52,7 +52,7 @@
                                         <h3>Úprava personálu</h3>
                                         <button id="addPersonal" type="button" onclick="addPersonal()">Pridať nového zamestnanca</button>
                                         <br><br>
-                                        <form id="personal" class="searchForm">
+                                        <form id="personal" class="searchForm" onsubmit="submitPersonal(this)">
                                             <select name="personals" id="personals" class="search-select">
                                                 <option value="none" disabled selected>Vyberte zamestnanca pre úpravu</option>
                                             </select>
@@ -211,6 +211,7 @@
                                     inputFName.style.width = "95%";
                                     inputFName.style.maxWidth = "300px";
                                     inputFName.style.marginBottom = "5px";
+                                    inputFName.required = true;
                                 var labelFName = document.createElement("label");
                                     labelFName.setAttribute("for", "fName");
                                     labelFName.innerHTML = "Meno";
@@ -226,6 +227,7 @@
                                     inputLName.style.width = "95%";
                                     inputLName.style.maxWidth = "300px";
                                     inputLName.style.marginBottom = "5px";
+                                    inputLName.required = true;
                                 var labelLName = document.createElement("label");
                                     labelLName.setAttribute("for", "lName");
                                     labelLName.innerHTML = "Priezvisko";
@@ -241,6 +243,7 @@
                                     inputEmail.style.width = "95%";
                                     inputEmail.style.maxWidth = "300px";
                                     inputEmail.style.marginBottom = "5px";
+                                    inputEmail.required = true;
                                 var labelEmail = document.createElement("label");
                                     labelEmail.setAttribute("for", "email");
                                     labelEmail.innerHTML = "Email";
@@ -286,10 +289,9 @@
                         div.setAttribute("id", "personalButtons");
                         div.classList.add("search-col");
                             var buttonSubmit = document.createElement("button");
-                                buttonSubmit.setAttribute("id", "submitPersonal");
-                                buttonSubmit.setAttribute("type", "button");
+                                buttonSubmit.setAttribute("type", "submit");
                                 buttonSubmit.style.float = "left";
-                                buttonSubmit.innerHTML = ("Upraviť popis");
+                                buttonSubmit.innerHTML = ("Upraviť účet");
                             div.appendChild(buttonSubmit);
                             var buttonSubmit = document.createElement("button");
                                 buttonSubmit.setAttribute("id", "deletePersonal");
@@ -357,12 +359,102 @@
                     };
                 };
             };
-            $(document).on('click', 'input[type="checkbox"]', function() {
-                $('input[type="checkbox"]').not(this).prop('checked', false);
-            });
         </script>
         <script>
-            $(document).on('click','#submitPersonal', function() {
+            function addPersonal() {
+                if (document.getElementById("personalAddForm") != null) {
+                    document.getElementById("personalAddForm").remove();
+                };
+                var form = document.createElement("form");
+                form.classList.add("searchForm");
+                form.setAttribute("id", "personalAddForm");
+                form.setAttribute("onSubmit", "submitPersonal(this)");
+                    var div1 = document.createElement("div");
+                        div1.classList.add("editorForm");
+                            var div = document.createElement("div");
+                                var inputFName = document.createElement("input");
+                                    inputFName.setAttribute("id", "addFName");
+                                    inputFName.setAttribute("name", "fName");
+                                    inputFName.style.textAlign = "center";
+                                    inputFName.style.width = "95%";
+                                    inputFName.style.maxWidth = "300px";
+                                    inputFName.style.marginBottom = "5px";
+                                    inputFName.required = true;
+                                var labelFName = document.createElement("label");
+                                    labelFName.setAttribute("for", "fName");
+                                    labelFName.innerHTML = "Meno";
+                                div.appendChild(labelFName);
+                                div.appendChild(inputFName);
+                            div1.appendChild(div);
+                            var div = document.createElement("div");
+                                var inputLName = document.createElement("input");
+                                    inputLName.setAttribute("id", "addLName");
+                                    inputLName.setAttribute("name", "lName");
+                                    inputLName.style.textAlign = "center";
+                                    inputLName.style.width = "95%";
+                                    inputLName.style.maxWidth = "300px";
+                                    inputLName.style.marginBottom = "5px";
+                                    inputLName.required = true;
+                                var labelLName = document.createElement("label");
+                                    labelLName.setAttribute("for", "lName");
+                                    labelLName.innerHTML = "Priezvisko";
+                                div.appendChild(labelLName);
+                                div.appendChild(inputLName);
+                            div1.appendChild(div);
+                            var div = document.createElement("div");
+                                var inputEmail = document.createElement("input");
+                                    inputEmail.setAttribute("id", "addEmail");
+                                    inputEmail.setAttribute("name", "email");
+                                    inputEmail.style.textAlign = "center";
+                                    inputEmail.style.width = "95%";
+                                    inputEmail.style.maxWidth = "300px";
+                                    inputEmail.style.marginBottom = "5px";
+                                    inputEmail.required = true;
+                                var labelEmail = document.createElement("label");
+                                    labelEmail.setAttribute("for", "email");
+                                    labelEmail.innerHTML = "Email";
+                                div.appendChild(labelEmail);
+                                div.appendChild(inputEmail);
+                            div1.appendChild(div);
+                        form.appendChild(div1);
+                        var labelIds = document.createElement("label");
+                            labelIds.setAttribute("id", "labelAddIds");
+                            labelIds.innerHTML = "Spoje";
+                        var div = document.createElement("div")
+                        div.setAttribute("id", "addIds");
+                        div.style.marginBottom = "10px";
+                            var input = document.createElement("input");
+                                input.setAttribute("type", "number");
+                                input.setAttribute("id", 0);
+                                input.setAttribute("max", "9999");
+                                input.setAttribute("oninput", "addInput(this)");
+                                input.style.textAlign = "center";
+                                input.style.margin = "0 5px";
+                                input.style.width = "30px";
+                            div.appendChild(input);
+                        form.appendChild(labelIds);
+                        form.appendChild(div);
+
+                        var buttonSubmit = document.createElement("button");
+                            buttonSubmit.setAttribute("type", "submit");
+                            buttonSubmit.innerHTML = ("Vytvoriť účet");
+                        form.appendChild(buttonSubmit);
+                    document.getElementById('addPersonal').parentNode.insertBefore(form, document.getElementById('addPersonal').nextSibling);
+            };
+            function submitPersonal(elem) {
+                var ids = "";
+                var i = 0;
+                if (elem.getAttribute('id') == "personalAddForm") {
+                    while (i < document.getElementById("addIds").lastChild.getAttribute('id')) {
+                        ids = ids.concat(" ", document.getElementById("addIds").childNodes.item(i).value);
+                        i++;
+                    };
+                } else {
+                    while (i < document.getElementById("ids").lastChild.getAttribute('id')) {
+                        ids = ids.concat(" ", document.getElementById("ids").childNodes.item(i).value);
+                        i++;
+                    };
+                };
                 $("#confirmDialog").removeClass("hidden");
                 $("#confirmDialog").dialog({
                     draggable: false,
@@ -372,12 +464,6 @@
                     modal: true,
                     buttons: {
                         "Uložiť": function() {
-                            var ids = "";
-                            var i = 0;
-                            while (i < $("#ids").children().last().attr('id')) {
-                                ids = ids.concat(" ", $("#" + i).val());
-                                i++;
-                            };
                             $("#successfulDialog").removeClass("hidden");
                             $.post('/editPersonalInfo', {"id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids}, function(result) {});
                             $(this).dialog("close");
@@ -400,7 +486,7 @@
                     }
                 });
                 $(".ui-dialog-titlebar").hide();
-            });
+            };
             $(document).on('click','#deletePersonal', function() {
                 $("#confirmPersonalDeleteDialog").removeClass("hidden");
                 $("#confirmPersonalDeleteDialog").dialog({
@@ -417,8 +503,8 @@
                             $('#labelIds').remove();
                             $('#ids').remove();
                             $('#personalButtons').remove();
+                            $("#personals option[value='" + $('#personal').find(":selected").val() + "']").remove()
                             $('#personals').val('none');
-                            $("#personals option[value='" + parseInt($('#personal').find(":selected").val()) + "']").remove()
                             $(this).dialog( "close" );
                             $("#successfulDialog").dialog({
                                 draggable: false,
@@ -502,8 +588,44 @@
                             $.post('/deleteVehicle', {"id": $('#vehicles').find(":selected").val(), "connections": $('#vehicles').find(":selected").attr('name')}, function(result) {});
                             $('#textArea').remove();
                             $('#vehicleButtons').remove();
+                            $("#vehicles option[value='" + $('#vehicles').find(":selected").val() + "']").remove()
                             $('#vehicles').val('none');
-                            $("#vehicles option[value='" + parseInt($('#vehicles').find(":selected").val()) + "']").remove()
+                            $(this).dialog( "close" );
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            });
+            $(document).on('click','#deleteConnection', function() {
+                $("#confirmConnectionDeleteDialog").removeClass("hidden");
+                $("#confirmConnectionDeleteDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Potvrdiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            $.post('/deleteConnection', {"id": $('#vehicles').find(":selected").val()}, function(result) {});
+                            $('#deleteConnection').remove();
+                            $("#connections option[value='" + $('#connections').find(":selected").val() + "']").remove()
+                            $('#connections').val('none');
                             $(this).dialog( "close" );
                             $("#successfulDialog").dialog({
                                 draggable: false,

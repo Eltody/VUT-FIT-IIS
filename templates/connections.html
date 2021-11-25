@@ -457,8 +457,7 @@
                     } else {
                         var purchaseForm = document.createElement("form");
                             purchaseForm.classList.add("purchaseForm");
-                            purchaseForm.setAttribute("action", "/purchase/signedIn");
-                            purchaseForm.setAttribute("method", "POST");
+                            purchaseForm.setAttribute("onSubmit", "formSignedIn()");
                             purchaseForm.setAttribute("id", "formBuy" + buy2);
                             var amountDiv = document.createElement("div");
                                 var iPassenger = document.createElement("i");
@@ -648,8 +647,7 @@
                             buy2 = buy.id;
                             var purchaseForm = document.createElement("form");
                                 purchaseForm.classList.add("purchaseForm");
-                                purchaseForm.setAttribute("action", "/purchase/signedIn");
-                                purchaseForm.setAttribute("method", "POST");
+                                purchaseForm.setAttribute("onSubmit", "formSignedIn()");
                                 purchaseForm.setAttribute("id", "formBuy" + buy.id);
                                 var amountDiv = document.createElement("div");
                                     var iPassenger = document.createElement("i");
@@ -738,8 +736,7 @@
                 var buy = elem.parentNode.parentNode;
                 var formBuy = document.createElement("form");
                     formBuy.classList.add("purchaseNotLoggedForm");
-                    formBuy.setAttribute("action", "/purchase/signIn");
-                    formBuy.setAttribute("method", "POST");
+                    formBuy.setAttribute("onSubmit", "formLogin()");
                     formBuy.setAttribute("name", "form");
                     formBuy.setAttribute("id", "formBuy" + buy2);
                     var formBuyForm = document.createElement("div");
@@ -826,8 +823,7 @@
                 var buy = elem.parentNode.parentNode;
                 var formBuy = document.createElement("form");
                     formBuy.classList.add("purchaseNotLoggedForm");
-                    formBuy.setAttribute("action", "/purchase/register");
-                    formBuy.setAttribute("method", "POST");
+                    formBuy.setAttribute("onSubmit", "formRegister()");
                     formBuy.setAttribute("name", "form");
                     formBuy.setAttribute("id", "formBuy" + buy2);
                     var formBuyForm = document.createElement("div");
@@ -838,7 +834,7 @@
                             inputFName.setAttribute("type", "text");
                             inputFName.setAttribute("id", "fname");
                             inputFName.setAttribute("name", "fname");
-                            inputFName.setAttribute("pattern", "[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z]");
+                            inputFName.setAttribute("pattern", "[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z]+");
                             inputFName.required = true;
                         var labelLName = document.createElement("label");
                             labelLName.setAttribute("for", "lname");
@@ -847,7 +843,7 @@
                             inputLName.setAttribute("type", "text");
                             inputLName.setAttribute("id", "lname");
                             inputLName.setAttribute("name", "lname");
-                            inputLName.setAttribute("pattern", "[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z]");
+                            inputLName.setAttribute("pattern", "[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z]+");
                             inputLName.required = true;
                         var labelEmail = document.createElement("label");
                             labelEmail.setAttribute("for", "email");
@@ -949,8 +945,7 @@
                 var buy = elem.parentNode.parentNode;
                 var formBuy = document.createElement("form");
                     formBuy.classList.add("purchaseNotLoggedForm");
-                    formBuy.setAttribute("action", "/purchase/oneTime");
-                    formBuy.setAttribute("method", "POST");
+                    formBuy.setAttribute("onSubmit", "formOneTime()");
                     formBuy.setAttribute("id", "formBuy" + buy2);
                     var formBuyForm = document.createElement("div");
                         var labelFName = document.createElement("label");
@@ -1056,10 +1051,8 @@
                     return false;
                 };
             });
-            $(document).on('click','#login', function() {
-                var email = $("#email").val();
-                var password = $("#password").val();
-                $.post('/validate/signIn', {"email": email, "password": password}, function(result) {
+            function formLogin() {
+                $.post('/validate/signIn', {"email": $("#email").val(), "password": $("#password").val()}, function(result) {
                     if (result === "log") {
                         document.getElementById("error").innerHTML = "Chybne zadaný email alebo heslo."
                     } else {
@@ -1067,36 +1060,31 @@
                         expiry.setTime(expiry.getTime()+(3600*1000));
                         var result = result.split("+");
                         document.cookie = "name="+result[1]+"; expires=" + expiry.toGMTString() + "; path=/";
-                        document.cookie = "email="+email+"; expires=" + expiry.toGMTString() + "; path=/";
+                        document.cookie = "email="+$('#email').val()+"; expires=" + expiry.toGMTString() + "; path=/";
                         document.cookie = "status="+result[0]+"; expires=" + expiry.toGMTString() + "; path=/";
-                        submitForm();
+                        $.post('/purchase/signIn', {"data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val()}, function(result) {});
                     };
                 });
-            });
-            $(document).on('click','#register', function() {
-                var name = $("#fname").val();
-                var email = $("#email").val();
-                $.post('/validate/register', {"email": email}, function(result) {
+            };
+            function formRegister() {
+                $.post('/validate/register', {"email": $("#email").val()}, function(result) {
                     if (result === "reg") {
                         document.getElementById("error").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
                     } else {
                         expiry = new Date();
                         expiry.setTime(expiry.getTime()+(3600*1000));
-                        document.cookie = "name="+name+"; expires=" + expiry.toGMTString() + "; path=/";
-                        document.cookie = "email="+email+"; expires=" + expiry.toGMTString() + "; path=/";
-                        document.cookie = "status=cestujuci ; expires=" + expiry.toGMTString() + "; path=/";
-                        submitForm();
+                        document.cookie = "name="+$('#fname').val()+"; expires=" + expiry.toGMTString() + "; path=/";
+                        document.cookie = "email="+$('#email').val()+"; expires=" + expiry.toGMTString() + "; path=/";
+                        document.cookie = "status=cestujuci; expires=" + expiry.toGMTString() + "; path=/";
+                        $.post('/purchase/register', {"data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val(), "fname": $('#fname').val(), "lname": $('#lname').val(), "password": $('#password').val()}, function(result) {});
                     };
                 });
-            });
-            $(document).on('click','#oneTime', function() {
-                submitForm();
-            });
-            $(document).on('click','#signedIn', function() {
-                submitForm();
-            });
-            function submitForm() {
-                document.getElementById("formBuy" + buy2).submit();
+            };
+            function formOneTime() {
+                $.post('/purchase/oneTime', {"data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val(), "fname": $('#fname').val(), "lname": $('#lname').val()}, function(result) {});
+            };
+            function formsignedIn() {
+                $.post('/purchase/signedIn', {"data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val(), "fname": $('#fname').val(), "lname": $('#lname').val()}, function(result) {});
             };
         </script>
         <script>
