@@ -79,7 +79,7 @@
                                         <h3>Odstránenie cestovného lístka</h3>
                                         <form id="ticket">
                                             <select name="tickets" id="tickets" class="search-select">
-                                                <option value="" disabled selected>Vyberte lístok</option>
+                                                <option value="none" disabled selected>Vyberte lístok</option>
                                             </select>
                                             <br>
                                         </form>
@@ -88,7 +88,7 @@
                                         <h3>Aktualizácia polohy vozidla</h3>
                                         <form id="stops">
                                             <select name="vehicles" id="vehicles" class="search-select">
-                                                <option value="" disabled selected>Vyberte vozidlo</option>
+                                                <option value="none" disabled selected>Vyberte vozidlo</option>
                                             </select>
                                             <div id="stop" class="stop"></div>
                                         </form>
@@ -227,10 +227,10 @@
                 vehiclesSelect.add(option);
             };
             ticketsSelect.onchange = function() {
-                var button = document.getElementById('submitTicket');
+                var button = document.getElementById('removeTicket');
                 if (button == null) {
                     var buttonSubmit = document.createElement("button");
-                        buttonSubmit.setAttribute("id", "submitTicket");
+                        buttonSubmit.setAttribute("id", "removeTicket");
                         buttonSubmit.setAttribute("type", "button");
                         buttonSubmit.innerHTML = ("Odstrániť lístok");
                     document.getElementById('ticket').appendChild(buttonSubmit);
@@ -247,7 +247,7 @@
                             var button = document.getElementById('submitStop');
                             var div = document.createElement("div")
                                 var input = document.createElement("input");
-                                    input.setAttribute("type", "checkbox");
+                                    input.setAttribute("type", "radio");
                                     input.setAttribute("id", vehicles[i][1][j]);
                                     input.setAttribute("name", "stops");
                                     input.setAttribute("value", vehicles[i][1][j]);
@@ -273,9 +273,6 @@
                     };
                 };
             };
-            $(document).on('click', 'input[type="checkbox"]', function() {
-                $('input[type="checkbox"]').not(this).prop('checked', false);
-            });
         </script>
 <!--        <script>
             var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
@@ -330,7 +327,7 @@
                 document.getElementById('showSearch').classList.add("hidden");
                 document.getElementById('searchForm').classList.remove("hidden");
             };
-            $(document).on('click','#submitTicket', function() {
+            $(document).on('click','#removeTicket', function() {
                 $("#confirmDeleteDialog").removeClass("hidden");
                 $("#confirmDeleteDialog").dialog({
                     draggable: false,
@@ -342,6 +339,7 @@
                         "Potvrdiť": function() {
                             $("#successfulDialog").removeClass("hidden");
                             $.post('/deleteTicket', {"ticket": $('#tickets').find(":selected").text()}, function(result) {});
+                            $('#tickets').val('none');
                             $("#tickets option[value='" + $('#tickets').find(":selected").text() +"']").remove()
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({
