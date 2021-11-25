@@ -1062,7 +1062,7 @@
                         document.cookie = "name="+result[1]+"; expires=" + expiry.toGMTString() + "; path=/";
                         document.cookie = "email="+$('#email').val()+"; expires=" + expiry.toGMTString() + "; path=/";
                         document.cookie = "status="+result[0]+"; expires=" + expiry.toGMTString() + "; path=/";
-                        $.post('/purchase/signIn', {"data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val()}, function(result) {});
+                        $.redirectPost('/purchase/signIn', {"data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val()});
                     };
                 });
             };
@@ -1076,16 +1076,26 @@
                         document.cookie = "name="+$('#fname').val()+"; expires=" + expiry.toGMTString() + "; path=/";
                         document.cookie = "email="+$('#email').val()+"; expires=" + expiry.toGMTString() + "; path=/";
                         document.cookie = "status=cestujuci; expires=" + expiry.toGMTString() + "; path=/";
-                        $.post('/purchase/register', {"data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val(), "fname": $('#fname').val(), "lname": $('#lname').val(), "password": $('#password').val()}, function(result) {});
+                        $.redirectPost('/purchase/register', {"data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val(), "fname": $('#fname').val(), "lname": $('#lname').val(), "password": $('#password').val()});
                     };
                 });
             };
             function formOneTime() {
-                $.post('/purchase/oneTime', {"data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val(), "fname": $('#fname').val(), "lname": $('#lname').val()}, function(result) {});
+                $.redirectPost('/purchase/oneTime', {"data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val(), "fname": $('#fname').val(), "lname": $('#lname').val()});
             };
             function formsignedIn() {
-                $.post('/purchase/signedIn', {"data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val(), "fname": $('#fname').val(), "lname": $('#lname').val()}, function(result) {});
+                $.redirectPost('/purchase/signedIn', {"data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val(), "fname": $('#fname').val(), "lname": $('#lname').val()});
             };
+            $.extend({
+                redirectPost: function(location, args){
+                    var form = '';
+                    $.each( args, function( key, value ) {
+                        value = value.split('"').join('\"')
+                        form += '<input type="hidden" name="'+key+'" value="'+value+'">';
+                    });
+                    $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo($(document.body)).submit();
+                }
+            });
         </script>
         <script>
             $("#status").click(function (event) {
