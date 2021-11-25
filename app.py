@@ -567,6 +567,29 @@ def deleteVehicle():
 
     return ''
 
+# funkcia pre pridanie noveho vozidla
+@app.route('/addVehicle', methods=['GET', 'POST'])
+def addVehicle():
+    numberOfSeats = request.form['seats']
+    descriptionOfVehicle = request.form['text']
+    carrierEmail = request.form['carrier']
+
+    # ziskanie id dopravcu, ktory pridava nove vozidlo
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Dopravca WHERE email='%s';" % carrierEmail)
+    idOfCarrier = cursor1.fetchone()
+    cursor1.close()
+    idOfCarrier = idOfCarrier[0]
+
+    # pridanie noveho vozidla dopravcom
+    cursor = connection.cursor()
+    cursor.execute(
+        "insert into `Vozidlo` (pocet_miest, popis_vozidla, id_dopravca_vozidlo) VALUES (%s, %s, %s)",
+        (numberOfSeats, descriptionOfVehicle, idOfCarrier))
+    connection.commit()
+    cursor.close()
+
+    return ''
 
 # funkcia pre upravu uctu personalu
 @app.route('/editPersonalInfo', methods=['GET', 'POST'])
@@ -652,9 +675,6 @@ def deletePersonal():
 
     return ''
 
-
-# addVehicle fce na pridanie vozidla
-# seats, text, carrier
 
 @app.route('/administrator', methods=['GET', 'POST'])
 def administrator():
