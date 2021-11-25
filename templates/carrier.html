@@ -488,7 +488,8 @@
                                 var password = '';
                             };
                             $(this).dialog("close");
-                            $.post('/editPersonalInfo', {"carrier": Cookies.get("email") , "id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids + password}, function(result) {});
+
+                            $.post('/editPersonalInfo', {"carrier": Cookies.get("email") , "id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids password}, function(result) {});
                             $("#successfulDialog").dialog({
                                 draggable: false,
                                 resizable: false,
@@ -553,7 +554,7 @@
                     var form = document.createElement("form");
                     form.classList.add("searchForm");
                     form.setAttribute("id", "vehicleAddForm");
-                    form.setAttribute("onSubmit", "submitPersonal(this)");
+                    form.setAttribute("onSubmit", "submitVehicle(this)");
                         var div1 = document.createElement("div");
                             div1.classList.add("editorForm");
                                 var div = document.createElement("div");
