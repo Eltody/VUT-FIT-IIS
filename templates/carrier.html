@@ -483,13 +483,13 @@
                         "Uložiť": function() {
                             $("#successfulDialog").removeClass("hidden");
                             if ($('#fName').val() != null) {
-                                var password = ', "password": ' + $('#fName').val();
+                                var password = $('#fName').val();
                             } else {
                                 var password = '';
                             };
                             $(this).dialog("close");
 
-                            $.post('/editPersonalInfo', {"carrier": Cookies.get("email") , "id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids password}, function(result) {});
+                            $.post('/editPersonalInfo', {"carrier": Cookies.get("email") , "id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids, "password": password}, function(result) {});
                             $("#successfulDialog").dialog({
                                 draggable: false,
                                 resizable: false,
