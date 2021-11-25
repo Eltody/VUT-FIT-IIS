@@ -156,7 +156,6 @@ def personal():
         for n in m:
             idsOfAllConnections.append(''.join(str(n)))
 
-
     vehicles = []
     allIdsAndTimesOfConnection = []
     sameVehicle = []
@@ -188,7 +187,6 @@ def personal():
             for n in m:
                 allTimes.append(''.join(str(n)))
 
-
         # odstranenie ':' z casu
         for k in range(len(allTimes)):
             tmp2 = allTimes[k].replace(":", "")  # odstranenie ':' pre prevod na int
@@ -219,7 +217,7 @@ def personal():
         for t in timesWithColon:
             cursor1 = connection.cursor()
             cursor1.execute("SELECT id_zastavky FROM Spoj_Zastavka WHERE id_spoju='%s' and cas_prejazdu='%s';" % (
-                    i, t))
+                i, t))
             idOfStop = cursor1.fetchone()
             cursor1.close()
             idOfStop = idOfStop[0]
@@ -285,7 +283,6 @@ def personal():
     return render_template("personal.html", cities=cities, data=data)
 
 
-
 # aktualizovanie polohy personalom, ktory sa nachadza v danom spoji
 @app.route('/updatePosition', methods=['GET', 'POST'])
 def updatePosition():
@@ -320,6 +317,7 @@ def deleteTicket():
     cursor1.close()
 
     return ""
+
 
 @app.route('/carrier', methods=['GET', 'POST'])
 def carrier():
@@ -366,20 +364,50 @@ def carrier():
         for m in tmp_allConnectionsOfVehicle:
             for n in m:
                 allIdsOfConnections.append(n)
-        print(allIdsOfConnections)
         tmp_allInfoOfVehicle.append(allIdsOfConnections)
         allVehicles.append(tmp_allInfoOfVehicle)
-    print(allVehicles)
-    print('vypis')
-    print(allVehicles[0][0])    # id vozidla
-    print(allVehicles[0][1])    # pocet miest
-    print(allVehicles[0][2])    # popis vozidla
-    print(allVehicles[0][3])    # akt.poloha
-    print(allVehicles[0][4])    # pole spojov
 
+    # ziskanie len id personalu
+    cursor1 = connection.cursor()
+    cursor1.execute(
+        "SELECT id FROM Personal WHERE id_dopravca_personal='%s';" % idOfCarrier)
+    tmp_allPersonalIds = cursor1.fetchall()
+    cursor1.close()
+    tmp_allPersonalIds = list(tmp_allPersonalIds)
+    allPersonalIds = []
+    for m in tmp_allPersonalIds:
+        for n in m:
+            allPersonalIds.append(n)
 
-    data = {'vehicles': allVehicles, 'connections': 'connections', 'personal': 'personal'}
+    allPersonal = []
+    # ziskanie vsetkych uctov personalu daneho dopravcu
+    for p in allPersonalIds:
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT id, meno, priezvisko, email, heslo FROM Personal WHERE id='%s';" % p)
+        tmp_allPersonalInfo = cursor1.fetchone()
+        cursor1.close()
+        tmp_allPersonalInfo = list(tmp_allPersonalInfo)
+
+        # ziskam spoje, pre ktore pracuje personal
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT id_spoju FROM Personal_Spoj WHERE id_personalu='%s';" % p)
+        tmp_allConnectionsOfPersonal = cursor1.fetchall()
+        cursor1.close()
+        tmp_allConnectionsOfPersonal = list(tmp_allConnectionsOfPersonal)
+        allConnectionsOfPersonal = []
+        for m in tmp_allConnectionsOfPersonal:
+            for n in m:
+                allConnectionsOfPersonal.append(n)
+
+        tmp_allPersonalInfo.append(allConnectionsOfPersonal)
+        allPersonal.append(tmp_allPersonalInfo)
+
+    data = {'vehicles': allVehicles, 'connections': 'connections', 'personal': allPersonal}
     return render_template("carrier.html", data=data)
+    # martin mi z vehicles posiela id a text vo formularoch pre editVehicleInfo
+    # vymazanie vozidla - funkcia deleteVehicle, posiela len id a pole spojov cez ktore prechadza connections
 
 
 @app.route('/administrator', methods=['GET', 'POST'])
@@ -629,7 +657,7 @@ def search(boolLoadMore, lastConnectionOnWeb):
                             cursor1 = connection.cursor()
                             cursor1.execute(
                                 "SELECT pocet_miest FROM Jizdenka WHERE datum='%s' and id_spoj_jizdenky='%s';" % (
-                                dateAndDayOfConnection, connectionNumber))
+                                    dateAndDayOfConnection, connectionNumber))
                             tmp_reservedNumberOfSeats = cursor1.fetchall()
                             cursor1.close()
                             reservedNumberOfSeats = []
@@ -651,7 +679,9 @@ def search(boolLoadMore, lastConnectionOnWeb):
                         if nextDay:  # pre dalsie spoje, na dalsi den - rovnake spoje, len datum o cislo vyssi a od zaciatku dna 00:00 vsetky, nie len najblizsie v dany den
                             # zistenie, kolko volnych miest dany spoj este ponuka na predaj
                             cursor1 = connection.cursor()
-                            cursor1.execute("SELECT pocet_miest FROM Jizdenka WHERE datum='%s' and id_spoj_jizdenky='%s';" % (dateAndDayOfConnection, connectionNumber))
+                            cursor1.execute(
+                                "SELECT pocet_miest FROM Jizdenka WHERE datum='%s' and id_spoj_jizdenky='%s';" % (
+                                dateAndDayOfConnection, connectionNumber))
                             tmp_reservedNumberOfSeats = cursor1.fetchall()
                             cursor1.close()
                             reservedNumberOfSeats = []
@@ -813,7 +843,8 @@ def loadStops():
 
     # ziskanie vsetkych navrhov zastavok, ich geografickych poloh a ich id
     cursor1 = connection.cursor()
-    cursor1.execute("SELECT id, nazov, geograficka_poloha, id_dopravca_navrhy, stav FROM NavrhZastavky WHERE stav='potvrdena';")
+    cursor1.execute(
+        "SELECT id, nazov, geograficka_poloha, id_dopravca_navrhy, stav FROM NavrhZastavky WHERE stav='potvrdena';")
     allSuggestedStops = cursor1.fetchall()
     cursor1.close()
     allSuggestedStops = list(allSuggestedStops)
@@ -821,19 +852,21 @@ def loadStops():
 
     return ""
 
+
 # DOPRAVCA - ulozenie info o navrhu novej zastavky, ktore bude schvalovat administrator
 @app.route('/newSuggestStop', methods=['GET', 'POST'])
 def newSuggestStop():
-    #TODO tu mi pridu data od Martina - potrebujem z formularu NAZOV, GEO.POLOHU, MENO DOPRAVCU KTORY TO NAVRHUJE
+    # TODO tu mi pridu data od Martina - potrebujem z formularu NAZOV, GEO.POLOHU, MENO DOPRAVCU KTORY TO NAVRHUJE
 
     # pridanie navrhu do DB
-    #cursor1 = connection.cursor()
-    #cursor1.execute(
+    # cursor1 = connection.cursor()
+    # cursor1.execute(
     #    "insert into `NavrhZastavky` (nazov, geograficka_poloha, id_dopravca_navrhy, stav, id_administrator_potvrdenie) VALUES (%s, %s, %s, %s, %s)",
     #    (, , , , , ))
-    #connection.commit()
-    #cursor1.close()
+    # connection.commit()
+    # cursor1.close()
     return
+
 
 @app.route('/carrier/addVehicle/<carrier_name>', methods=['GET', 'POST'])
 def addVehicle(carrier_name):
@@ -877,7 +910,7 @@ def addVehicle(carrier_name):
     idOfVehicle = idOfVehicle[-1][0]  # ziskanie posledneho vytvoreneho id vozidla daneho dopravcu
 
     cursor1 = connection.cursor()
-    cursor1.execute("insert into `Vozidlo_Spoj` (id_vozidla, id_spoju) VALUES (%s, %s)",(idOfVehicle, idOfConnection))
+    cursor1.execute("insert into `Vozidlo_Spoj` (id_vozidla, id_spoju) VALUES (%s, %s)", (idOfVehicle, idOfConnection))
     connection.commit()
     cursor1.close()
 
@@ -988,6 +1021,7 @@ def loadUsers():
 
     return render_template("XXXXX.html", data=allUsers)
 
+
 # ADMIN - edit daneho uctu
 @app.route('/editUser/', methods=['GET', 'POST'])
 def editUser():
@@ -996,10 +1030,10 @@ def editUser():
     # TODO ziskanie tabulky, ktoru budem editovat - ci administrator, dopravca, personal, cestujuci
 
     # aktualizacia daneho uctu podla emailu
-    #cursor1 = connection.cursor()
-    #cursor1.execute("UPDATE DANA_TABULKA SET meno = '%s', priezvisko = '%s', email = '%s', heslo = '%s' WHERE email = '%s'" % (, , , , ))
-    #connection.commit()
-    #cursor1.close()
+    # cursor1 = connection.cursor()
+    # cursor1.execute("UPDATE DANA_TABULKA SET meno = '%s', priezvisko = '%s', email = '%s', heslo = '%s' WHERE email = '%s'" % (, , , , ))
+    # connection.commit()
+    # cursor1.close()
 
     return ""
 
@@ -1339,7 +1373,7 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
 
 def databaseCheck():
     try:
-       conn = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
+        conn = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
     except pymysql.Error as error:
         webhookUrl = 'https://maker.ifttt.com/trigger/error/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
         requests.post(webhookUrl, headers={'Content-Type': 'application/json'})
