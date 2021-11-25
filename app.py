@@ -321,12 +321,12 @@ def deleteTicket():
 
     return ""
 
-@app.route('/carrier')
+@app.route('/carrier', methods=['GET', 'POST'])
 def carrier():
     return render_template("carrier.html")
 
 
-@app.route('/administrator')
+@app.route('/administrator', methods=['GET', 'POST'])
 def administrator():
     return render_template("administrator.html")
 
