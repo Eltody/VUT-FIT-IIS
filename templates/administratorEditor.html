@@ -388,6 +388,9 @@
                 };
             };
             suggestionsSelect.onchange = function() {
+                while (document.getElementById('confirmStops').children.length > 2) {
+                    document.getElementById('confirmStops').removeChild(document.getElementById('confirmStops').lastChild);
+                };
                 var buttonSubmit = document.createElement("button");
                     buttonSubmit.setAttribute("id", "acceptSuggestionButton");
                     buttonSubmit.setAttribute("onclick", "acceptSuggestion()");
