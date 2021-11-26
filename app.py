@@ -1030,13 +1030,38 @@ def administratorEditor():
 
     availablePersonalAndVehicles = [availableVehicles, availablePersonal]
 
-    allSuggestions = [['Bohumín', '45.5859595, 46.5595954', '3']]
-    print(allSuggestions)
+    # ziskanie vsetkych id nepotvrdenych navrhov zastavok od dopravcov
+    cursor = connection.cursor()
+    cursor.execute("SELECT id from NavrhZastavky WHERE stav='nepotvrdena'")
+    tmp_allIdsSuggestions = cursor.fetchall()
+    cursor.close()
+    allIdsSuggestions = []
+    for m in tmp_allIdsSuggestions:
+        for n in m:
+            allIdsSuggestions.append(n)
+
+    # ziskanie vsetkych nepotvrdenych navrhov zastavok od dopravcov
+    allSuggestions = []
+    for i in allIdsSuggestions:
+        cursor = connection.cursor()
+        cursor.execute("SELECT nazov, geograficka_poloha, id_dopravca_navrhy from NavrhZastavky WHERE stav='nepotvrdena' and id='%s';" % i)
+        tmp_oneSuggestion = cursor.fetchall()
+        cursor.close()
+        oneSuggestion = []
+        for m in tmp_oneSuggestion:
+            for n in m:
+                oneSuggestion.append(n)
+        allSuggestions.append(oneSuggestion)
 
     data = {'vehicles': allVehicles, 'connections': allConnections,
             'personal': allPersonal,
             'availablePersonalAndVehicles': availablePersonalAndVehicles, 'suggestions': allSuggestions, 'carrierName': carrierName}  # TODO doplnit navrhy zastavok
     return render_template("administratorEditor.html", data=data, cities=allNamesOfCities)
+
+@app.route('/suggestionConfirmation', methods=['GET', 'POST'])
+def suggestionConfirmation():
+    # email, status, suggestion
+    return ''
 
 
 @app.route('/search/<boolLoadMore>/<lastConnectionOnWeb>', methods=['GET', 'POST'])
