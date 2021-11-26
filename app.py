@@ -91,45 +91,25 @@ Subject: Upozornenie na podozrivú aktivitu
 Niekto sa pokúša prihlásiť do Vášho účtu na portáli CP.poriadne.sk. Ak ste to neboli Vy odporúčame Vám si zmeniť heslo.
 """.format(lName, fName, email)
         message = message.encode('utf-8')
+    elif status == "register":
+        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: Registrácia na webe CP.poriadne.sk
+
+Úspešne sme Vás zaregistrovali na portáli CP.poriadne.sk.
+""".format(lName, fName, email)
+        message = message.encode('utf-8')
     elif status == "ticket":
-        print("ticket")
-        filename = "C:/Users/Martin/Documents/GitHub/VUT_FIT_IIS_proj1/static/tickets/ticket.pdf"
+        ticketAddress = ""
+        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: CP cestovný lístok
 
-        fo = open(filename, "rb")
-        filecontent = fo.read()
-        encodedcontent = base64.b64encode(filecontent)
-
-        marker = "AUNIQUEMARKER"
-
-        body = """
 Ďakujeme za zakúpenie cestovného lístka cez portál CP.poriadne.sk. Váš cestovný lístok nájdete v prílohe tohoto emailu.
-"""
 
-        part1 = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
-To: %s %s <%s>
-Subject: Cestovný lístok
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary=%s
---%s
-""" % (fName, lName, email, marker, marker)
 
-        # Define the message action
-        part2 = """Content-Type: text/plain
-Content-Transfer-Encoding:8bit
-
-%s
---%s
-""" % (body, marker)
-
-        # Define the attachment section
-        part3 = """Content-Type: multipart/mixed; name=\"%s\"
-Content-Transfer-Encoding:base64
-Content-Disposition: attachment; filename=%s
-
-%s
---%s--
-""" % (filename, filename, encodedcontent, marker)
-        message = part1 + part2 + part3
+""".format(lName, fName, email, status)
+        message = message.encode('utf-8')
     else:
         message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
 To: {}{} <{}>
@@ -145,20 +125,49 @@ Vaše nové heslo: {}
         server.starttls(context=context)
         server.login(sender_email, password)
         server.sendmail(sender_email, email, message)
-    return "true"
+    return ""
 
 @app.route('/resetPassword', methods=['GET', 'POST'])
 def resetPassword():
     user_email = request.form['email']
     print(user_email)
     password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
-    sendEmail(user_email, password, "")
-    return "true"
+    return sendEmail(user_email, password, "")
 
-@app.route('/profile')
-def profile():
-    return render_template("profile.html")
+@app.route('/profile/<email>')
+def profile(email):
+    cestujuci = connection.cursor()
+    administrator = connection.cursor()
+    personal = connection.cursor()
+    carrier = connection.cursor()
+    cestujuci.execute("SELECT meno, priezvisko, heslo FROM Cestujuci WHERE email='%s';" % email)
+    administrator.execute("SELECT meno, priezvisko, heslo FROM Administrator WHERE email='%s';" % email)
+    personal.execute("SELECT meno, priezvisko, heslo FROM Personal WHERE email='%s';" % email)
+    carrier.execute("SELECT nazov, heslo FROM Dopravca WHERE email='%s';" % email)
+    for (meno, priezvisko, heslo) in cestujuci:
+        fName = meno
+        lName = priezvisko
+        password = heslo
+    for (meno, priezvisko, heslo) in administrator:
+        fName = meno
+        lName = priezvisko
+        password = heslo
+    for (meno, priezvisko, heslo) in personal:
+        fName = meno
+        lName = priezvisko
+        password = heslo
+    for (nazov, heslo) in carrier:
+        fName = nazov
+        lName = ''
+        password = heslo
+    cestujuci.close()
+    administrator.close()
+    personal.close()
+    carrier.close()
 
+    data = {'fName': fName, 'lName': lName, 'password': password}
+
+    return render_template("profile.html", data=data)
 
 @app.route('/tickets', methods=['GET', 'POST'])
 def tickets():
@@ -1574,24 +1583,16 @@ def signIn():
     global emails
     if user_email == emails[0]:
         if user_email == emails[1]:
-            if user_email == emails[2]:
-                emails = ['', '', '']
-                sendEmail(user_email, "loginError", "")
-            elif emails[2] == '':
-                emails[2] = user_email
-            else:
-                emails = ['', '', '']
-                emails.append(user_email)
+            emails = ['', '']
+            sendEmail(user_email, "loginError", "")
         elif emails[1] == '':
             emails[1] = user_email
         else:
-            emails = ['', '', '']
-            emails.append(user_email)
-    elif emails[0] == '':
-        emails[0] = user_email
+            emails = ['', '']
+            emails[0] = user_email
     else:
-        emails = ['', '', '']
-        emails.append(user_email)
+        emails = ['', '']
+        emails[0] = user_email
 
     data = {'error': 'log', 'email': user_email}
     return render_template('signIn.html', data=data)
@@ -1627,6 +1628,7 @@ def registration():
                    (fname, lname, user_email, password))
     connection.commit()
     cursor.close()
+    sendEmail(user_email, "register", "")
     profileNameMainPage = fname
     loginData = {'message': 'login', 'email': user_email, 'status': 'cestujuci'}
     return redirect(url_for('index'))

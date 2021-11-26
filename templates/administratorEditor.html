@@ -50,12 +50,21 @@
                                 <div class="resultContent" id="content">
                                     <h3 id="carrierName" style="color: red"></h3>
                                     <div class="editForm">
-                                        <h3>Úprava personálu</h3>
-                                        <button id="addPersonal" type="button" onclick="addPersonal()">Pridať nového zamestnanca</button>
+                                        <h3>Úprava používateľských účtov</h3>
+                                        <form id="account" class="searchForm" onsubmit="submitAccount()">
+                                            <select name="accounts" id="accounts" class="search-select">
+                                                <option value="none" disabled selected>Vyberte účet pre úpravu</option>
+                                            </select>
+                                            <br>
+                                        </form>
+                                    </div>
+                                    <div class="editForm">
+                                        <h3>Úprava dopravcu</h3>
+                                        <button id="addCarrier" type="button" onclick="addCarrier()">Pridať nového dopravcu</button>
                                         <br><br>
-                                        <form id="personal" class="searchForm" onsubmit="submitPersonal()">
-                                            <select name="personals" id="personals" class="search-select">
-                                                <option value="none" disabled selected>Vyberte zamestnanca pre úpravu</option>
+                                        <form id="carrier" class="searchForm" onsubmit="submitCarrier()">
+                                            <select name="carriers" id="carriers" class="search-select">
+                                                <option value="none" disabled selected>Vyberte dopravcu pre úpravu</option>
                                             </select>
                                             <br>
                                         </form>
