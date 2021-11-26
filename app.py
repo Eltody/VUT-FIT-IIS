@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for    # pip in
 from flask_apscheduler import APScheduler   # pip install flask-apscheduler
 from fpdf import FPDF  # fpdf class
 import smtplib
+import base64
 import ssl
 import os
 import json
@@ -55,20 +56,96 @@ def index():
     loginData.clear()
     return render_template("index.html", cities=cities, data=data, name=profileNameMainPage)
 
-@app.route('/sendEmail/<email>')
+@app.route('/sendEmail/<email>/<status>/<ticket>')
 def sendEmail(email, status, ticket):
-    print(email, status)
-    text = ''
+    cestujuci = connection.cursor()
+    administrator = connection.cursor()
+    personal = connection.cursor()
+    carrier = connection.cursor()
+    cestujuci.execute("SELECT meno, priezvisko FROM Cestujuci WHERE email='%s';" % email)
+    administrator.execute("SELECT meno, priezvisko FROM Administrator WHERE email='%s';" % email)
+    personal.execute("SELECT meno, priezvisko FROM Personal WHERE email='%s';" % email)
+    carrier.execute("SELECT nazov FROM Dopravca WHERE email='%s';" % email)
+    for (meno, priezvisko) in cestujuci:
+        fName = meno
+        lName = priezvisko
+    for (meno, priezvisko) in administrator:
+        fName = meno
+        lName = priezvisko
+    for (meno, priezvisko) in personal:
+        fName = meno
+        lName = priezvisko
+    for (nazov) in carrier:
+        fName = nazov
+        lName = ''
+    cestujuci.close()
+    administrator.close()
+    personal.close()
+    carrier.close()
+
     if status == "loginError":
-        text = "Niekto sa pokusa prihlasit to vasho uctu na cp."
+        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: Upozornenie na podozrivú aktivitu
+
+Niekto sa pokúša prihlásiť do Vášho účtu na portáli CP.poriadne.sk. Ak ste to neboli Vy odporúčame Vám si zmeniť heslo.
+""".format(lName, fName, email)
+        message = message.encode('utf-8')
+    elif status == "ticket":
+        print("ticket")
+        filename = "C:/Users/Martin/Documents/GitHub/VUT_FIT_IIS_proj1/static/tickets/ticket.pdf"
+
+        fo = open(filename, "rb")
+        filecontent = fo.read()
+        encodedcontent = base64.b64encode(filecontent)
+
+        marker = "AUNIQUEMARKER"
+
+        body = """
+Ďakujeme za zakúpenie cestovného lístka cez portál CP.poriadne.sk. Váš cestovný lístok nájdete v prílohe tohoto emailu.
+"""
+
+        part1 = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: %s %s <%s>
+Subject: Cestovný lístok
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary=%s
+--%s
+""" % (fName, lName, email, marker, marker)
+
+        # Define the message action
+        part2 = """Content-Type: text/plain
+Content-Transfer-Encoding:8bit
+
+%s
+--%s
+""" % (body, marker)
+
+        # Define the attachment section
+        part3 = """Content-Type: multipart/mixed; name=\"%s\"
+Content-Transfer-Encoding:base64
+Content-Disposition: attachment; filename=%s
+
+%s
+--%s--
+""" % (filename, filename, encodedcontent, marker)
+        message = part1 + part2 + part3
     else:
-        text == status
+        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: CP obnova hesla
+
+Na Vašu žiadosť Vám bolo vygenerované nové heslo pre prístup na stránku CP.poriadne.sk. Odporúčame Vám toto heslo čo najskôr zmeniť.
+
+Vaše nové heslo: {}
+""".format(lName, fName, email, status)
+        message = message.encode('utf-8')
 
     with smtplib.SMTP(smtp_server, port) as server:
         server.starttls(context=context)
         server.login(sender_email, password)
-        server.sendmail(sender_email, email, text)
-    return
+        server.sendmail(sender_email, email, message)
+    return "true"
 
 @app.route('/resetPassword', methods=['GET', 'POST'])
 def resetPassword():
@@ -76,7 +153,7 @@ def resetPassword():
     print(user_email)
     password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
     sendEmail(user_email, password, "")
-    return
+    return "true"
 
 @app.route('/profile')
 def profile():
