@@ -1070,8 +1070,19 @@ def suggestionConfirmation():
     idOfCarrierSuggesting = wholeSuggestion[3]
 
     # ziskanie vsetkych nazvov uz existujucich zastavok, aby sme zistili, ci nepridavame s rovnakym nazvom znova
+    cursor = connection.cursor()
+    cursor.execute("SELECT nazov_zastavky from Zastavky")
+    tmp_allNamesStops = cursor.fetchall()
+    cursor.close()
+    allNamesStops = []
+    for m in tmp_allNamesStops:
+        for n in m:
+            allNamesStops.append(n)
+    if nameOfNewConnection in allNamesStops:    # pokial sa uz nachadza rovnaky nazov v Zastavky, tak vymazat navrh
+        statusOfSuggestion = 'zamietnuta'
 
 
+    # pridanie navrhu medzi zastavky alebo zamietnutie a vymazanie
     if statusOfSuggestion == 'potvrdena':
         cursor = connection.cursor()
         cursor.execute("insert into `Zastavky` (nazov_zastavky, geograficka_poloha) VALUES (%s, %s)",
@@ -1092,7 +1103,6 @@ def suggestionConfirmation():
             nameOfNewConnection, idOfCarrierSuggesting, geoLocation))
         connection.commit()
         cursor1.close()
-
 
     return ''
 
