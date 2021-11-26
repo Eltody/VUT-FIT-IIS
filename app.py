@@ -1030,9 +1030,12 @@ def administratorEditor():
 
     availablePersonalAndVehicles = [availableVehicles, availablePersonal]
 
+    allSuggestions = 'nothing'
+
+
     data = {'vehicles': allVehicles, 'connections': allConnections,
             'personal': allPersonal,
-            'availablePersonalAndVehicles': availablePersonalAndVehicles}  # TODO doplnit navrhy zastavok
+            'availablePersonalAndVehicles': availablePersonalAndVehicles, 'suggestions': allSuggestions, 'carrierName': carrierName}  # TODO doplnit navrhy zastavok
     return render_template("administratorEditor.html", data=data, cities=allNamesOfCities)
 
 
