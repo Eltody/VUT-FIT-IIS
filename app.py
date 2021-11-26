@@ -559,7 +559,7 @@ def carrier():
     availablePersonalAndVehicles = [availableVehicles, availablePersonal]
 
     data = {'vehicles': allVehicles, 'connections': allConnections,
-            'personal': allPersonal, 'availablePersonalAndVehicles': availablePersonalAndVehicles}  # TODO doplnit navrhy zastavok
+            'personal': allPersonal, 'availablePersonalAndVehicles': availablePersonalAndVehicles}
     return render_template("carrier.html", data=data, cities=allNamesOfCities)
     # martin mi z vehicles posiela id a text vo formularoch pre editVehicleInfo
     # vymazanie vozidla - funkcia deleteVehicle, posiela len id a pole spojov cez ktore prechadza connections
@@ -778,7 +778,257 @@ def addStop():
 
 @app.route('/administrator', methods=['GET', 'POST'])
 def administrator():
-    return render_template("administrator.html")
+    carrierName = request.form['email']
+
+    cursor = connection.cursor()
+    cursor.execute("SELECT symbol from Symboly")
+    symbols = cursor.fetchall()
+    cursor.close()
+
+    # vyhladam nazov dopravcu v DB a zistim tak id dopravcu
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Dopravca WHERE email='%s';" % carrierName)
+    idOfCarrier = cursor1.fetchone()
+    cursor1.close()
+    idOfCarrier = idOfCarrier[0]  # ziskanie z listu len prvy prvok - integer (id dopravcu)
+
+    # ziskanie vsetkych len id vozidiel
+    cursor1 = connection.cursor()
+    cursor1.execute(
+        "SELECT id FROM Vozidlo WHERE id_dopravca_vozidlo='%s';" % idOfCarrier)
+    tmp_allIdsOfVehicles = cursor1.fetchall()
+    cursor1.close()
+    tmp_allIdsOfVehicles = list(tmp_allIdsOfVehicles)
+    allIdsOfVehicles = []
+    for m in tmp_allIdsOfVehicles:
+        for n in m:
+            allIdsOfVehicles.append(n)
+
+    allVehicles = []
+    for i in allIdsOfVehicles:
+        tmp_allVehiclesdata = []
+        # ziskam info o konkretnom vozidle
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT id, pocet_miest, popis_vozidla, aktualna_poloha FROM Vozidlo WHERE id='%s';" % i)
+        tmp_allInfoOfVehicle = cursor1.fetchone()
+        cursor1.close()
+        tmp_allInfoOfVehicle = list(tmp_allInfoOfVehicle)
+
+        # ziskam spoje, cez ktore prechadza konkretne vozidlo
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT id_spoju FROM Vozidlo_Spoj WHERE id_vozidla='%s';" % i)
+        tmp_allConnectionsOfVehicle = cursor1.fetchall()
+        cursor1.close()
+        tmp_allConnectionsOfVehicle = list(tmp_allConnectionsOfVehicle)
+        allIdsOfConnections = []
+        for m in tmp_allConnectionsOfVehicle:
+            for n in m:
+                allIdsOfConnections.append(n)
+        tmp_allInfoOfVehicle.append(allIdsOfConnections)
+        allVehicles.append(tmp_allInfoOfVehicle)
+
+    # ziskanie len id personalu
+    cursor1 = connection.cursor()
+    cursor1.execute(
+        "SELECT id FROM Personal WHERE id_dopravca_personal='%s';" % idOfCarrier)
+    tmp_allPersonalIds = cursor1.fetchall()
+    cursor1.close()
+    tmp_allPersonalIds = list(tmp_allPersonalIds)
+    allPersonalIds = []
+    for m in tmp_allPersonalIds:
+        for n in m:
+            allPersonalIds.append(n)
+
+    allPersonal = []
+    # ziskanie vsetkych uctov personalu daneho dopravcu
+    for p in allPersonalIds:
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT id, meno, priezvisko, email, heslo FROM Personal WHERE id='%s';" % p)
+        tmp_allPersonalInfo = cursor1.fetchone()
+        cursor1.close()
+        tmp_allPersonalInfo = list(tmp_allPersonalInfo)
+
+        # ziskam spoje, pre ktore pracuje personal
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT id_spoju FROM Personal_Spoj WHERE id_personalu='%s';" % p)
+        tmp_allConnectionsOfPersonal = cursor1.fetchall()
+        cursor1.close()
+        tmp_allConnectionsOfPersonal = list(tmp_allConnectionsOfPersonal)
+        allConnectionsOfPersonal = []
+        for m in tmp_allConnectionsOfPersonal:
+            for n in m:
+                allConnectionsOfPersonal.append(n)
+
+        tmp_allPersonalInfo.append(allConnectionsOfPersonal)
+        allPersonal.append(tmp_allPersonalInfo)
+
+    allIdsOfConnectionsCarrier = []
+
+    # ziskanie vsetkych spojov, ktore poskytuje dany dopravca
+    # ziskanie vsetkych len id spojov
+    cursor1 = connection.cursor()
+    cursor1.execute(
+        "SELECT id FROM Spoj WHERE id_dopravca_spoje='%s';" % idOfCarrier)
+    tmp_allIdsOfConnections = cursor1.fetchall()
+    cursor1.close()
+    tmp_allIdsOfConnectionsCarrier = list(tmp_allIdsOfConnections)
+
+    for m in tmp_allIdsOfConnectionsCarrier:
+        for n in m:
+            allIdsOfConnectionsCarrier.append(n)
+
+    allConnections = []
+    for i in allIdsOfConnectionsCarrier:
+        allTimesSplitted = []
+        tmp_fromAndToTime = []
+        cities = []
+
+        # ziskanie vsetkych casov, cez ktore spoj premava
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "SELECT cas_prejazdu FROM Spoj_Zastavka WHERE id_spoju='%s';" % i)
+        tmp_allTimes = cursor1.fetchall()
+        cursor1.close()
+
+        allTimes = []
+        for m in tmp_allTimes:
+            for n in m:
+                allTimes.append(''.join(str(n)))
+
+        # odstranenie ':' z casu
+        for k in range(len(allTimes)):
+            tmp2 = allTimes[k].replace(":", "")  # odstranenie ':' pre prevod na int
+            tmp2 = int(tmp2)
+            allTimesSplitted.append(tmp2)
+
+        # sortovanie, aby boli spoje zoradene od najmensieho cisla po najvacsie pre zobrazenie
+        allTimesSplitted.sort()
+        timesWithColon = []
+        for timeS in allTimesSplitted:
+            if timeS <= 9:
+                timeS = str(timeS)
+                tmp_time = timeS[:0] + '0' + timeS[:3]
+                tmp_time = tmp_time[:0] + '0' + tmp_time[:2]
+                tmp_time = tmp_time[:1] + ':' + tmp_time[1:]
+                timesWithColon.append(tmp_time)
+            elif timeS <= 59:
+                timeS = str(timeS)
+                tmp_time = timeS[:0] + '0' + timeS[:4]
+                tmp_time = tmp_time[:1] + ':' + tmp_time[1:]
+                timesWithColon.append(tmp_time)
+            elif timeS > 959:
+                timeS = str(timeS)
+                tmp_time = timeS[:2] + ':' + timeS[2:]
+                timesWithColon.append(tmp_time)
+            elif timeS <= 959:
+                timeS = str(timeS)
+                tmp_time = timeS[:1] + ':' + timeS[1:]
+                timesWithColon.append(tmp_time)
+        fromTime = str(timesWithColon[0])
+        toTime = str(timesWithColon[-1])
+
+        fromTime = str(fromTime)
+        toTime = str(toTime)
+
+        tmp_fromAndToTime.append(fromTime)
+        tmp_fromAndToTime.append(toTime)
+        for t in timesWithColon:
+            cursor1 = connection.cursor()
+            cursor1.execute("SELECT id_zastavky FROM Spoj_Zastavka WHERE id_spoju='%s' and cas_prejazdu='%s';" % (
+                i, t))
+            idOfStop = cursor1.fetchone()
+            cursor1.close()
+            idOfStop = idOfStop[0]
+
+            cursor1 = connection.cursor()
+            cursor1.execute(
+                "SELECT nazov_zastavky FROM Zastavky WHERE id='%s';" % idOfStop)
+            city = cursor1.fetchone()
+            cursor1.close()
+            city = list(city)
+            city.append(t)
+            cities.append(city)
+
+        oneConnection = str(i) + ' | ' + cities[0][0] + ' ' + symbols[6][0] + ' ' + cities[-1][0]
+        allConnections.append([oneConnection, cities])
+
+    # ziskanie vsetkych nazvov zastavok pre dropdown menu pre vytvorenie noveho spoju - priprava
+    cursor = connection.cursor()
+    cursor.execute("SELECT nazov_zastavky from Zastavky")
+    tmp = cursor.fetchall()
+    cursor.close()
+    allNamesOfCities = []
+    for n in tmp:
+        allNamesOfCities.append(''.join(n))
+
+    # ziskanie vsetkych dostupnych vozidiel od daneho dopravcu, ktore nemaju pridelene ziadne spoje
+    cursor = connection.cursor()
+    cursor.execute("SELECT id from Vozidlo WHERE id_dopravca_vozidlo='%s';" % idOfCarrier)
+    tmp_idOfAllVehicles = cursor.fetchall()
+    cursor.close()
+    idOfAllVehicles = []
+    for m in tmp_idOfAllVehicles:
+        for n in m:
+            idOfAllVehicles.append(n)
+
+    availableVehicles = []
+    for i in idOfAllVehicles:
+        # kontrolujem, ktore vozidla nemaju ziadny spoj zo vsetkych dopravcovych vozidiel
+        cursor1 = connection.cursor()
+        cursor1.execute("SELECT id_spoju FROM Vozidlo_Spoj WHERE id_vozidla='%s';" % i)
+        hasConnection = cursor1.fetchone()
+        cursor1.close()
+        if hasConnection is None:
+            availableVehicles.append(i)         # DOSTUPNE VOZIDLA
+
+    # ziskanie dostupneho personalu od daneho dopravcu, ktory nema pridelene ziadny spoj
+    cursor = connection.cursor()
+    cursor.execute("SELECT id from Personal WHERE id_dopravca_personal='%s';" % idOfCarrier)
+    tmp_idOfAllPersonal = cursor.fetchall()
+    cursor.close()
+    idOfAllPersonal = []
+    for m in tmp_idOfAllPersonal:
+        for n in m:
+            idOfAllPersonal.append(n)
+
+    availablePersonal = []
+    for j in idOfAllPersonal:
+        # kontrolujem, ktory personal nema ziadny spoj, v ktorom pracuje
+        cursor1 = connection.cursor()
+        cursor1.execute("SELECT id_spoju FROM Personal_Spoj WHERE id_personalu='%s';" % j)
+        personalHasConnection = cursor1.fetchone()
+        cursor1.close()
+        if personalHasConnection is None:
+            cursor1 = connection.cursor()
+            cursor1.execute("SELECT meno, priezvisko FROM Personal WHERE id='%s';" % j)
+            nameOfPersonal = cursor1.fetchone()
+            cursor1.close()
+            idAndNameOfPersonal = [j, nameOfPersonal]
+            availablePersonal.append(idAndNameOfPersonal)  # DOSTUPNY PERSONAL
+
+    availablePersonalAndVehicles = [availableVehicles, availablePersonal]
+
+    # ziskanie vsetkych nazvov dopravcov, z ktorych si admin zvoli jedneho, za ktoreho bude vykonavat zmeny v systeme
+    cursor = connection.cursor()
+    cursor.execute("SELECT nazov from Dopravca")
+    tmp_names = cursor.fetchall()
+    cursor.close()
+
+    allCarriers = []
+    for m in tmp_names:
+        for n in m:
+            allCarriers.append(n)
+
+    allSuggestions = 'nothing'
+
+
+    data = {'vehicles': allVehicles, 'connections': allConnections,
+            'personal': allPersonal, 'availablePersonalAndVehicles': availablePersonalAndVehicles, 'carriers': allCarriers, 'suggestions': allSuggestions}
+    return render_template("administrator.html", data=data, cities=allNamesOfCities)
 
 
 @app.route('/search/<boolLoadMore>/<lastConnectionOnWeb>', methods=['GET', 'POST'])
@@ -1233,83 +1483,6 @@ def newSuggestStop():
     return
 
 
-@app.route('/carrier/addVehicleCarrier/<carrier_name>', methods=['GET', 'POST'])
-def addVehicleCarrier(carrier_name):
-    # prihlaseny bude Dopravca - Martin mi bude musiet poslat nazov dopravcu, akym nazvom je prihlaseny
-    # podla nazvu Dopravcu si vyhladam jeho id v DB
-    # Dopravca si chce pridat nove vozidlo
-    # bude tam policko pre pocet_miest, popis_vozidla(max 1000 znakov), v DB este info o ID Dopravcu - to doplnim ja
-    # Martin mi posle z formularov data v tvare:
-
-    carrierName = carrier_name
-    numberOfSeats = request.form['numberOfSeats']
-    descriptionOfBus = request.form['descriptionOfBus']
-    actualLocation = ' '
-
-    # vyhladam nazov dopravcu v DB a zistim tak id dopravcu
-    cursor1 = connection.cursor()
-    cursor1.execute("SELECT id FROM Dopravca WHERE nazov='%s';" % carrierName)
-    idOfCarrier = cursor1.fetchone()
-    cursor1.close()
-    idOfCarrier = idOfCarrier[0]  # ziskanie z listu len prvy prvok - integer (id dopravcu)
-
-    print(idOfCarrier)
-    print(carrierName)
-    print(numberOfSeats)
-    print(descriptionOfBus)
-
-    # pridanie vozidla do DB
-    cursor1 = connection.cursor()
-    cursor1.execute(
-        "insert into `Vozidlo` (pocet_miest, popis_vozidla, aktualna_poloha, id_dopravca_vozidlo) VALUES (%s, %s, %s, %s)",
-        (numberOfSeats, descriptionOfBus, actualLocation, idOfCarrier))
-    connection.commit()
-    cursor1.close()
-
-    # pridanie info do DB, ze vozidlo este nema prideleny ziadny spoj
-    idOfConnection = 0  # zatial nepriradeny k ziadnemu spoju - to spravi Dopravca az pridanim spoju a zvolenim tohto vozidla
-    cursor1 = connection.cursor()
-    cursor1.execute("SELECT id FROM Vozidlo WHERE id_dopravca_vozidlo='%s';" % idOfCarrier)
-    idOfVehicle = cursor1.fetchall()
-    cursor1.close()
-    idOfVehicle = idOfVehicle[-1][0]  # ziskanie posledneho vytvoreneho id vozidla daneho dopravcu
-
-    cursor1 = connection.cursor()
-    cursor1.execute("insert into `Vozidlo_Spoj` (id_vozidla, id_spoju) VALUES (%s, %s)", (idOfVehicle, idOfConnection))
-    connection.commit()
-    cursor1.close()
-
-    return
-
-# DOPRAVCA
-@app.route('/carrier/showMyVehicles/<carrier_name>', methods=['GET', 'POST'])
-def showMyVehicles(carrier_name):
-    # popis fce: zobrazenie vsetkych autobusov daneho dopravcu
-
-    carrierName = carrier_name
-
-    # vyhladam nazov dopravcu v DB a zistim tak id dopravcu
-    cursor1 = connection.cursor()
-    cursor1.execute("SELECT id FROM Dopravca WHERE nazov='%s';" % carrierName)
-    idOfCarrier = cursor1.fetchone()
-    cursor1.close()
-    idOfCarrier = idOfCarrier[0]  # ziskanie z listu len prvy prvok - integer (id dopravcu)
-
-    print(idOfCarrier)
-
-    # ziskanie vsetkych vozidiel, pre edit a mazanie dopravcom
-    cursor1 = connection.cursor()
-    cursor1.execute(
-        "SELECT id, pocet_miest, popis_vozidla, aktualna_poloha FROM Vozidlo WHERE id_dopravca_vozidlo='%s';" % idOfCarrier)
-    allVehicles = cursor1.fetchall()
-    cursor1.close()
-
-    print(allVehicles)
-
-    # TODO EDITOVANIE A MAZANIE VOZIDIEL Z DB
-    # https://swcarpentry.github.io/sql-novice-survey/09-create/index.html
-
-
 # ADMIN - zobrazenie vsetkych uctov
 @app.route('/loadUsers/', methods=['GET', 'POST'])
 def loadUsers():
@@ -1347,22 +1520,6 @@ def loadUsers():
     # allUsers[3] - cestujuci ucty
 
     return render_template("XXXXX.html", data=allUsers)
-
-
-# ADMIN - edit daneho uctu
-@app.route('/editUser/', methods=['GET', 'POST'])
-def editUser():
-    user_email = request.form['email']
-
-    # TODO ziskanie tabulky, ktoru budem editovat - ci administrator, dopravca, personal, cestujuci
-
-    # aktualizacia daneho uctu podla emailu
-    # cursor1 = connection.cursor()
-    # cursor1.execute("UPDATE DANA_TABULKA SET meno = '%s', priezvisko = '%s', email = '%s', heslo = '%s' WHERE email = '%s'" % (, , , , ))
-    # connection.commit()
-    # cursor1.close()
-
-    return ""
 
 
 # kontrola pri nakupe listka ci uzivatel klikol na registrovat alebo prihlasit
