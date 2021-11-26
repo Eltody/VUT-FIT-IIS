@@ -743,6 +743,38 @@ def deletePersonal():
 
     return ''
 
+# funkcia pre navrh novej zastavky navrhovanu od dopravcu
+@app.route('/addConnection', methods=['GET', 'POST'])
+def addConnection():
+
+    return ''
+
+
+# funkcia pre navrh novej zastavky navrhovanu od dopravcu
+@app.route('/addStop', methods=['GET', 'POST'])
+def addStop():
+    carrierEmail = request.form['carrier']
+    nameOfConnection = request.form['name']
+    sirkaGEO = request.form['latitude']
+    vyskaGEO = request.form['longtitude']
+
+    GeoLocation = sirkaGEO + ', ' + vyskaGEO
+
+    # ziskanie id dopravcu podla emailu
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Dopravca WHERE email='%s';" % carrierEmail)
+    idOfCarrier = cursor1.fetchone()  # ziskanie id_dopravcu_spoje
+    cursor1.close()
+    idOfCarrier = idOfCarrier[0]
+
+    # vytvaram novy navrh o zastavke, navrhovany konkretnym dopravcom
+    cursor = connection.cursor()
+    cursor.execute("insert into `NavrhZastavky` (nazov, geograficka_poloha, id_dopravca_navrhy, stav) VALUES (%s, %s, %s, %s)",
+                   (nameOfConnection, GeoLocation, idOfCarrier, 'nepotvrdena'))
+    connection.commit()
+    cursor.close()
+
+    return ''
 
 @app.route('/administrator', methods=['GET', 'POST'])
 def administrator():
