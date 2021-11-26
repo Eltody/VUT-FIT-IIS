@@ -1,13 +1,16 @@
 from flask import Flask, render_template, request, redirect, url_for    # pip install flask
 from flask_apscheduler import APScheduler   # pip install flask-apscheduler
 from fpdf import FPDF  # fpdf class
+import smtplib
+import ssl
 import os
 import json
 import qrcode
+import string
+import random
 import pymysql      # pip install pymysql
 import datetime     # pip install datetime
 import requests     # pip install requests
-
 
 app = Flask(__name__)
 try:
@@ -16,9 +19,16 @@ except pymysql.Error as error:
     webhookUrl = 'https://maker.ifttt.com/trigger/error/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
     requests.post(webhookUrl, headers={'Content-Type': 'application/json'})
     print("Cannot connect to database. Error: " + str(error))
-emails = []
+emails = ["", "", ""]
 loginData = {}
 profileNameMainPage = ''
+
+port = 587  # For starttls
+smtp_server = "smtp.gmail.com"
+sender_email = "cp.poriadne.sk@gmail.com"
+password = "matono12"
+
+context = ssl.create_default_context()
 
 class Config:
     SCHEDULER_API_ENABLED = True
@@ -45,6 +55,28 @@ def index():
     loginData.clear()
     return render_template("index.html", cities=cities, data=data, name=profileNameMainPage)
 
+@app.route('/sendEmail/<email>')
+def sendEmail(email, status, ticket):
+    print(email, status)
+    text = ''
+    if status == "loginError":
+        text = "Niekto sa pokusa prihlasit to vasho uctu na cp."
+    else:
+        text == status
+
+    with smtplib.SMTP(smtp_server, port) as server:
+        server.starttls(context=context)
+        server.login(sender_email, password)
+        server.sendmail(sender_email, email, text)
+    return
+
+@app.route('/resetPassword', methods=['GET', 'POST'])
+def resetPassword():
+    user_email = request.form['email']
+    print(user_email)
+    password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+    sendEmail(user_email, password, "")
+    return
 
 @app.route('/profile')
 def profile():
@@ -1462,25 +1494,28 @@ def signIn():
     personal.close()
     carrier.close()
 
-    #    if user_email == emails[0]:
-    #        if user_email == emails[1]:
-    #            if user_email == emails[2]:
-    #                #TODO email sending
-    #            elif emails[2] == '':
-    #                emails.append(user_email)
-    #            else:
-    #                emails.clear()
-    #                emails.append(user_email)
-    #        elif emails[1] == '':
-    #            emails.append(user_email)
-    #        else:
-    #            emails.clear()
-    #            emails.append(user_email)
-    #    elif emails[0] == '':
-    #        emails.append(user_email)
-    #    else:
-    #        emails.clear()
-    #        emails.append(user_email)
+    global emails
+    if user_email == emails[0]:
+        if user_email == emails[1]:
+            if user_email == emails[2]:
+                emails = ['', '', '']
+                sendEmail(user_email, "loginError", "")
+            elif emails[2] == '':
+                emails[2] = user_email
+            else:
+                emails = ['', '', '']
+                emails.append(user_email)
+        elif emails[1] == '':
+            emails[1] = user_email
+        else:
+            emails = ['', '', '']
+            emails.append(user_email)
+    elif emails[0] == '':
+        emails[0] = user_email
+    else:
+        emails = ['', '', '']
+        emails.append(user_email)
+
     data = {'error': 'log', 'email': user_email}
     return render_template('signIn.html', data=data)
 
