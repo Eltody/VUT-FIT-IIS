@@ -1030,7 +1030,7 @@ def administratorEditor():
 
     availablePersonalAndVehicles = [availableVehicles, availablePersonal]
 
-    allSuggestions = [['Bohumín', '45.5859595, 46.5595954', 'nepotvrdena', '3']]
+    allSuggestions = [['Bohumín', '45.5859595, 46.5595954', '3']]
     print(allSuggestions)
 
     data = {'vehicles': allVehicles, 'connections': allConnections,
