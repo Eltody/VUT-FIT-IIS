@@ -511,9 +511,9 @@ def carrier():
     for n in tmp:
         allNamesOfCities.append(''.join(n))
 
-    # ziskanie vsetkych dostupnych vozidiel, ktore nemaju pridelene ziadne spoje
+    # ziskanie vsetkych dostupnych vozidiel od daneho dopravcu, ktore nemaju pridelene ziadne spoje
     cursor = connection.cursor()
-    cursor.execute("SELECT id from Vozidlo")
+    cursor.execute("SELECT id from Vozidlo WHERE id_dopravca_vozidlo='%s';" % idOfCarrier)
     tmp_idOfAllVehicles = cursor.fetchall()
     cursor.close()
     idOfAllVehicles = []
@@ -523,16 +523,40 @@ def carrier():
 
     availableVehicles = []
     for i in idOfAllVehicles:
-        # kontrolujem, ktore vozidla nemaju ziadny spoj
+        # kontrolujem, ktore vozidla nemaju ziadny spoj zo vsetkych dopravcovych vozidiel
         cursor1 = connection.cursor()
         cursor1.execute("SELECT id_spoju FROM Vozidlo_Spoj WHERE id_vozidla='%s';" % i)
         hasConnection = cursor1.fetchone()
         cursor1.close()
         if hasConnection is None:
-            availableVehicles.append(i)
-    print(availableVehicles)
+            availableVehicles.append(i)         # DOSTUPNE VOZIDLA
 
-    availablePersonalAndVehicles = 'nothing'
+    # ziskanie dostupneho personalu od daneho dopravcu, ktory nema pridelene ziadny spoj
+    cursor = connection.cursor()
+    cursor.execute("SELECT id from Personal WHERE id_dopravca_personal='%s';" % idOfCarrier)
+    tmp_idOfAllPersonal = cursor.fetchall()
+    cursor.close()
+    idOfAllPersonal = []
+    for m in tmp_idOfAllPersonal:
+        for n in m:
+            idOfAllPersonal.append(n)
+
+    availablePersonal = []
+    for j in idOfAllPersonal:
+        # kontrolujem, ktory personal nema ziadny spoj, v ktorom pracuje
+        cursor1 = connection.cursor()
+        cursor1.execute("SELECT id_spoju FROM Personal_Spoj WHERE id_personalu='%s';" % j)
+        personalHasConnection = cursor1.fetchone()
+        cursor1.close()
+        if personalHasConnection is None:
+            cursor1 = connection.cursor()
+            cursor1.execute("SELECT meno, priezvisko FROM Personal WHERE id='%s';" % j)
+            nameOfPersonal = cursor1.fetchone()
+            cursor1.close()
+            idAndNameOfPersonal = [j, nameOfPersonal]
+            availablePersonal.append(idAndNameOfPersonal)  # DOSTUPNY PERSONAL
+
+    availablePersonalAndVehicles = [availableVehicles, availablePersonal]
 
     data = {'vehicles': allVehicles, 'connections': allConnections,
             'personal': allPersonal, 'availablePersonalAndVehicles': availablePersonalAndVehicles}  # TODO doplnit navrhy zastavok
