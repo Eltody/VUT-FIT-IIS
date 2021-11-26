@@ -823,7 +823,7 @@
                                 div2.setAttribute("id", "insertBefore");
                                 div2.setAttribute("name", "0");
                                     var buttonStop = document.createElement("button");
-                                        buttonStop.setAttribute("onclick", "addStop()");
+                                        buttonStop.setAttribute("onclick", "addBetweenStop()");
                                         buttonStop.setAttribute("type", "button");
                                         buttonStop.style.width = "30px";
                                         buttonStop.style.height = "30px";
@@ -941,7 +941,7 @@
                     personal.add(option);
                 };
             };
-            function addStop() {
+            function addBetweenStop() {
                 var id = parseInt(document.getElementById('insertBefore').getAttribute("name")) + 1;
                 document.getElementById('insertBefore').setAttribute("name", id);
 
@@ -1014,6 +1014,7 @@
                             var i = 1;
                             while (i <= $('#insertBefore').attr('name')) {
                                 stops = stops.concat(" | ", $('#city' + i).val());
+                                stops = stops.concat(" - ", $('#time' + i).val());
                                 i++;
                             };
                             var email = cookie();
@@ -1156,12 +1157,6 @@
                         "Uložiť": function() {
                             $("#successfulDialog").removeClass("hidden");
                             var email = cookie();
-                            var stops = '';
-                            var i = 1;
-                            while (i <= $('#insertBefore').attr('name')) {
-                                stops = stops.concat(" | ", $('#city' + i).val());
-                                i++;
-                            };
                             var email = cookie();
                             $.post('/addStop', {"carrier": email, "name": $('#stopName').val(), "latitude": $('#latitude').val(), "longtitude": $('#longtitude').val()}, function(result) {});
                             $('#stopAddForm').remove();
