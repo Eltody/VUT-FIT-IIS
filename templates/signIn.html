@@ -7,6 +7,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" type="text/css" href="/static/style.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
         <script src="https://kit.fontawesome.com/6079958bc1.js" crossorigin="anonymous"></script>
     </head>
@@ -46,6 +49,7 @@
                                     <div class="search-col">
                                         <button type="button" class="buttonRegister" onclick="register()"><a>Vytvoriť účet</a></button>
                                     </div>
+                                    <button type="button" class="buttonRegister" id="resetPassword"><a>Obnoviť heslo</a></button>
                                 </form>
                             </div>
                         </div>
@@ -91,6 +95,12 @@
                 </div>
             </header>
         </div>
+        <div id="confirmDialog" class="hidden">
+            <p style="color: black">Prajete si obnoviť heslo pre nasledujúci email?</p>
+        </div>
+        <div id="successfulDialog" class="hidden">
+            <p style="color: green">Nové heslo vám bolo odoslané na email.</p>
+        </div>
         <!-- Footer -->
         <footer id="footer">
             <p>Copyright © reserved, Website by <a href="mailto:cp.poriadne.sk@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
@@ -122,6 +132,49 @@
                     document.getElementById("login").classList.add("hidden");
                 }
             }
+        </script>
+        <script>
+            $(document).on('click','#resetPassword', function() {
+                addEmail($("#lEmail").val());
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 225,
+                    width: 275,
+                    modal: true,
+                    buttons: {
+                        "Potvrdiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            $.post('/resetPassword', {"email": $("#lEmail").val()}, function(result) {});
+                            $(this).dialog("close");
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 150,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            });
+            function addEmail(email) {
+            document.getElementById("email").remove();
+            var p = document.createElement("p");
+            p.setAttribute("id", "email");
+            p.innerHTML = email;
+            document.getElementById("confirmDialog").appendChild(p);
+            };
         </script>
         <script>
             function validatePassword() {
