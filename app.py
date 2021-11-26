@@ -511,9 +511,31 @@ def carrier():
     for n in tmp:
         allNamesOfCities.append(''.join(n))
 
+    # ziskanie vsetkych dostupnych vozidiel, ktore nemaju pridelene ziadne spoje
+    cursor = connection.cursor()
+    cursor.execute("SELECT id from Vozidlo")
+    tmp_idOfAllVehicles = cursor.fetchall()
+    cursor.close()
+    idOfAllVehicles = []
+    for m in tmp_idOfAllVehicles:
+        for n in m:
+            idOfAllVehicles.append(n)
+
+    availableVehicles = []
+    for i in idOfAllVehicles:
+        # kontrolujem, ktore vozidla nemaju ziadny spoj
+        cursor1 = connection.cursor()
+        cursor1.execute("SELECT id_spoju FROM Vozidlo_Spoj WHERE id_vozidla='%s';" % i)
+        hasConnection = cursor1.fetchone()
+        cursor1.close()
+        if hasConnection is None:
+            availableVehicles.append(i)
+    print(availableVehicles)
+
+    availablePersonalAndVehicles = 'nothing'
 
     data = {'vehicles': allVehicles, 'connections': allConnections,
-            'personal': allPersonal}  # TODO doplnit navrhy zastavok
+            'personal': allPersonal, 'availablePersonalAndVehicles': availablePersonalAndVehicles}  # TODO doplnit navrhy zastavok
     return render_template("carrier.html", data=data, cities=allNamesOfCities)
     # martin mi z vehicles posiela id a text vo formularoch pre editVehicleInfo
     # vymazanie vozidla - funkcia deleteVehicle, posiela len id a pole spojov cez ktore prechadza connections
@@ -609,8 +631,10 @@ def editPersonalInfo():
     lname = request.form['lname']
     email = request.form['email']
     idsOfConnections = request.form['ids']
+    # odstranenie prazdnych hodnot z pola, aby mi zostalo len pole hodnot id spojov
     idsOfConnections = idsOfConnections.split(' ')
-    idsOfConnections.remove('')
+    valueToBeRemoved = ''
+    idsOfConnections = [value for value in idsOfConnections if value != valueToBeRemoved]
 
     # aktualizacia uctu konkretneho personalu dopravcu
     cursor1 = connection.cursor()
@@ -620,6 +644,16 @@ def editPersonalInfo():
 
     # TODO skontrolovat, ci sa zmenili jej spoje (z toho pola co mi posiela martin a z toho co je v DB debinovane), na ktorych pracuje a update, pripadne delete
     # TODO ale co ak na spoji nebude zrazu ziadny personal? take spoje by sa asi nemali zobrazovat, asi ze?
+    # riesene tu nizsie
+
+
+    if len(idsOfConnections) == 0:
+        print('empty')
+    elif len(idsOfConnections) == 1:
+        print('one')
+    elif len(idsOfConnections) >= 2:
+        print('more than one')
+
 
     return ''
 
