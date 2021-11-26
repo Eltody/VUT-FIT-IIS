@@ -1061,6 +1061,39 @@ def administratorEditor():
 @app.route('/suggestionConfirmation', methods=['GET', 'POST'])
 def suggestionConfirmation():
     # email, status, suggestion
+    emailAdmin = request.form['email']
+    statusOfSuggestion = request.form['status']
+    wholeSuggestion= request.form['suggestion']
+    wholeSuggestion = wholeSuggestion.split(',')
+    nameOfNewConnection = wholeSuggestion[0]
+    geoLocation = wholeSuggestion[1] + ',' + wholeSuggestion[2]
+    idOfCarrierSuggesting = wholeSuggestion[3]
+
+    # ziskanie vsetkych nazvov uz existujucich zastavok, aby sme zistili, ci nepridavame s rovnakym nazvom znova
+
+
+    if statusOfSuggestion == 'potvrdena':
+        cursor = connection.cursor()
+        cursor.execute("insert into `Zastavky` (nazov_zastavky, geograficka_poloha) VALUES (%s, %s)",
+                       (nameOfNewConnection, geoLocation))
+        connection.commit()
+        cursor.close()
+        # vymazanie zaznamu o navrhu pokial potvrdeny
+        cursor1 = connection.cursor()
+        cursor1.execute("DELETE FROM NavrhZastavky WHERE nazov = '%s' and id_dopravca_navrhy = '%s' and geograficka_poloha = '%s'" % (nameOfNewConnection, idOfCarrierSuggesting, geoLocation))
+        connection.commit()
+        cursor1.close()
+
+    elif statusOfSuggestion == 'zamietnuta':
+        # vymazanie zaznamu o navrhu pokial zamietnuty
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "DELETE FROM NavrhZastavky WHERE nazov = '%s' and id_dopravca_navrhy = '%s' and geograficka_poloha = '%s'" % (
+            nameOfNewConnection, idOfCarrierSuggesting, geoLocation))
+        connection.commit()
+        cursor1.close()
+
+
     return ''
 
 
