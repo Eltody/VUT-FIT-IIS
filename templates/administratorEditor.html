@@ -48,6 +48,7 @@
                         <div class="animate__animated animate__fadeIn animate__faster">
                             <div class="resultWrap">
                                 <div class="resultContent" id="content">
+                                    <h3 id="carrierName" style="color: red"></h3>
                                     <div class="editForm">
                                         <h3>Úprava personálu</h3>
                                         <button id="addPersonal" type="button" onclick="addPersonal()">Pridať nového zamestnanca</button>
@@ -88,7 +89,7 @@
                                     <div class="editForm">
                                         <h3>Schvalovanie návrhov zastávok</h3>
                                         <form id="confirmStops" class="searchForm">
-                                            <select name="suggestions" id="suggestions" class="search-select">
+                                            <select name="suggestions" id="suggestions" class="search-select" style="margin-bottom: 20px !important;">
                                                 <option value="none" disabled selected>Vyberte návrh na schválenie</option>
                                             </select>
                                             <br>
@@ -170,10 +171,11 @@
             });
         </script>
         <script>
+            document.getElementById("carrierName").innerHTML = {{data.carrierName|tojson}};
             var personals = {{data.personal|tojson}};
             var vehicles = {{data.vehicles|tojson}};
             var connections = {{data.connections|tojson}};
-            var suggestions =
+            var suggestions = {{data.suggestions|tojson}};
 
             var personalsSelect = document.getElementById('personals');
             var vehiclesSelect = document.getElementById('vehicles');
@@ -206,6 +208,12 @@
                     option.value = connections[i][0];
                     option.innerHTML = connections[i][0];
                 connectionsSelect.add(option);
+            };
+            for (var i in suggestions) {
+                var option = document.createElement('option');
+                    option.value = suggestions[i];
+                    option.innerHTML = suggestions[i];
+                suggestionsSelect.add(option);
             };
             personalsSelect.onchange = function() {
                 while (document.getElementById('personal').children.length > 2) {
@@ -378,6 +386,24 @@
                         document.getElementById('connection').appendChild(buttonSubmit);
                     };
                 };
+            };
+            suggestionsSelect.onchange = function() {
+                var buttonSubmit = document.createElement("button");
+                    buttonSubmit.setAttribute("id", "acceptSuggestionButton");
+                    buttonSubmit.setAttribute("onclick", "acceptSuggestion()");
+                    buttonSubmit.setAttribute("type", "button");
+                    buttonSubmit.style.color = "green";
+                    buttonSubmit.style.margin = "0 5px";
+                    buttonSubmit.innerHTML = ("Schváliť návrh");
+                document.getElementById('confirmStops').appendChild(buttonSubmit);
+                var buttonSubmit = document.createElement("button");
+                    buttonSubmit.setAttribute("id", "declineSuggestionButton");
+                    buttonSubmit.setAttribute("onclick", "declineSuggestion()");
+                    buttonSubmit.setAttribute("type", "button");
+                    buttonSubmit.style.color = "red";
+                    buttonSubmit.style.margin = "0 5px";
+                    buttonSubmit.innerHTML = ("Odmietnuť návrh");
+                document.getElementById('confirmStops').appendChild(buttonSubmit);
             };
         </script>
         <script>
@@ -1171,6 +1197,82 @@
                             var email = cookie();
                             $.post('/addStop', {"carrier": email, "name": $('#stopName').val(), "latitude": $('#latitude').val(), "longtitude": $('#longtitude').val()}, function(result) {});
                             $('#stopAddForm').remove();
+                            $(this).dialog("close");
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            };
+            function acceptSuggestion() {
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            var email = cookie();
+                            $.post('/suggestionConfirmation', {"email": email, "status": "potvrdena", "suggestion": $('#suggestions').find(":selected").val()}, function(result) {});
+                            $('#acceptSuggestionButton').remove();
+                            $('#declineSuggestionButton').remove();
+                            $("#suggestions option[value='" + $('#suggestions').find(":selected").val() + "']").remove()
+                            $('#suggestions').val('none');
+                            $(this).dialog("close");
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            };
+            function declineSuggestion() {
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            var email = cookie();
+                            $.post('/suggestionConfirmation', {"email": email, "status": "zamietnuta", "suggestion": $('#suggestions').find(":selected").val()}, function(result) {});
+                            $('#acceptSuggestionButton').remove();
+                            $('#declineSuggestionButton').remove();
+                            $("#suggestions option[value='" + $('#suggestions').find(":selected").val() + "']").remove()
+                            $('#suggestions').val('none');
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({
                                 draggable: false,
