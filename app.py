@@ -796,7 +796,7 @@ def administrator():
 
 @app.route('/administratorEditor', methods=['GET', 'POST'])
 def administratorEditor():
-    carrierName = request.form['email']
+    carrierName = request.form['carrier']
 
     cursor = connection.cursor()
     cursor.execute("SELECT symbol from Symboly")
@@ -805,7 +805,7 @@ def administratorEditor():
 
     # vyhladam nazov dopravcu v DB a zistim tak id dopravcu
     cursor1 = connection.cursor()
-    cursor1.execute("SELECT id FROM Dopravca WHERE email='%s';" % carrierName)
+    cursor1.execute("SELECT id FROM Dopravca WHERE nazov='%s';" % carrierName)
     idOfCarrier = cursor1.fetchone()
     cursor1.close()
     idOfCarrier = idOfCarrier[0]  # ziskanie z listu len prvy prvok - integer (id dopravcu)
