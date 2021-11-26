@@ -70,7 +70,7 @@
                                             <br>
                                         </form>
                                     </div>
-                                    <div class="editForm" style="margin-bottom: 0">
+                                    <div class="editForm">
                                         <h3>Úprava spojov</h3>
                                         <button id="addConnection" type="button" onclick="addConnection()">Pridať nový spoj</button>
                                         <br><br>
@@ -80,6 +80,10 @@
                                             </select>
                                             <div id="stop" class="stop"></div>
                                         </form>
+                                    </div>
+                                    <div class="editForm">
+                                        <h3>Návrh zastávky</h3>
+                                        <button id="addStop" type="button" onclick="addStop()">Pridať návrh novej zastávky</button>
                                     </div>
                                 </div>
                             </div>
@@ -981,7 +985,6 @@
                     buttons: {
                         "Uložiť": function() {
                             $("#successfulDialog").removeClass("hidden");
-                            $('#vehicleAddForm').remove();
                             var email = cookie();
                             var stops = '';
                             var i = 1;
@@ -990,6 +993,7 @@
                                 i++;
                             };
                             $.post('/addConnection', {"fromCity": $('#fromCity').find(":selected").val(), "fromCityTime": $('#timeFrom').val(), "toCity": $('#fromCity').find(":selected").val(), "toCityTime": $('#timeTo').val(), "stops": stops, "vehicle": $('#vehicle').find(":selected").val(), "personal": $('#personal').find(":selected").val()}, function(result) {});
+                            $('#connectionAddForm').remove();
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({
                                 draggable: false,
@@ -1047,6 +1051,112 @@
                 });
                 $(".ui-dialog-titlebar").hide();
             });
+            function addStop() {
+                if (document.getElementById("stopAddForm") == null) {
+                    var form = document.createElement("form");
+                    form.classList.add("searchForm");
+                    form.setAttribute("id", "stopAddForm");
+                    form.setAttribute("onSubmit", "submitAddStop()");
+                        var div1 = document.createElement("div");
+                            div1.classList.add("editorForm");
+                                var div = document.createElement("div");
+                                    var inputName = document.createElement("input");
+                                        inputName.setAttribute("id", "stopName");
+                                        inputName.setAttribute("name", "stopName");
+                                        inputName.style.textAlign = "center";
+                                        inputName.style.width = "95%";
+                                        inputName.style.maxWidth = "300px";
+                                        inputName.style.marginBottom = "5px";
+                                        inputName.required = true;
+                                    var labelName = document.createElement("label");
+                                        labelName.setAttribute("for", "stopName");
+                                        labelName.innerHTML = "Názov";
+                                    div.appendChild(labelName);
+                                    div.appendChild(inputName);
+                                div1.appendChild(div);
+                                var div = document.createElement("div");
+                                    var inputLatitude = document.createElement("input");
+                                        inputLatitude.setAttribute("type", "number");
+                                        inputLatitude.setAttribute("id", "latitude");
+                                        inputLatitude.setAttribute("name", "latitude");
+                                        inputLatitude.style.textAlign = "center";
+                                        inputLatitude.style.width = "95%";
+                                        inputLatitude.style.maxWidth = "300px";
+                                        inputLatitude.style.marginBottom = "5px";
+                                        inputLatitude.required = true;
+                                    var labelLatitude = document.createElement("label");
+                                        labelLatitude.setAttribute("for", "latitude");
+                                        labelLatitude.innerHTML = "Zemepisná šírka";
+                                    div.appendChild(labelLatitude);
+                                    div.appendChild(inputLatitude);
+                                div1.appendChild(div);
+                                var div = document.createElement("div");
+                                    var inputLongtitude = document.createElement("input");
+                                        inputLongtitude.setAttribute("type", "number");
+                                        inputLongtitude.setAttribute("id", "longtitude");
+                                        inputLongtitude.setAttribute("name", "longtitude");
+                                        inputLongtitude.style.textAlign = "center";
+                                        inputLongtitude.style.width = "95%";
+                                        inputLongtitude.style.maxWidth = "300px";
+                                        inputLongtitude.style.marginBottom = "5px";
+                                        inputLongtitude.required = true;
+                                    var labelLongtitude = document.createElement("label");
+                                        labelLongtitude.setAttribute("for", "longtitude");
+                                        labelLongtitude.innerHTML = "Zemepisná výška";
+                                    div.appendChild(labelLongtitude);
+                                    div.appendChild(inputLongtitude);
+                                div1.appendChild(div);
+                            form.appendChild(div1);
+                            var buttonSubmit = document.createElement("button");
+                                buttonSubmit.setAttribute("type", "submit");
+                                buttonSubmit.innerHTML = ("Vytvoriť návrh zastávky");
+                            form.appendChild(buttonSubmit);
+                        document.getElementById('addStop').parentNode.appendChild(form);
+                } else {
+                    document.getElementById("stopAddForm").remove();
+                };
+            };
+            function submitAddStop() {
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            var email = cookie();
+                            var stops = '';
+                            var i = 1;
+                            while (i <= $('#insertBefore').attr('name')) {
+                                stops = stops.concat(" | ", $('#city' + i).val());
+                                i++;
+                            };
+                            $.post('/addStop', {"name": $('#stopName').val(), "latitude": $('#latitude').val(), "longtitude": $('#longtitude').val()}, function(result) {});
+                            $('#stopAddForm').remove();
+                            $(this).dialog("close");
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            };
             $(document).on("submit", "form", function(e){
                 e.preventDefault();
                 return false;
