@@ -479,15 +479,15 @@
                     buttons: {
                         "Uložiť": function() {
                             $("#successfulDialog").removeClass("hidden");
-                            $('#personalAddForm').remove();
                             if ($('#password').val() != null) {
                                 var password = $('#password').val();
                             } else {
                                 var password = '';
                             };
-                            $(this).dialog("close");
                             var email = cookie();
                             $.post('/addPersonal', {"carrier": email, "fname": $('#addFName').val(), "lname": $('#addLName').val(), "email": $('#addEmail').val(), "ids": ids, "password": $('#addPassword').val()}, function(result) {});
+                            $('#personalAddForm').remove();
+                            $(this).dialog("close");
                             $("#successfulDialog").dialog({
                                 draggable: false,
                                 resizable: false,
@@ -515,7 +515,6 @@
                     ids = ids.concat(" ", document.getElementById("ids").childNodes.item(i).value);
                     i++;
                 };
-                console.log(ids);
                 $("#confirmDialog").removeClass("hidden");
                 $("#confirmDialog").dialog({
                     draggable: false,
@@ -656,9 +655,9 @@
                     buttons: {
                         "Uložiť": function() {
                             $("#successfulDialog").removeClass("hidden");
-                            $('#vehicleAddForm').remove();
                             var email = cookie();
                             $.post('/addVehicle', {"carrier": email, "seats": $('#addSeats').val(), "text": $('#addDescription').val()}, function(result) {});
+                            $('#vehicleAddForm').remove();
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({
                                 draggable: false,
@@ -809,13 +808,31 @@
                                         div2.appendChild(inputTimeFrom);
                                     div3.appendChild(div2);
                                 div1.appendChild(div3);
-                                var buttonStop = document.createElement("button");
-                                    buttonStop.setAttribute("onclick", "addStop()");
-                                    buttonStop.setAttribute("id", "insertBefore");
-                                    buttonStop.setAttribute("name", "0");
-                                    buttonStop.setAttribute("type", "button");
-                                    buttonStop.innerHTML = ("Pridať medzizastávku");
-                                div1.appendChild(buttonStop);
+                                var div2 = document.createElement("div");
+                                div2.style.display = "flex";
+                                div2.style.flexDirection = "row";
+                                div2.style.margin = "0 5px";
+                                div2.setAttribute("id", "insertBefore");
+                                div2.setAttribute("name", "0");
+                                    var buttonStop = document.createElement("button");
+                                        buttonStop.setAttribute("onclick", "addStop()");
+                                        buttonStop.setAttribute("type", "button");
+                                        buttonStop.style.width = "30px";
+                                        buttonStop.style.height = "30px";
+                                        buttonStop.style.margin = "0 5px";
+                                        buttonStop.style.padding = "0";
+                                        buttonStop.innerHTML = ("+");
+                                    div2.appendChild(buttonStop);
+                                    var buttonRemoveStop = document.createElement("button");
+                                        buttonRemoveStop.setAttribute("onclick", "removeStop()");
+                                        buttonRemoveStop.setAttribute("type", "button");
+                                        buttonRemoveStop.style.width = "30px";
+                                        buttonRemoveStop.style.height = "30px";
+                                        buttonRemoveStop.style.padding = "0";
+                                        buttonRemoveStop.style.margin = "0 5px";
+                                        buttonRemoveStop.innerHTML = ("-");
+                                    div2.appendChild(buttonRemoveStop);
+                                div1.appendChild(div2);
                                 var div3 = document.createElement("div");
                                     div3.style.display = "flex";
                                     div3.style.flexDirection = "row";
@@ -897,11 +914,11 @@
                 };
             };
             function addStop() {
-                var id = parseInt(document.getElementById('insertBefore').getAttribute("name"));
-                document.getElementById('insertBefore').name = id;
-                id = id + 1;
-                console.log(id);
+                var id = parseInt(document.getElementById('insertBefore').getAttribute("name")) + 1;
+                document.getElementById('insertBefore').setAttribute("name", id);
+
                 var div3 = document.createElement("div");
+                    div3.setAttribute("id", "betweenStop" + id);
                     div3.style.display = "flex";
                     div3.style.flexDirection = "row";
                         var div2 = document.createElement("div");
@@ -909,10 +926,10 @@
                         div2.style.flexDirection = "column";
                         div2.style.margin = "0 5px";
                             var selectCity = document.createElement("select");
-                                selectCity.setAttribute("id", "city");
-                                selectCity.setAttribute("name", "city");
+                                selectCity.setAttribute("id", "city" + id);
+                                selectCity.setAttribute("name", "city" + id);
                             var labelCity = document.createElement("label");
-                                labelCity.setAttribute("for", "city");
+                                labelCity.setAttribute("for", "city" + id);
                                 labelCity.innerHTML = "Medzizastávka";
                         div2.appendChild(labelCity);
                         div2.appendChild(selectCity);
@@ -922,14 +939,14 @@
                         div2.style.flexDirection = "column";
                         div2.style.margin = "0 5px";
                             var inputTime = document.createElement("input");
-                                inputTime.setAttribute("id", "0");
-                                inputTime.setAttribute("name", "time0");
+                                inputTime.setAttribute("id", "time" + id);
+                                inputTime.setAttribute("name", "time" + id);
                                 inputTime.setAttribute("type", "time");
                                 inputTime.style.textAlign = "center";
                                 inputTime.style.marginBottom = "5px";
                                 inputTime.required = true;
                             var labelTime = document.createElement("label");
-                                labelTime.setAttribute("for", "time0");
+                                labelTime.setAttribute("for", "time" + id);
                                 labelTime.innerHTML = "Čas";
                         div2.appendChild(labelTime);
                         div2.appendChild(inputTime);
@@ -938,12 +955,19 @@
 
                 var cities = {{cities|tojson}};
                 cities = cities.sort(Intl.Collator().compare);
-                var city = document.getElementById('city');
+                var city = document.getElementById('city' + id);
                 for (var i in cities) {
                     var option = document.createElement('option');
                         option.value = cities[i];
                         option.innerHTML = cities[i];
                     city.add(option);
+                };
+            };
+            function removeStop() {
+                var id = parseInt(document.getElementById('insertBefore').getAttribute("name"));
+                if (id != 0) {
+                    document.getElementById('insertBefore').setAttribute("name", id - 1);
+                    document.getElementById('betweenStop' + id).remove();
                 };
             };
             function submitAddConnection() {
@@ -959,8 +983,13 @@
                             $("#successfulDialog").removeClass("hidden");
                             $('#vehicleAddForm').remove();
                             var email = cookie();
-                            var stops = [];
-                            $.post('/addConnection', {"fromCity": $('#fromCity').find(":selected").val(), "fromCityTime": $('#timeFrom').val(), "toCity": $('#fromCity').find(":selected").val(), "toCityTime": $('#timeTo').val(), "stops": stops}, function(result) {});
+                            var stops = '';
+                            var i = 1;
+                            while (i <= $('#insertBefore').attr('name')) {
+                                stops = stops.concat(" | ", $('#city' + i).val());
+                                i++;
+                            };
+                            $.post('/addConnection', {"fromCity": $('#fromCity').find(":selected").val(), "fromCityTime": $('#timeFrom').val(), "toCity": $('#fromCity').find(":selected").val(), "toCityTime": $('#timeTo').val(), "stops": stops, "vehicle": $('#vehicle').find(":selected").val(), "personal": $('#personal').find(":selected").val()}, function(result) {});
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({
                                 draggable: false,
