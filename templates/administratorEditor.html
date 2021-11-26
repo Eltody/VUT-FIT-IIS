@@ -48,9 +48,6 @@
                         <div class="animate__animated animate__fadeIn animate__faster">
                             <div class="resultWrap">
                                 <div class="resultContent" id="content">
-                                    <select name="carriers" id="carriers" class="search-select">
-                                        <option value="none" style="color: red" disabled selected>Vyberte dopravcu</option>
-                                    </select>
                                     <div class="editForm">
                                         <h3>Úprava personálu</h3>
                                         <button id="addPersonal" type="button" onclick="addPersonal()">Pridať nového zamestnanca</button>
@@ -132,7 +129,7 @@
                 c.push(cookies[i].split('='));
             };
             if (c[0][0] === "name") {
-                if (c[2][1] != "carrier") {
+                if (c[2][1] != "administrator") {
                     location.replace("/");
                 } else {
                     document.getElementById("status").innerHTML = "Editor";
@@ -176,13 +173,11 @@
             var personals = {{data.personal|tojson}};
             var vehicles = {{data.vehicles|tojson}};
             var connections = {{data.connections|tojson}};
-            var carriers = {{data.carriers|tojson}};
-            var suggestions = {{data.suggestions|tojson}};
+            var suggestions =
 
             var personalsSelect = document.getElementById('personals');
             var vehiclesSelect = document.getElementById('vehicles');
             var connectionsSelect = document.getElementById('connections');
-            var carriersSelect = document.getElementById('carriers');
             var suggestionsSelect = document.getElementById('suggestions');
             for (var i in personals) {
                 var connectionsIds = "";
