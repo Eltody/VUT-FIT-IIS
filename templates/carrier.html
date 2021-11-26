@@ -206,6 +206,7 @@
                         var div1 = document.createElement("div");
                         div1.setAttribute("id", "personalForm");
                         div1.classList.add("editorForm");
+                        div1.style.margin = "10px 0";
                             var div = document.createElement("div");
                                 var inputFName = document.createElement("input");
                                     inputFName.setAttribute("id", "fName");
@@ -377,6 +378,7 @@
                     form.setAttribute("onSubmit", "submitAddPersonal()");
                         var div1 = document.createElement("div");
                             div1.classList.add("editorForm");
+                            div1.style.margin = "10px 0";
                                 var div = document.createElement("div");
                                     var inputFName = document.createElement("input");
                                         inputFName.setAttribute("id", "addFName");
@@ -604,6 +606,7 @@
                     form.setAttribute("onSubmit", "submitAddVehicle()");
                         var div1 = document.createElement("div");
                             div1.classList.add("editorForm");
+                            div1.style.margin = "10px 0";
                                 var div = document.createElement("div");
                                     var inputSeats = document.createElement("input");
                                         inputSeats.setAttribute("id", "addSeats");
@@ -777,6 +780,7 @@
                     form.setAttribute("onSubmit", "submitAddConnection()");
                         var div1 = document.createElement("div");
                             div1.classList.add("editorForm");
+                            div1.style.margin = "10px 0";
                                 var div3 = document.createElement("div");
                                     div3.style.display = "flex";
                                     div3.style.flexDirection = "row";
@@ -875,9 +879,10 @@
                                 div.style.display = "flex";
                                 div.style.flexDirection = "column";
                                     var selectVehicle = document.createElement("select");
-                                        selectVehicle.setAttribute("name", "vehicle");
+                                        selectVehicle.setAttribute("name", "vehicleSelect");
+                                        selectVehicle.setAttribute("id", "vehicleSelect");
                                     var labelVehicle = document.createElement("label");
-                                        labelVehicle.setAttribute("for", "vehicle");
+                                        labelVehicle.setAttribute("for", "vehicleSelect");
                                         labelVehicle.innerHTML = "Vozidlo";
                                     div.appendChild(labelVehicle);
                                     div.appendChild(selectVehicle);
@@ -886,9 +891,10 @@
                                 div.style.display = "flex";
                                 div.style.flexDirection = "column";
                                     var selectPersonal = document.createElement("select");
-                                        selectPersonal.setAttribute("name", "personal");
+                                        selectPersonal.setAttribute("name", "personalSelect");
+                                        selectPersonal.setAttribute("id", "personalSelect");
                                     var labelPersonal = document.createElement("label");
-                                        labelPersonal.setAttribute("for", "personal");
+                                        labelPersonal.setAttribute("for", "personalSelect");
                                         labelPersonal.innerHTML = "Personál";
                                     div.appendChild(labelPersonal);
                                     div.appendChild(selectPersonal);
@@ -904,15 +910,14 @@
                 };
                 var cities = {{cities|tojson}};
                 var data = {{data.availablePersonalAndVehicles|tojson}};
-                for (var i in data[0]) {
+                var vehicleData = data[0];
+                var personalData = data[1];
 
-                };
-                for (var i in data[1]) {
-
-                };
                 cities = cities.sort(Intl.Collator().compare);
                 var fromCity = document.getElementById('fromCity');
                 var toCity = document.getElementById('toCity');
+                var vehicle = document.getElementById('vehicleSelect');
+                var personal = document.getElementById('personalSelect');
                 for (var i in cities) {
                     var option = document.createElement('option');
                         option.value = cities[i];
@@ -922,6 +927,18 @@
                         option.value = cities[i];
                         option.innerHTML = cities[i];
                     toCity.add(option);
+                };
+                for (var i in vehicleData) {
+                    var option = document.createElement('option');
+                        option.value = vehicleData[i];
+                        option.innerHTML = vehicleData[i];
+                    vehicle.add(option);
+                };
+                for (var i in personalData) {
+                    var option = document.createElement('option');
+                        option.value = personalData[i];
+                        option.innerHTML = personalData[i];
+                    personal.add(option);
                 };
             };
             function addStop() {
@@ -1000,7 +1017,7 @@
                                 i++;
                             };
                             var email = cookie();
-                            $.post('/addConnection', {"carrier": email, "fromCity": $('#fromCity').find(":selected").val(), "fromCityTime": $('#timeFrom').val(), "toCity": $('#fromCity').find(":selected").val(), "toCityTime": $('#timeTo').val(), "stops": stops, "vehicle": $('#vehicle').find(":selected").val(), "personal": $('#personal').find(":selected").val()}, function(result) {});
+                            $.post('/addConnection', {"carrier": email, "fromCity": $('#fromCity').find(":selected").val(), "fromCityTime": $('#timeFrom').val(), "toCity": $('#fromCity').find(":selected").val(), "toCityTime": $('#timeTo').val(), "stops": stops, "vehicle": $('#vehicleSelect').find(":selected").val(), "personal": $('#personalSelect').find(":selected").val()}, function(result) {});
                             $('#connectionAddForm').remove();
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({
@@ -1067,6 +1084,7 @@
                     form.setAttribute("onSubmit", "submitAddStop()");
                         var div1 = document.createElement("div");
                             div1.classList.add("editorForm");
+                            div1.style.margin = "10px 0";
                                 var div = document.createElement("div");
                                     var inputName = document.createElement("input");
                                         inputName.setAttribute("id", "stopName");
