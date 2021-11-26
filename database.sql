@@ -89,7 +89,7 @@ CREATE TABLE NavrhZastavky(
     nazov VARCHAR(50),
     id_dopravca_navrhy INTEGER,
     id_administrator_potvrdenie INTEGER,
-    stav VARCHAR(20),					-- potvrdena, nepotvrdena
+    stav VARCHAR(20),					-- potvrdena, nepotvrdena - default stav pri zvytvoreni, zamietnuta
     geograficka_poloha VARCHAR(100),
     CONSTRAINT PK_id_dopravca_navrhy	-- id dopravcu, ktory zastavku navrhuje
 		FOREIGN KEY (id_dopravca_navrhy) REFERENCES Dopravca (id)
@@ -186,6 +186,9 @@ VALUES('Počet miest: ');
 
 INSERT INTO Symboly(symbol)
 VALUES('↔');
+
+INSERT INTO Symboly(symbol)
+VALUES('→');
 
 INSERT INTO Administrator (meno, priezvisko, email, heslo)
 VALUES ('Admin', 'Admin', 'admin@admin.com', 'password');
@@ -305,7 +308,7 @@ VALUES ('1', '1'); -- regio, Brno-Praha
 INSERT INTO Spoj (id_dopravca_spoje)
 VALUES ('1');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('2', '1', '09:30'); -- Brno
+VALUES ('2', '1', '9:30'); -- Brno
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
 VALUES ('2', '10', '12:00'); -- Praha
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
@@ -657,7 +660,7 @@ VALUES ('3');
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
 VALUES ('38', '9', '23:00'); -- Plzen
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('38', '10', '00:00'); -- Praha
+VALUES ('38', '10', '23:59'); -- Praha
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('9', '38'); -- flix bus, Plzen-Praha
 
