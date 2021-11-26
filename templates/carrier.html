@@ -903,6 +903,13 @@
                     document.getElementById("connectionAddForm").remove();
                 };
                 var cities = {{cities|tojson}};
+                var data = {{data.availablePersonalAndVehicles|tojson}};
+                for (var i in data[0]) {
+
+                };
+                for (var i in data[1]) {
+
+                };
                 cities = cities.sort(Intl.Collator().compare);
                 var fromCity = document.getElementById('fromCity');
                 var toCity = document.getElementById('toCity');
@@ -992,7 +999,8 @@
                                 stops = stops.concat(" | ", $('#city' + i).val());
                                 i++;
                             };
-                            $.post('/addConnection', {"fromCity": $('#fromCity').find(":selected").val(), "fromCityTime": $('#timeFrom').val(), "toCity": $('#fromCity').find(":selected").val(), "toCityTime": $('#timeTo').val(), "stops": stops, "vehicle": $('#vehicle').find(":selected").val(), "personal": $('#personal').find(":selected").val()}, function(result) {});
+                            var email = cookie();
+                            $.post('/addConnection', {"carrier": email, "fromCity": $('#fromCity').find(":selected").val(), "fromCityTime": $('#timeFrom').val(), "toCity": $('#fromCity').find(":selected").val(), "toCityTime": $('#timeTo').val(), "stops": stops, "vehicle": $('#vehicle').find(":selected").val(), "personal": $('#personal').find(":selected").val()}, function(result) {});
                             $('#connectionAddForm').remove();
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({
@@ -1134,7 +1142,8 @@
                                 stops = stops.concat(" | ", $('#city' + i).val());
                                 i++;
                             };
-                            $.post('/addStop', {"name": $('#stopName').val(), "latitude": $('#latitude').val(), "longtitude": $('#longtitude').val()}, function(result) {});
+                            var email = cookie();
+                            $.post('/addStop', {"carrier": email, "name": $('#stopName').val(), "latitude": $('#latitude').val(), "longtitude": $('#longtitude').val()}, function(result) {});
                             $('#stopAddForm').remove();
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({
