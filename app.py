@@ -1033,7 +1033,7 @@ def administratorEditor():
     data = {'vehicles': allVehicles, 'connections': allConnections,
             'personal': allPersonal,
             'availablePersonalAndVehicles': availablePersonalAndVehicles}  # TODO doplnit navrhy zastavok
-    return render_template("edministratorEditor.html", data=data, cities=allNamesOfCities)
+    return render_template("administratorEditor.html", data=data, cities=allNamesOfCities)
 
 
 @app.route('/search/<boolLoadMore>/<lastConnectionOnWeb>', methods=['GET', 'POST'])
