@@ -1,14 +1,13 @@
-from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for    # pip install flask
+from flask_apscheduler import APScheduler   # pip install flask-apscheduler
 from fpdf import FPDF  # fpdf class
 import os
-import time
 import json
 import qrcode
-import pymysql  # pip install pymysql
-import datetime  # pip install datetime
-import requests  # pip install requests
-import threading
+import pymysql      # pip install pymysql
+import datetime     # pip install datetime
+import requests     # pip install requests
+
 
 app = Flask(__name__)
 try:
@@ -21,6 +20,12 @@ emails = []
 loginData = {}
 profileNameMainPage = ''
 
+class Config:
+    SCHEDULER_API_ENABLED = True
+
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
 
 #############################################
 @app.route('/')
@@ -1945,7 +1950,7 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.output(savePDFname, 'F')
     return
 
-
+@scheduler.task('interval', id='databaseCheck', seconds=300, misfire_grace_time=900)
 def databaseCheck():
     try:
         conn = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
@@ -2020,9 +2025,5 @@ def databaseCheck():
                 os.remove(removeTicket)
             boolRemoveTicket = True
 
-
 if __name__ == '__main__':
-    scheduler = BackgroundScheduler()
-    job = scheduler.add_job(databaseCheck, 'interval', minutes=5)
-    scheduler.start()
     app.run(debug=True)
