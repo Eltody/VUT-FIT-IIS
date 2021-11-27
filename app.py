@@ -1042,10 +1042,33 @@ def addConnection():
 # funkcia pre vymazanie spoju
 @app.route('/deleteConnection', methods=['GET', 'POST'])
 def deleteConnection():
-    data = request.form['id']
-    print(data)
+    connectionToDelete = request.form['id']
+    connectionToDelete = connectionToDelete.split('|')
+    connectionToDelete = connectionToDelete[0]
 
+    # odstranenie zaznamu z tabulky Personal_Spoj
+    cursor1 = connection.cursor()
+    cursor1.execute("DELETE FROM Personal_Spoj WHERE id_spoju = '%s'" % connectionToDelete)
+    connection.commit()
+    cursor1.close()
 
+    # odstranenie zaznamu z tabulky Spoj
+    cursor1 = connection.cursor()
+    cursor1.execute("DELETE FROM Spoj WHERE id = '%s'" % connectionToDelete)
+    connection.commit()
+    cursor1.close()
+
+    # odstranenie zaznamu z tabulky Spoj_Zastavka
+    cursor1 = connection.cursor()
+    cursor1.execute("DELETE FROM Spoj_Zastavka WHERE id_spoju = '%s'" % connectionToDelete)
+    connection.commit()
+    cursor1.close()
+
+    # odstranenie zaznamu z tabulky Vozidlo_Spoj
+    cursor1 = connection.cursor()
+    cursor1.execute("DELETE FROM Vozidlo_Spoj WHERE id_spoju = '%s'" % connectionToDelete)
+    connection.commit()
+    cursor1.close()
 
     return ''
 
