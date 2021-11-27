@@ -1118,18 +1118,15 @@ def administrator():
     cursor1.execute("SELECT id, meno, priezvisko, email, heslo FROM Cestujuci")
     tmp_allUsers = cursor1.fetchall()
     cursor1.close()
-
-    for m in tmp_allUsers:
-        for n in m:
-            allUsers.append(n)
+    tmp_allUsers = list(tmp_allUsers)
 
     cursor1 = connection.cursor()
     cursor1.execute("SELECT id, meno, priezvisko, email, heslo FROM Personal")
-    tmp_allUsers = cursor1.fetchall()
+    tmp_allUsers2 = cursor1.fetchall()
     cursor1.close()
-    tmp_allUsers = list(tmp_allUsers)
-
-    print(tmp_allUsers)
+    tmp_allUsers2 = list(tmp_allUsers2)
+    allUsers = tmp_allUsers + tmp_allUsers2
+    print(allUsers)
 
     # ziskanie vsetkych id nepotvrdenych navrhov zastavok od dopravcov
     cursor = connection.cursor()
@@ -1160,10 +1157,8 @@ def administrator():
     tmp_allCarriersInfo = cursor1.fetchall()
     cursor1.close()
     tmp_allCarriersInfo = list(tmp_allCarriersInfo)
-    print(tmp_allCarriersInfo)
 
-
-    return render_template("administrator.html", carriers=allCarriers, users=tmp_allUsers, editCarriers=tmp_allCarriersInfo, suggestions=allSuggestions)
+    return render_template("administrator.html", carriers=allCarriers, users=allUsers, editCarriers=tmp_allCarriersInfo, suggestions=allSuggestions)
 
 
 @app.route('/administratorEditor', methods=['GET', 'POST'])
