@@ -48,10 +48,12 @@
                         <div class="animate__animated animate__fadeIn animate__faster">
                             <div class="resultWrap">
                                 <div class="resultContent" id="content">
-                                    <h3>Zvoľte dopravcu na editáciu</h3>
-                                    <select name="carriersList" id="carriersList" class="search-select">
+                                    <h3>Zvoľte dopravcu na editáciu jeho vozidiel a spojov</h3>
+                                    <select name="carriers" id="carriers" class="search-select">
                                         <option value="none" disabled selected>-----</option>
                                     </select>
+                                    <br>
+                                    <br>
                                     <div class="editForm">
                                         <h3>Úprava používateľských účtov</h3>
                                         <form id="account" class="searchForm" onsubmit="submitAccount()">
@@ -62,12 +64,10 @@
                                         </form>
                                     </div>
                                     <div class="editForm">
-                                        <h3>Úprava dopravcu</h3>
-                                        <button id="addCarrier" type="button" onclick="addCarrier()">Pridať nového dopravcu</button>
-                                        <br><br>
-                                        <form id="carrier" class="searchForm" onsubmit="submitCarrier()">
-                                            <select name="carriers" id="carriers" class="search-select">
-                                                <option value="none" disabled selected>Vyberte dopravcu pre úpravu</option>
+                                        <h3>Schvalovanie návrhov zastávok</h3>
+                                        <form id="confirmStops" class="searchForm">
+                                            <select name="suggestions" id="suggestions" class="search-select">
+                                                <option value="none" disabled selected>Vyberte návrh na schválenie</option>
                                             </select>
                                             <br>
                                         </form>
@@ -82,6 +82,15 @@
             <footer id="footer">
                 <p>Copyright © reserved, Website by <a href="mailto:cp.poriadne.sk@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
             </footer>
+        </div>
+        <div id="confirmPersonalDeleteDialog" class="hidden">
+            <p>Prajete si vymazať účet?</p>
+        </div>
+        <div id="confirmDialog" class="hidden">
+            <p>Prajete si uložiť zmeny?</p>
+        </div>
+        <div id="successfulDialog" class="hidden">
+            <p style="color: green">Zmeny boli vykonané</p>
         </div>
         <!-- Scripts -->
         <script>
@@ -114,16 +123,176 @@
         </script>
         <script>
             var carriers = {{carriers|tojson}};
+            var accounts = {{users|tojson}};
+            var suggestions = {{suggestions|tojson}};
 
-            var carriersSelect = document.getElementById('carriersList');
+            var carriersSelect = document.getElementById('carriers');
+            var accountsSelect = document.getElementById('accounts');
+            var suggestionsSelect = document.getElementById('suggestions');
             for (var i in carriers) {
                 var option = document.createElement('option');
                     option.value = carriers[i];
                     option.innerHTML = carriers[i];
                 carriersSelect.add(option);
             };
+            for (var i in accounts) {
+                var connectionsIds = "";
+                var option = document.createElement('option');
+                    option.value = accounts[i][0];
+                    for (j in accounts[i][4]) {
+                        connectionsIds = connectionsIds.concat(" ", accounts[i][4][j]);
+                    };
+                    option.setAttribute("name", connectionsIds);
+                    option.innerHTML = accounts[i][0] + " | " + accounts[i][1] + " " + accounts[i][2];
+                accountsSelect.add(option);
+            };
+            for (var i in suggestions) {
+                var option = document.createElement('option');
+                    option.value = suggestions[i];
+                    option.innerHTML = suggestions[i];
+                suggestionsSelect.add(option);
+            };
             carriersSelect.onchange = function() {
-                $.redirectPost('/administratorEditor', {"carrier": $('#carriersList').find(":selected").val()});
+                $.redirectPost('/administratorEditor', {"carrier": $('#carriers').find(":selected").val()});
+            };
+            accountsSelect.onchange = function() {
+                while (document.getElementById('account').children.length > 2) {
+                    document.getElementById('account').removeChild(document.getElementById('account').lastChild);
+                };
+                var id = accountsSelect.value;
+                for (var i in accounts) {
+                    if (id == accounts[i][0]) {
+                        var div1 = document.createElement("div");
+                        div1.setAttribute("id", "accountForm");
+                        div1.classList.add("editorForm");
+                        div1.style.margin = "10px 0";
+                            var div = document.createElement("div");
+                                var inputFName = document.createElement("input");
+                                    inputFName.setAttribute("id", "fName");
+                                    inputFName.setAttribute("name", "fName");
+                                    inputFName.value = accounts[i][1];
+                                    inputFName.style.textAlign = "center";
+                                    inputFName.style.width = "95%";
+                                    inputFName.style.maxWidth = "300px";
+                                    inputFName.style.marginBottom = "5px";
+                                    inputFName.required = true;
+                                var labelFName = document.createElement("label");
+                                    labelFName.setAttribute("for", "fName");
+                                    labelFName.innerHTML = "Meno";
+                                div.appendChild(labelFName);
+                                div.appendChild(inputFName);
+                            div1.appendChild(div);
+                            var div = document.createElement("div");
+                                var inputLName = document.createElement("input");
+                                    inputLName.setAttribute("id", "lName");
+                                    inputLName.setAttribute("name", "lName");
+                                    inputLName.value = accounts[i][2];
+                                    inputLName.style.textAlign = "center";
+                                    inputLName.style.width = "95%";
+                                    inputLName.style.maxWidth = "300px";
+                                    inputLName.style.marginBottom = "5px";
+                                    inputLName.required = true;
+                                var labelLName = document.createElement("label");
+                                    labelLName.setAttribute("for", "lName");
+                                    labelLName.innerHTML = "Priezvisko";
+                                div.appendChild(labelLName);
+                                div.appendChild(inputLName);
+                            div1.appendChild(div);
+                            var div = document.createElement("div");
+                                var inputEmail = document.createElement("input");
+                                    inputEmail.setAttribute("id", "email");
+                                    inputEmail.setAttribute("name", "email");
+                                    inputEmail.setAttribute("type", "email");
+                                    inputEmail.value = accounts[i][3];
+                                    inputEmail.style.textAlign = "center";
+                                    inputEmail.style.width = "95%";
+                                    inputEmail.style.maxWidth = "300px";
+                                    inputEmail.style.marginBottom = "5px";
+                                    inputEmail.required = true;
+                                var labelEmail = document.createElement("label");
+                                    labelEmail.setAttribute("for", "email");
+                                    labelEmail.innerHTML = "Email";
+                                div.appendChild(labelEmail);
+                                div.appendChild(inputEmail);
+                            div1.appendChild(div);
+                        document.getElementById('account').appendChild(div1);
+                        var id = accountsSelect.value;
+                        var labelIds = document.createElement("label");
+                            labelIds.setAttribute("id", "labelIds");
+                            labelIds.innerHTML = "Spoje";
+                        var div = document.createElement("div")
+                        div.setAttribute("id", "ids");
+                        div.style.marginBottom = "10px";
+                        for (var i in accounts) {
+                            if (id == accounts[i][0]) {
+                                for (var j in accounts[i][5]) {
+                                    var input = document.createElement("input");
+                                        input.setAttribute("type", "number");
+                                        input.setAttribute("id", j);
+                                        input.setAttribute("max", "9999");
+                                        input.setAttribute("value", accounts[i][5][j]);
+                                        input.style.textAlign = "center";
+                                        input.style.margin = "0 5px";
+                                        input.style.width = "30px";
+                                    div.appendChild(input);
+                                };
+                                var input = document.createElement("input");
+                                    input.setAttribute("type", "number");
+                                    if (j == null) {
+                                        input.setAttribute("id", "0");
+                                    } else {
+                                        input.setAttribute("id", ++j);
+                                    };
+                                    input.setAttribute("max", "9999");
+                                    input.setAttribute("oninput", "addInput(this)");
+                                    input.style.textAlign = "center";
+                                    input.style.margin = "0 5px";
+                                    input.style.width = "30px";
+                                div.appendChild(input);
+                            };
+                        };
+                        document.getElementById('account').appendChild(labelIds);
+                        document.getElementById('account').appendChild(div);
+
+                        var div = document.createElement("div");
+                        div.setAttribute("id", "accountButtons");
+                        div.classList.add("search-col");
+                            var buttonSubmit = document.createElement("button");
+                                buttonSubmit.setAttribute("type", "submit");
+                                buttonSubmit.style.float = "left";
+                                buttonSubmit.innerHTML = ("Upraviť účet");
+                            div.appendChild(buttonSubmit);
+                            var buttonSubmit = document.createElement("button");
+                                buttonSubmit.setAttribute("id", "deleteAccount");
+                                buttonSubmit.setAttribute("type", "button");
+                                buttonSubmit.style.float = "right";
+                                buttonSubmit.style.color = "red"
+                                buttonSubmit.innerHTML = ("Odstrániť účet");
+                            div.appendChild(buttonSubmit);
+                        document.getElementById('account').appendChild(div);
+                    };
+                };
+            };
+            suggestionsSelect.onchange = function() {
+                while (document.getElementById('confirmStops').children.length > 2) {
+                    document.getElementById('confirmStops').removeChild(document.getElementById('confirmStops').lastChild);
+                };
+                var buttonSubmit = document.createElement("button");
+                    buttonSubmit.setAttribute("id", "acceptSuggestionButton");
+                    buttonSubmit.setAttribute("onclick", "acceptSuggestion()");
+                    buttonSubmit.setAttribute("type", "button");
+                    buttonSubmit.style.color = "green";
+                    buttonSubmit.style.margin = "0 5px";
+                    buttonSubmit.innerHTML = ("Schváliť návrh");
+                document.getElementById('confirmStops').appendChild(buttonSubmit);
+                var buttonSubmit = document.createElement("button");
+                    buttonSubmit.setAttribute("id", "declineSuggestionButton");
+                    buttonSubmit.setAttribute("onclick", "declineSuggestion()");
+                    buttonSubmit.setAttribute("type", "button");
+                    buttonSubmit.style.color = "red";
+                    buttonSubmit.style.margin = "0 5px";
+                    buttonSubmit.innerHTML = ("Odmietnuť návrh");
+                document.getElementById('confirmStops').appendChild(buttonSubmit);
             };
             $("#status").click(function (event) {
                 if (document.getElementById("status").innerHTML == "Lístky") {
@@ -142,6 +311,331 @@
                     $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo($(document.body)).submit();
                 }
             });
+        </script>
+        <script>
+            function addaccount() {
+                if (document.getElementById("accountAddForm") == null) {
+                    var form = document.createElement("form");
+                    form.classList.add("searchForm");
+                    form.setAttribute("id", "accountAddForm");
+                    form.setAttribute("onSubmit", "submitAddaccount()");
+                        var div1 = document.createElement("div");
+                            div1.classList.add("editorForm");
+                            div1.style.margin = "10px 0";
+                                var div = document.createElement("div");
+                                    var inputFName = document.createElement("input");
+                                        inputFName.setAttribute("id", "addFName");
+                                        inputFName.setAttribute("name", "fName");
+                                        inputFName.style.textAlign = "center";
+                                        inputFName.style.width = "95%";
+                                        inputFName.style.maxWidth = "300px";
+                                        inputFName.style.marginBottom = "5px";
+                                        inputFName.required = true;
+                                    var labelFName = document.createElement("label");
+                                        labelFName.setAttribute("for", "fName");
+                                        labelFName.innerHTML = "Meno";
+                                    div.appendChild(labelFName);
+                                    div.appendChild(inputFName);
+                                div1.appendChild(div);
+                                var div = document.createElement("div");
+                                    var inputLName = document.createElement("input");
+                                        inputLName.setAttribute("id", "addLName");
+                                        inputLName.setAttribute("name", "lName");
+                                        inputLName.style.textAlign = "center";
+                                        inputLName.style.width = "95%";
+                                        inputLName.style.maxWidth = "300px";
+                                        inputLName.style.marginBottom = "5px";
+                                        inputLName.required = true;
+                                    var labelLName = document.createElement("label");
+                                        labelLName.setAttribute("for", "lName");
+                                        labelLName.innerHTML = "Priezvisko";
+                                    div.appendChild(labelLName);
+                                    div.appendChild(inputLName);
+                                div1.appendChild(div);
+                                var div = document.createElement("div");
+                                    var inputEmail = document.createElement("input");
+                                        inputEmail.setAttribute("id", "addEmail");
+                                        inputEmail.setAttribute("name", "email");
+                                        inputEmail.setAttribute("type", "email");
+                                        inputEmail.style.textAlign = "center";
+                                        inputEmail.style.width = "95%";
+                                        inputEmail.style.maxWidth = "300px";
+                                        inputEmail.style.marginBottom = "5px";
+                                        inputEmail.required = true;
+                                    var labelEmail = document.createElement("label");
+                                        labelEmail.setAttribute("for", "email");
+                                        labelEmail.innerHTML = "Email";
+                                    div.appendChild(labelEmail);
+                                    div.appendChild(inputEmail);
+                                div1.appendChild(div);
+                                var div = document.createElement("div");
+                                    var inputPassword = document.createElement("input");
+                                        inputPassword.setAttribute("id", "addPassword");
+                                        inputPassword.setAttribute("name", "password");
+                                        inputPassword.setAttribute("pattern", "(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}");
+                                        inputPassword.style.textAlign = "center";
+                                        inputPassword.style.width = "95%";
+                                        inputPassword.style.maxWidth = "300px";
+                                        inputPassword.style.marginBottom = "5px";
+                                        inputPassword.required = true;
+                                    var labelPassword = document.createElement("label");
+                                        labelPassword.setAttribute("for", "password");
+                                        labelPassword.innerHTML = "Heslo";
+                                    div.appendChild(labelPassword);
+                                    div.appendChild(inputPassword);
+                                div1.appendChild(div);
+                            form.appendChild(div1);
+                            var labelIds = document.createElement("label");
+                                labelIds.setAttribute("id", "labelAddIds");
+                                labelIds.innerHTML = "Spoje";
+                            var div = document.createElement("div")
+                            div.setAttribute("id", "addIds");
+                            div.style.marginBottom = "10px";
+                                var input = document.createElement("input");
+                                    input.setAttribute("type", "number");
+                                    input.setAttribute("id", 0);
+                                    input.setAttribute("max", "9999");
+                                    input.setAttribute("oninput", "addInput(this)");
+                                    input.style.textAlign = "center";
+                                    input.style.margin = "0 5px";
+                                    input.style.width = "30px";
+                                div.appendChild(input);
+                            form.appendChild(labelIds);
+                            form.appendChild(div);
+                            var buttonSubmit = document.createElement("button");
+                                buttonSubmit.setAttribute("type", "submit");
+                                buttonSubmit.innerHTML = ("Vytvoriť účet");
+                            form.appendChild(buttonSubmit);
+                        document.getElementById('addaccount').parentNode.insertBefore(form, document.getElementById('addaccount').nextSibling);
+                } else {
+                    document.getElementById("accountAddForm").remove();
+                };
+            };
+            function submitAddaccount() {
+                var ids = "";
+                var i = 0;
+                while (i < document.getElementById("addIds").lastChild.getAttribute('id')) {
+                    ids = ids.concat(" ", document.getElementById("addIds").childNodes.item(i).value);
+                    i++;
+                };
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            if ($('#password').val() != null) {
+                                var password = $('#password').val();
+                            } else {
+                                var password = '';
+                            };
+                            var email = cookie();
+                            $.post('/addaccount', {"carrier": email, "fname": $('#addFName').val(), "lname": $('#addLName').val(), "email": $('#addEmail').val(), "ids": ids, "password": $('#addPassword').val()}, function(result) {});
+                            $('#accountAddForm').remove();
+                            $(this).dialog("close");
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            };
+            function submitAccount() {
+                var ids = "";
+                var i = 0;
+                while (i < document.getElementById("ids").lastChild.getAttribute('id')) {
+                    ids = ids.concat(" ", document.getElementById("ids").childNodes.item(i).value);
+                    i++;
+                };
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            if ($('#password').val() != null) {
+                                var password = $('#password').val();
+                            } else {
+                                var password = '';
+                            };
+                            $(this).dialog("close");
+                            var email = cookie();
+                            $.post('/editaccountInfo', {"carrier": email, "id": $('#account').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids}, function(result) {});
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            };
+            $(document).on('click','#deleteAccount', function() {
+                $("#confirmaccountDeleteDialog").removeClass("hidden");
+                $("#confirmaccountDeleteDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Potvrdiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            $.post('/deleteAccount', {"id": $('#account').find(":selected").val()}, function(result) {});
+                            $('#accountForm').remove();
+                            $('#labelIds').remove();
+                            $('#ids').remove();
+                            $('#accountButtons').remove();
+                            $("#accounts option[value='" + $('#account').find(":selected").val() + "']").remove()
+                            $('#accounts').val('none');
+                            $(this).dialog( "close" );
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            });
+            function acceptSuggestion() {
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            var email = cookie();
+                            $.post('/suggestionConfirmation', {"email": email, "status": "potvrdena", "suggestion": $('#suggestions').find(":selected").val()}, function(result) {});
+                            $('#acceptSuggestionButton').remove();
+                            $('#declineSuggestionButton').remove();
+                            $("#suggestions option[value='" + $('#suggestions').find(":selected").val() + "']").remove()
+                            $('#suggestions').val('none');
+                            $(this).dialog("close");
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            };
+            function declineSuggestion() {
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            var email = cookie();
+                            $.post('/suggestionConfirmation', {"email": email, "status": "zamietnuta", "suggestion": $('#suggestions').find(":selected").val()}, function(result) {});
+                            $('#acceptSuggestionButton').remove();
+                            $('#declineSuggestionButton').remove();
+                            $("#suggestions option[value='" + $('#suggestions').find(":selected").val() + "']").remove()
+                            $('#suggestions').val('none');
+                            $(this).dialog("close");
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            };
+
+            function cookie() {
+                return document.cookie.split('; ')[1].split('=')[1];
+            };
+        </script>
+        <script>
+            function addInput(elem) {
+                var input = document.createElement("input");
+                    input.setAttribute("type", "number");
+                    var id = elem.getAttribute("id");
+                    input.setAttribute("id", ++id);
+                    input.setAttribute("max", "9999");
+                    input.setAttribute("oninput", "addInput(this)");
+                    input.style.textAlign = "center";
+                    input.style.margin = "0 5px";
+                    input.style.width = "30px";
+                elem.parentNode.appendChild(input);
+                elem.setAttribute("oninput", "")
+            };
         </script>
     </body>
 </html>
