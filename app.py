@@ -880,7 +880,7 @@ def deletePersonal():
     return ''
 
 
-# funkcia pre navrh novej zastavky navrhovanu od dopravcu
+# funkcia pre vytvorenie noveho spoju
 @app.route('/addConnection', methods=['GET', 'POST'])
 def addConnection():
     carrierEmail = request.form['carrier']
@@ -995,6 +995,15 @@ def addConnection():
 
     return ''
 
+# funkcia pre vymazanie spoju
+@app.route('/deleteConnection', methods=['GET', 'POST'])
+def deleteConnection():
+    data = request.form['id']
+    print(data)
+
+
+
+    return ''
 
 # funkcia pre navrh novej zastavky navrhovanu od dopravcu
 @app.route('/addStop', methods=['GET', 'POST'])
@@ -1302,6 +1311,7 @@ def administratorEditor():
             'personal': allPersonal,
             'availablePersonalAndVehicles': availablePersonalAndVehicles, 'suggestions': allSuggestions,
             'carrierName': carrierName}  # TODO doplnit navrhy zastavok
+    print(data)
     return render_template("administratorEditor.html", data=data, cities=allNamesOfCities)
 
 
@@ -1681,17 +1691,17 @@ def signIn():
     administrator.execute("SELECT meno, email, heslo FROM Administrator")
     personal.execute("SELECT meno, email, heslo FROM Personal")
     carrier.execute("SELECT nazov, email, heslo FROM Dopravca")
-    for (meno, email, heslo) in cestujuci:
-        if email == user_email and heslo == password:
-            cestujuci.close()
-            profileNameMainPage = meno
-            loginData = {'message': 'login', 'email': user_email, 'status': 'cestujuci'}
-            return redirect(url_for('index'))
     for (meno, email, heslo) in administrator:
         if email == user_email and heslo == password:
             administrator.close()
             profileNameMainPage = meno
             loginData = {'message': 'login', 'email': user_email, 'status': 'administrator'}
+            return redirect(url_for('index'))
+    for (meno, email, heslo) in cestujuci:
+        if email == user_email and heslo == password:
+            cestujuci.close()
+            profileNameMainPage = meno
+            loginData = {'message': 'login', 'email': user_email, 'status': 'cestujuci'}
             return redirect(url_for('index'))
     for (meno, email, heslo) in personal:
         if email == user_email and heslo == password:
