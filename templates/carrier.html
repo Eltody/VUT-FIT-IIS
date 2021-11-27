@@ -1013,12 +1013,12 @@
                             var stops = '';
                             var i = 1;
                             while (i <= $('#insertBefore').attr('name')) {
-                                stops = stops.concat(" | ", $('#city' + i).val());
-                                stops = stops.concat(" - ", $('#time' + i).val());
+                                stops = stops.concat("|", $('#city' + i).val());
+                                stops = stops.concat("-", $('#time' + i).val());
                                 i++;
                             };
                             var email = cookie();
-                            $.post('/addConnection', {"carrier": email, "fromCity": $('#fromCity').find(":selected").val(), "fromCityTime": $('#timeFrom').val(), "toCity": $('#fromCity').find(":selected").val(), "toCityTime": $('#timeTo').val(), "stops": stops, "vehicle": $('#vehicleSelect').find(":selected").val(), "personal": $('#personalSelect').find(":selected").val()}, function(result) {});
+                            $.post('/addConnection', {"carrier": email, "fromCity": $('#fromCity').find(":selected").val(), "fromCityTime": $('#timeFrom').val(), "toCity": $('#toCity').find(":selected").val(), "toCityTime": $('#timeTo').val(), "stops": stops, "vehicle": $('#vehicleSelect').find(":selected").val(), "personal": $('#personalSelect').find(":selected").val()}, function(result) {});
                             $('#connectionAddForm').remove();
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({

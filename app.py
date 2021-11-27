@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for    # pip install flask
-from flask_apscheduler import APScheduler   # pip install flask-apscheduler
+from flask import Flask, render_template, request, redirect, url_for  # pip install flask
+from flask_apscheduler import APScheduler  # pip install flask-apscheduler
 from fpdf import FPDF  # fpdf class
 import smtplib
 import base64
@@ -9,9 +9,9 @@ import json
 import qrcode
 import string
 import random
-import pymysql      # pip install pymysql
-import datetime     # pip install datetime
-import requests     # pip install requests
+import pymysql  # pip install pymysql
+import datetime  # pip install datetime
+import requests  # pip install requests
 
 app = Flask(__name__)
 try:
@@ -31,12 +31,15 @@ password = "matono12"
 
 context = ssl.create_default_context()
 
+
 class Config:
     SCHEDULER_API_ENABLED = True
+
 
 scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
+
 
 #############################################
 @app.route('/')
@@ -55,6 +58,7 @@ def index():
     data = loginData.copy()
     loginData.clear()
     return render_template("index.html", cities=cities, data=data, name=profileNameMainPage)
+
 
 @app.route('/sendEmail/<email>/<status>/<ticket>')
 def sendEmail(email, status, ticket):
@@ -127,12 +131,14 @@ Vaše nové heslo: {}
         server.sendmail(sender_email, email, message)
     return ""
 
+
 @app.route('/resetPassword', methods=['GET', 'POST'])
 def resetPassword():
     user_email = request.form['email']
     print(user_email)
     password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
     return sendEmail(user_email, password, "")
+
 
 @app.route('/profile/<email>')
 def profile(email):
@@ -168,6 +174,7 @@ def profile(email):
     data = {'fName': fName, 'lName': lName, 'password': password}
 
     return render_template("profile.html", data=data)
+
 
 @app.route('/tickets', methods=['GET', 'POST'])
 def tickets():
@@ -652,7 +659,7 @@ def carrier():
         hasConnection = cursor1.fetchone()
         cursor1.close()
         if hasConnection is None:
-            availableVehicles.append(i)         # DOSTUPNE VOZIDLA
+            availableVehicles.append(i)  # DOSTUPNE VOZIDLA
 
     # ziskanie dostupneho personalu od daneho dopravcu, ktory nema pridelene ziadny spoj
     cursor = connection.cursor()
@@ -682,13 +689,15 @@ def carrier():
     availablePersonalAndVehicles = [availableVehicles, availablePersonal]
 
     data = {'vehicles': allVehicles, 'connections': allConnections,
-            'personal': allPersonal, 'availablePersonalAndVehicles': availablePersonalAndVehicles}  # TODO doplnit navrhy zastavok
+            'personal': allPersonal,
+            'availablePersonalAndVehicles': availablePersonalAndVehicles}  # TODO doplnit navrhy zastavok
     return render_template("carrier.html", data=data, cities=allNamesOfCities)
     # martin mi z vehicles posiela id a text vo formularoch pre editVehicleInfo
     # vymazanie vozidla - funkcia deleteVehicle, posiela len id a pole spojov cez ktore prechadza connections
     # /editPersonalInfo pre zmenu info o zamestnancovi - id, fname, lname, email, ids
     # /deletePersonal, posiela mi id daneho zamestnanca
     # /deleteConnection posiela mi id - je to string ktory treba splitnut a vybrat z toho to id
+
 
 # funkcia pre upravu popisu vozidla
 @app.route('/editVehicleInfo', methods=['GET', 'POST'])
@@ -704,6 +713,7 @@ def editVehicleInfo():
     cursor1.close()
 
     return ''
+
 
 # funkcia pre upravu popisu vozidla
 @app.route('/deleteVehicle', methods=['GET', 'POST'])
@@ -746,6 +756,7 @@ def deleteVehicle():
 
     return ''
 
+
 # funkcia pre pridanie noveho vozidla
 @app.route('/addVehicle', methods=['GET', 'POST'])
 def addVehicle():
@@ -770,6 +781,7 @@ def addVehicle():
 
     return ''
 
+
 # funkcia pre upravu uctu personalu
 @app.route('/editPersonalInfo', methods=['GET', 'POST'])
 def editPersonalInfo():
@@ -785,14 +797,14 @@ def editPersonalInfo():
 
     # aktualizacia uctu konkretneho personalu dopravcu
     cursor1 = connection.cursor()
-    cursor1.execute("UPDATE Personal SET meno = '%s', priezvisko = '%s', email = '%s' WHERE id = '%s'" % (fname, lname, email, idOfPersonal))
+    cursor1.execute("UPDATE Personal SET meno = '%s', priezvisko = '%s', email = '%s' WHERE id = '%s'" % (
+        fname, lname, email, idOfPersonal))
     connection.commit()
     cursor1.close()
 
     # TODO skontrolovat, ci sa zmenili jej spoje (z toho pola co mi posiela martin a z toho co je v DB debinovane), na ktorych pracuje a update, pripadne delete
     # TODO ale co ak na spoji nebude zrazu ziadny personal? take spoje by sa asi nemali zobrazovat, asi ze?
     # riesene tu nizsie
-
 
     if len(idsOfConnections) == 0:
         print('empty')
@@ -801,8 +813,8 @@ def editPersonalInfo():
     elif len(idsOfConnections) >= 2:
         print('more than one')
 
-
     return ''
+
 
 # funkcia pre pridanie noveho uctu personalu
 @app.route('/addPersonal', methods=['GET', 'POST'])
@@ -824,8 +836,9 @@ def addPersonal():
 
     # vytvorenie noveho uctu do Personal
     cursor = connection.cursor()
-    cursor.execute("insert into `Personal` (meno, priezvisko, email, heslo, id_dopravca_personal) VALUES (%s, %s, %s, %s, %s)",
-            (fname, lname, email, password, idOfCarrier))
+    cursor.execute(
+        "insert into `Personal` (meno, priezvisko, email, heslo, id_dopravca_personal) VALUES (%s, %s, %s, %s, %s)",
+        (fname, lname, email, password, idOfCarrier))
     connection.commit()
     cursor.close()
 
@@ -866,9 +879,119 @@ def deletePersonal():
 
     return ''
 
+
 # funkcia pre navrh novej zastavky navrhovanu od dopravcu
 @app.route('/addConnection', methods=['GET', 'POST'])
 def addConnection():
+    carrierEmail = request.form['carrier']
+    # ziskanie id dopravcu podla emailu
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Dopravca WHERE email='%s';" % carrierEmail)
+    carrierID = cursor1.fetchone()  # ziskanie id_dopravcu_spoje
+    cursor1.close()
+    carrierID = carrierID[0]
+    fromCity = request.form['fromCity']
+    fromCityTime = request.form['fromCityTime']
+    toCity = request.form['toCity']
+    toCityTime = request.form['toCityTime']
+    vehicleID = request.form['vehicle']
+    personalID = request.form['personal']
+    personalID = personalID.split(',')
+    personalID = personalID[0]
+    stops = request.form['stops']
+
+    if fromCityTime[0] == '0':
+        fromCityTime = fromCityTime[1:]
+    if toCityTime[0] == '0':
+        toCityTime = toCityTime[1:]
+
+    # do tabulky Spoj pridam id dopravcu a vytvori sa mi id noveho spoju
+    cursor = connection.cursor()
+    cursor.execute(
+        "insert into `Spoj` (id_dopravca_spoje) VALUES (%s)",
+        (carrierID))
+    connection.commit()
+    newConnectionID = cursor.lastrowid
+    print('new id of connection')
+    print(newConnectionID)
+    cursor.close()
+
+    # do tabulky Personal_Spoj pridam id personalu a nove id spoju
+    cursor = connection.cursor()
+    cursor.execute(
+        "insert into `Personal_Spoj` (id_personalu, id_spoju) VALUES (%s, %s)",
+        (personalID, newConnectionID))
+    connection.commit()
+    cursor.close()
+
+    # do tabulky Vozidlo_Spoj pridam id vozidla a nove id spoju
+    cursor = connection.cursor()
+    cursor.execute(
+        "insert into `Vozidlo_Spoj` (id_vozidla, id_spoju) VALUES (%s, %s)",
+        (vehicleID, newConnectionID))
+    connection.commit()
+    cursor.close()
+
+    # ziskanie id zastavky, ktorej pridelim cas prejazdu
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Zastavky WHERE nazov_zastavky='%s';" % fromCity)
+    idOfFromCity = cursor1.fetchone()
+    cursor1.close()
+    idOfFromCity = idOfFromCity[0]
+
+    # do tabulky Spoj_Zastavka pridam id zastavok, cas prejazdu a nove id spoju
+    cursor = connection.cursor()
+    cursor.execute(
+        "insert into `Spoj_Zastavka` (id_spoju, id_zastavky, cas_prejazdu) VALUES (%s, %s, %s)",
+        (newConnectionID, idOfFromCity, fromCityTime))
+    connection.commit()
+    cursor.close()
+
+    if stops == '':
+        stops = 'no middle stops'
+        print(stops)
+    else:
+        stops = stops.split('|')
+        valueToBeRemoved = ''
+        stops = [value for value in stops if value != valueToBeRemoved]
+        stopsSplitted = []
+        for i in stops:
+            stopsSplitted.append(i.rsplit('-', 1))  # [0] nazov zastavky, [1] cas prejazdu
+        for i in stopsSplitted:
+            print('id of stop')
+            print(i)
+            # ziskanie id zastavky, ktorej pridelim cas prejazdu
+            cursor1 = connection.cursor()
+            cursor1.execute("SELECT id FROM Zastavky WHERE nazov_zastavky='%s';" % i[0])
+            idOfConnection = cursor1.fetchone()
+            cursor1.close()
+            idOfConnection = idOfConnection[0]
+
+            if i[1][0] == '0':
+                i[1] = i[1][1:]
+
+            # do tabulky Spoj_Zastavka pridam id zastavok, cas prejazdu a nove id spoju
+            cursor = connection.cursor()
+            cursor.execute(
+                "insert into `Spoj_Zastavka` (id_spoju, id_zastavky, cas_prejazdu) VALUES (%s, %s, %s)",
+                (newConnectionID, idOfConnection, i[1]))
+            connection.commit()
+            cursor.close()
+
+    # ziskanie id zastavky, ktorej pridelim cas prejazdu
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Zastavky WHERE nazov_zastavky='%s';" % toCity)
+    idOfToCity = cursor1.fetchone()
+    cursor1.close()
+    idOfToCity = idOfToCity[0]
+
+    # do tabulky Spoj_Zastavka pridam id zastavok, cas prejazdu a nove id spoju
+    cursor = connection.cursor()
+    cursor.execute(
+        "insert into `Spoj_Zastavka` (id_spoju, id_zastavky, cas_prejazdu) VALUES (%s, %s, %s)",
+        (newConnectionID, idOfToCity, toCityTime))
+    connection.commit()
+    cursor.close()
 
     return ''
 
@@ -892,12 +1015,14 @@ def addStop():
 
     # vytvaram novy navrh o zastavke, navrhovany konkretnym dopravcom
     cursor = connection.cursor()
-    cursor.execute("insert into `NavrhZastavky` (nazov, geograficka_poloha, id_dopravca_navrhy, stav) VALUES (%s, %s, %s, %s)",
-                   (nameOfConnection, GeoLocation, idOfCarrier, 'nepotvrdena'))
+    cursor.execute(
+        "insert into `NavrhZastavky` (nazov, geograficka_poloha, id_dopravca_navrhy, stav) VALUES (%s, %s, %s, %s)",
+        (nameOfConnection, GeoLocation, idOfCarrier, 'nepotvrdena'))
     connection.commit()
     cursor.close()
 
     return ''
+
 
 @app.route('/administrator', methods=['GET', 'POST'])
 def administrator():
@@ -911,6 +1036,7 @@ def administrator():
             allCarriers.append(n)
 
     return render_template("administrator.html", carriers=allCarriers)
+
 
 @app.route('/administratorEditor', methods=['GET', 'POST'])
 def administratorEditor():
@@ -1162,7 +1288,8 @@ def administratorEditor():
     allSuggestions = []
     for i in allIdsSuggestions:
         cursor = connection.cursor()
-        cursor.execute("SELECT nazov, geograficka_poloha, id_dopravca_navrhy from NavrhZastavky WHERE stav='nepotvrdena' and id='%s';" % i)
+        cursor.execute(
+            "SELECT nazov, geograficka_poloha, id_dopravca_navrhy from NavrhZastavky WHERE stav='nepotvrdena' and id='%s';" % i)
         tmp_oneSuggestion = cursor.fetchall()
         cursor.close()
         oneSuggestion = []
@@ -1173,15 +1300,17 @@ def administratorEditor():
 
     data = {'vehicles': allVehicles, 'connections': allConnections,
             'personal': allPersonal,
-            'availablePersonalAndVehicles': availablePersonalAndVehicles, 'suggestions': allSuggestions, 'carrierName': carrierName}  # TODO doplnit navrhy zastavok
+            'availablePersonalAndVehicles': availablePersonalAndVehicles, 'suggestions': allSuggestions,
+            'carrierName': carrierName}  # TODO doplnit navrhy zastavok
     return render_template("administratorEditor.html", data=data, cities=allNamesOfCities)
+
 
 @app.route('/suggestionConfirmation', methods=['GET', 'POST'])
 def suggestionConfirmation():
     # email, status, suggestion
     emailAdmin = request.form['email']
     statusOfSuggestion = request.form['status']
-    wholeSuggestion= request.form['suggestion']
+    wholeSuggestion = request.form['suggestion']
     wholeSuggestion = wholeSuggestion.split(',')
     nameOfNewConnection = wholeSuggestion[0]
     geoLocation = wholeSuggestion[1] + ',' + wholeSuggestion[2]
@@ -1196,9 +1325,8 @@ def suggestionConfirmation():
     for m in tmp_allNamesStops:
         for n in m:
             allNamesStops.append(n)
-    if nameOfNewConnection in allNamesStops:    # pokial sa uz nachadza rovnaky nazov v Zastavky, tak vymazat navrh
+    if nameOfNewConnection in allNamesStops:  # pokial sa uz nachadza rovnaky nazov v Zastavky, tak vymazat navrh
         statusOfSuggestion = 'zamietnuta'
-
 
     # pridanie navrhu medzi zastavky alebo zamietnutie a vymazanie
     if statusOfSuggestion == 'potvrdena':
@@ -1209,7 +1337,9 @@ def suggestionConfirmation():
         cursor.close()
         # vymazanie zaznamu o navrhu pokial potvrdeny
         cursor1 = connection.cursor()
-        cursor1.execute("DELETE FROM NavrhZastavky WHERE nazov = '%s' and id_dopravca_navrhy = '%s' and geograficka_poloha = '%s'" % (nameOfNewConnection, idOfCarrierSuggesting, geoLocation))
+        cursor1.execute(
+            "DELETE FROM NavrhZastavky WHERE nazov = '%s' and id_dopravca_navrhy = '%s' and geograficka_poloha = '%s'" % (
+                nameOfNewConnection, idOfCarrierSuggesting, geoLocation))
         connection.commit()
         cursor1.close()
 
@@ -1218,7 +1348,7 @@ def suggestionConfirmation():
         cursor1 = connection.cursor()
         cursor1.execute(
             "DELETE FROM NavrhZastavky WHERE nazov = '%s' and id_dopravca_navrhy = '%s' and geograficka_poloha = '%s'" % (
-            nameOfNewConnection, idOfCarrierSuggesting, geoLocation))
+                nameOfNewConnection, idOfCarrierSuggesting, geoLocation))
         connection.commit()
         cursor1.close()
 
@@ -1854,6 +1984,11 @@ def purchase(signedInOrOneTime):
         cursor1.execute("SELECT id, meno, priezvisko FROM Cestujuci WHERE email='%s';" % user_email)
         idOfUser = cursor1.fetchone()
         cursor1.close()
+        if idOfUser is None:
+            cursor1 = connection.cursor()
+            cursor1.execute("SELECT id, meno, priezvisko FROM Administrator WHERE email='%s';" % user_email)
+            idOfUser = cursor1.fetchone()
+            cursor1.close()
         tmp_fname_lname = idOfUser
         idOfUser = idOfUser[0]
         if signedInOrOneTime == 'signIn' or signedInOrOneTime == 'signedIn':
@@ -2058,6 +2193,7 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.output(savePDFname, 'F')
     return
 
+
 @scheduler.task('interval', id='databaseCheck', seconds=300, misfire_grace_time=900)
 def databaseCheck():
     try:
@@ -2132,6 +2268,7 @@ def databaseCheck():
                 removeTicket = os.path.dirname(os.path.realpath(__file__)) + '/static/qr/' + item
                 os.remove(removeTicket)
             boolRemoveTicket = True
+
 
 if __name__ == '__main__':
     app.run(debug=True)
