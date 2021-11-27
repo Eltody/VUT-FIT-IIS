@@ -73,8 +73,6 @@
                                     </div>
                                     <div class="editForm">
                                         <h3>Úprava účtu</h3>
-                                        <button id="addCarrier" type="button" onclick="addCarrier()">Pridať nového dopravcu</button>
-                                        <br><br>
                                         <form id="carrier" class="searchForm" onsubmit="submitCarrier()">
                                             <select name="carriers" id="carriers" class="search-select">
                                                 <option value="none" disabled selected>Vyberte dopravcu pre úpravu</option>
@@ -298,8 +296,7 @@
                     buttons: {
                         "Uložiť": function() {
                             $("#successfulDialog").removeClass("hidden");
-                            var email = cookie();
-                            $.post('/addVehicle', {"carrier": email, "seats": $('#addSeats').val(), "text": $('#addDescription').val()}, function(result) {});
+                            $.post('/addVehicle', {"carrier": $('#carrierName').val(), "seats": $('#addSeats').val(), "text": $('#addDescription').val()}, function(result) {});
                             $('#vehicleAddForm').remove();
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({
@@ -334,7 +331,7 @@
                         "Uložiť": function() {
                             $("#successfulDialog").removeClass("hidden");
                             var email = cookie();
-                            $.post('/editVehicleInfo', {"carrier": email, "id": $('#vehicles').find(":selected").val(), "text": $('#description').val()}, function(result) {});
+                            $.post('/editVehicleInfo', {"id": $('#vehicles').find(":selected").val(), "text": $('#description').val()}, function(result) {});
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({
                                 draggable: false,
@@ -655,8 +652,7 @@
                                 stops = stops.concat(" - ", $('#time' + i).val());
                                 i++;
                             };
-                            var email = cookie();
-                            $.post('/addConnection', {"carrier": email, "fromCity": $('#fromCity').find(":selected").val(), "fromCityTime": $('#timeFrom').val(), "toCity": $('#fromCity').find(":selected").val(), "toCityTime": $('#timeTo').val(), "stops": stops, "vehicle": $('#vehicleSelect').find(":selected").val(), "personal": $('#personalSelect').find(":selected").val()}, function(result) {});
+                            $.post('/addConnection', {"carrier": $('#carrierName').val(), "fromCity": $('#fromCity').find(":selected").val(), "fromCityTime": $('#timeFrom').val(), "toCity": $('#fromCity').find(":selected").val(), "toCityTime": $('#timeTo').val(), "stops": stops, "vehicle": $('#vehicleSelect').find(":selected").val(), "personal": $('#personalSelect').find(":selected").val()}, function(result) {});
                             $('#connectionAddForm').remove();
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({

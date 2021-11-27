@@ -64,6 +64,10 @@
                                         </form>
                                     </div>
                                     <div class="editForm">
+                                        <h3>Registrácia účtu dopravcu</h3>
+                                        <button id="addCarrier" type="button" onclick="addCarrier()">Pridať nového dopravcu</button>
+                                    </div>
+                                    <div class="editForm">
                                         <h3>Schvalovanie návrhov zastávok</h3>
                                         <form id="confirmStops" class="searchForm">
                                             <select name="suggestions" id="suggestions" class="search-select">
@@ -83,7 +87,7 @@
                 <p>Copyright © reserved, Website by <a href="mailto:cp.poriadne.sk@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
             </footer>
         </div>
-        <div id="confirmPersonalDeleteDialog" class="hidden">
+        <div id="confirmDeleteDialog" class="hidden">
             <p>Prajete si vymazať účet?</p>
         </div>
         <div id="confirmDialog" class="hidden">
@@ -216,43 +220,6 @@
                                 div.appendChild(inputEmail);
                             div1.appendChild(div);
                         document.getElementById('account').appendChild(div1);
-                        var id = accountsSelect.value;
-                        var labelIds = document.createElement("label");
-                            labelIds.setAttribute("id", "labelIds");
-                            labelIds.innerHTML = "Spoje";
-                        var div = document.createElement("div")
-                        div.setAttribute("id", "ids");
-                        div.style.marginBottom = "10px";
-                        for (var i in accounts) {
-                            if (id == accounts[i][0]) {
-                                for (var j in accounts[i][5]) {
-                                    var input = document.createElement("input");
-                                        input.setAttribute("type", "number");
-                                        input.setAttribute("id", j);
-                                        input.setAttribute("max", "9999");
-                                        input.setAttribute("value", accounts[i][5][j]);
-                                        input.style.textAlign = "center";
-                                        input.style.margin = "0 5px";
-                                        input.style.width = "30px";
-                                    div.appendChild(input);
-                                };
-                                var input = document.createElement("input");
-                                    input.setAttribute("type", "number");
-                                    if (j == null) {
-                                        input.setAttribute("id", "0");
-                                    } else {
-                                        input.setAttribute("id", ++j);
-                                    };
-                                    input.setAttribute("max", "9999");
-                                    input.setAttribute("oninput", "addInput(this)");
-                                    input.style.textAlign = "center";
-                                    input.style.margin = "0 5px";
-                                    input.style.width = "30px";
-                                div.appendChild(input);
-                            };
-                        };
-                        document.getElementById('account').appendChild(labelIds);
-                        document.getElementById('account').appendChild(div);
 
                         var div = document.createElement("div");
                         div.setAttribute("id", "accountButtons");
@@ -313,49 +280,34 @@
             });
         </script>
         <script>
-            function addaccount() {
+            function addCarrier() {
                 if (document.getElementById("accountAddForm") == null) {
                     var form = document.createElement("form");
                     form.classList.add("searchForm");
                     form.setAttribute("id", "accountAddForm");
-                    form.setAttribute("onSubmit", "submitAddaccount()");
+                    form.setAttribute("onSubmit", "submitAddCarrier()");
                         var div1 = document.createElement("div");
                             div1.classList.add("editorForm");
                             div1.style.margin = "10px 0";
                                 var div = document.createElement("div");
                                     var inputFName = document.createElement("input");
-                                        inputFName.setAttribute("id", "addFName");
-                                        inputFName.setAttribute("name", "fName");
+                                        inputFName.setAttribute("id", "addName");
+                                        inputFName.setAttribute("name", "addName");
                                         inputFName.style.textAlign = "center";
                                         inputFName.style.width = "95%";
                                         inputFName.style.maxWidth = "300px";
                                         inputFName.style.marginBottom = "5px";
                                         inputFName.required = true;
                                     var labelFName = document.createElement("label");
-                                        labelFName.setAttribute("for", "fName");
+                                        labelFName.setAttribute("for", "addName");
                                         labelFName.innerHTML = "Meno";
                                     div.appendChild(labelFName);
                                     div.appendChild(inputFName);
                                 div1.appendChild(div);
                                 var div = document.createElement("div");
-                                    var inputLName = document.createElement("input");
-                                        inputLName.setAttribute("id", "addLName");
-                                        inputLName.setAttribute("name", "lName");
-                                        inputLName.style.textAlign = "center";
-                                        inputLName.style.width = "95%";
-                                        inputLName.style.maxWidth = "300px";
-                                        inputLName.style.marginBottom = "5px";
-                                        inputLName.required = true;
-                                    var labelLName = document.createElement("label");
-                                        labelLName.setAttribute("for", "lName");
-                                        labelLName.innerHTML = "Priezvisko";
-                                    div.appendChild(labelLName);
-                                    div.appendChild(inputLName);
-                                div1.appendChild(div);
-                                var div = document.createElement("div");
                                     var inputEmail = document.createElement("input");
                                         inputEmail.setAttribute("id", "addEmail");
-                                        inputEmail.setAttribute("name", "email");
+                                        inputEmail.setAttribute("name", "addEmail");
                                         inputEmail.setAttribute("type", "email");
                                         inputEmail.style.textAlign = "center";
                                         inputEmail.style.width = "95%";
@@ -363,7 +315,7 @@
                                         inputEmail.style.marginBottom = "5px";
                                         inputEmail.required = true;
                                     var labelEmail = document.createElement("label");
-                                        labelEmail.setAttribute("for", "email");
+                                        labelEmail.setAttribute("for", "addEmail");
                                         labelEmail.innerHTML = "Email";
                                     div.appendChild(labelEmail);
                                     div.appendChild(inputEmail);
@@ -371,7 +323,7 @@
                                 var div = document.createElement("div");
                                     var inputPassword = document.createElement("input");
                                         inputPassword.setAttribute("id", "addPassword");
-                                        inputPassword.setAttribute("name", "password");
+                                        inputPassword.setAttribute("name", "addPassword");
                                         inputPassword.setAttribute("pattern", "(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}");
                                         inputPassword.style.textAlign = "center";
                                         inputPassword.style.width = "95%";
@@ -379,45 +331,22 @@
                                         inputPassword.style.marginBottom = "5px";
                                         inputPassword.required = true;
                                     var labelPassword = document.createElement("label");
-                                        labelPassword.setAttribute("for", "password");
+                                        labelPassword.setAttribute("for", "addPassword");
                                         labelPassword.innerHTML = "Heslo";
                                     div.appendChild(labelPassword);
                                     div.appendChild(inputPassword);
                                 div1.appendChild(div);
                             form.appendChild(div1);
-                            var labelIds = document.createElement("label");
-                                labelIds.setAttribute("id", "labelAddIds");
-                                labelIds.innerHTML = "Spoje";
-                            var div = document.createElement("div")
-                            div.setAttribute("id", "addIds");
-                            div.style.marginBottom = "10px";
-                                var input = document.createElement("input");
-                                    input.setAttribute("type", "number");
-                                    input.setAttribute("id", 0);
-                                    input.setAttribute("max", "9999");
-                                    input.setAttribute("oninput", "addInput(this)");
-                                    input.style.textAlign = "center";
-                                    input.style.margin = "0 5px";
-                                    input.style.width = "30px";
-                                div.appendChild(input);
-                            form.appendChild(labelIds);
-                            form.appendChild(div);
                             var buttonSubmit = document.createElement("button");
                                 buttonSubmit.setAttribute("type", "submit");
                                 buttonSubmit.innerHTML = ("Vytvoriť účet");
                             form.appendChild(buttonSubmit);
-                        document.getElementById('addaccount').parentNode.insertBefore(form, document.getElementById('addaccount').nextSibling);
+                        document.getElementById('addCarrier').parentNode.insertBefore(form, document.getElementById('addCarrier').nextSibling);
                 } else {
                     document.getElementById("accountAddForm").remove();
                 };
             };
-            function submitAddaccount() {
-                var ids = "";
-                var i = 0;
-                while (i < document.getElementById("addIds").lastChild.getAttribute('id')) {
-                    ids = ids.concat(" ", document.getElementById("addIds").childNodes.item(i).value);
-                    i++;
-                };
+            function submitAddCarrier() {
                 $("#confirmDialog").removeClass("hidden");
                 $("#confirmDialog").dialog({
                     draggable: false,
@@ -428,13 +357,7 @@
                     buttons: {
                         "Uložiť": function() {
                             $("#successfulDialog").removeClass("hidden");
-                            if ($('#password').val() != null) {
-                                var password = $('#password').val();
-                            } else {
-                                var password = '';
-                            };
-                            var email = cookie();
-                            $.post('/addaccount', {"carrier": email, "fname": $('#addFName').val(), "lname": $('#addLName').val(), "email": $('#addEmail').val(), "ids": ids, "password": $('#addPassword').val()}, function(result) {});
+                            $.post('/addCarrier', {"name": $('#addName').val(), "email": $('#addEmail').val(), "password": $('#addPassword').val()}, function(result) {});
                             $('#accountAddForm').remove();
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({
@@ -458,12 +381,6 @@
                 $(".ui-dialog-titlebar").hide();
             };
             function submitAccount() {
-                var ids = "";
-                var i = 0;
-                while (i < document.getElementById("ids").lastChild.getAttribute('id')) {
-                    ids = ids.concat(" ", document.getElementById("ids").childNodes.item(i).value);
-                    i++;
-                };
                 $("#confirmDialog").removeClass("hidden");
                 $("#confirmDialog").dialog({
                     draggable: false,
@@ -481,7 +398,7 @@
                             };
                             $(this).dialog("close");
                             var email = cookie();
-                            $.post('/editaccountInfo', {"carrier": email, "id": $('#account').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids}, function(result) {});
+                            $.post('/editAccount', {"fName": $('#fName').val(), "lName": $('#lName').val(), "email": $('#email').val(), "password": ""}, function(result) {});
                             $("#successfulDialog").dialog({
                                 draggable: false,
                                 resizable: false,
@@ -503,8 +420,8 @@
                 $(".ui-dialog-titlebar").hide();
             };
             $(document).on('click','#deleteAccount', function() {
-                $("#confirmaccountDeleteDialog").removeClass("hidden");
-                $("#confirmaccountDeleteDialog").dialog({
+                $("#confirmDeleteDialog").removeClass("hidden");
+                $("#confirmDeleteDialog").dialog({
                     draggable: false,
                     resizable: false,
                     height: 150,
@@ -617,24 +534,14 @@
                 });
                 $(".ui-dialog-titlebar").hide();
             };
-
+            $(document).on("submit", "form", function(e){
+                if ($('#carriers').find(":selected").val() == "-----") {
+                    e.preventDefault();
+                    return false;
+                };
+            });
             function cookie() {
                 return document.cookie.split('; ')[1].split('=')[1];
-            };
-        </script>
-        <script>
-            function addInput(elem) {
-                var input = document.createElement("input");
-                    input.setAttribute("type", "number");
-                    var id = elem.getAttribute("id");
-                    input.setAttribute("id", ++id);
-                    input.setAttribute("max", "9999");
-                    input.setAttribute("oninput", "addInput(this)");
-                    input.style.textAlign = "center";
-                    input.style.margin = "0 5px";
-                    input.style.width = "30px";
-                elem.parentNode.appendChild(input);
-                elem.setAttribute("oninput", "")
             };
         </script>
     </body>
