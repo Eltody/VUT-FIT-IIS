@@ -165,6 +165,12 @@
                     select.selectedIndex = i;
                 };
             };
+            var select = document.getElementById('fromCity');
+            for (var i = 0; i < select.length; i++) {
+                if (select[i].childNodes[0].nodeValue === 'Brno - ÚAN Zvonařka'){
+                    select.selectedIndex = i;
+                };
+            };
         </script>
         <script>
             var now = new Date();
