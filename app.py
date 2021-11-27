@@ -1102,6 +1102,7 @@ def addStop():
 
 @app.route('/administrator', methods=['GET', 'POST'])
 def administrator():
+    # vyhladam mena vsetkych dopravcov - k ktorom mene bude admin upravovat to, co robi dopravca
     cursor1 = connection.cursor()
     cursor1.execute("SELECT nazov FROM Dopravca")
     tmp_allCarriers = cursor1.fetchall()
@@ -1111,7 +1112,58 @@ def administrator():
         for n in m:
             allCarriers.append(n)
 
-    return render_template("administrator.html", carriers=allCarriers)
+    allUsers = []
+    # vyhladam info o vsetkych uctoch
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id, meno, priezvisko, email, heslo FROM Cestujuci")
+    tmp_allUsers = cursor1.fetchall()
+    cursor1.close()
+
+    for m in tmp_allUsers:
+        for n in m:
+            allUsers.append(n)
+
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id, meno, priezvisko, email, heslo FROM Personal")
+    tmp_allUsers = cursor1.fetchall()
+    cursor1.close()
+    tmp_allUsers = list(tmp_allUsers)
+
+    print(tmp_allUsers)
+
+    # ziskanie vsetkych id nepotvrdenych navrhov zastavok od dopravcov
+    cursor = connection.cursor()
+    cursor.execute("SELECT id from NavrhZastavky WHERE stav='nepotvrdena'")
+    tmp_allIdsSuggestions = cursor.fetchall()
+    cursor.close()
+    allIdsSuggestions = []
+    for m in tmp_allIdsSuggestions:
+        for n in m:
+            allIdsSuggestions.append(n)
+
+    # ziskanie vsetkych nepotvrdenych navrhov zastavok od dopravcov
+    allSuggestions = []
+    for i in allIdsSuggestions:
+        cursor = connection.cursor()
+        cursor.execute(
+            "SELECT nazov, geograficka_poloha, id_dopravca_navrhy from NavrhZastavky WHERE stav='nepotvrdena' and id='%s';" % i)
+        tmp_oneSuggestion = cursor.fetchall()
+        cursor.close()
+        oneSuggestion = []
+        for m in tmp_oneSuggestion:
+            for n in m:
+                oneSuggestion.append(n)
+        allSuggestions.append(oneSuggestion)
+
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id, nazov, email, heslo FROM Dopravca")
+    tmp_allCarriersInfo = cursor1.fetchall()
+    cursor1.close()
+    tmp_allCarriersInfo = list(tmp_allCarriersInfo)
+    print(tmp_allCarriersInfo)
+
+
+    return render_template("administrator.html", carriers=allCarriers, users=tmp_allUsers, editCarriers=tmp_allCarriersInfo, suggestions=allSuggestions)
 
 
 @app.route('/administratorEditor', methods=['GET', 'POST'])
