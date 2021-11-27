@@ -794,6 +794,7 @@ def editPersonalInfo():
     idsOfConnections = idsOfConnections.split(' ')
     valueToBeRemoved = ''
     idsOfConnections = [value for value in idsOfConnections if value != valueToBeRemoved]
+    idsOfConnections = [int(i) for i in idsOfConnections]
 
     # aktualizacia uctu konkretneho personalu dopravcu
     cursor1 = connection.cursor()
@@ -812,6 +813,44 @@ def editPersonalInfo():
         print('one')
     elif len(idsOfConnections) >= 2:
         print('more than one')
+
+    print(idsOfConnections)
+
+    # ziskam spoje, pre ktore pracuje personal
+    cursor1 = connection.cursor()
+    cursor1.execute(
+        "SELECT id_spoju FROM Personal_Spoj WHERE id_personalu='%s';" % idOfPersonal)
+    tmp_allConnectionsOfPersonalDB = cursor1.fetchall()
+    cursor1.close()
+    tmp_allConnectionsOfPersonalDB = list(tmp_allConnectionsOfPersonalDB)
+    allConnectionsOfPersonalDB = []
+    for m in tmp_allConnectionsOfPersonalDB:
+        for n in m:
+            allConnectionsOfPersonalDB.append(n)
+    print(allConnectionsOfPersonalDB)
+
+    # ziskam id spojov, ktore musim z DB vymazat / pridat
+    if allConnectionsOfPersonalDB != idsOfConnections:
+        idsToDeleteFromDB = [x for x in allConnectionsOfPersonalDB if x not in idsOfConnections]
+        print(idsToDeleteFromDB)
+        idsToAddToDB = [x for x in idsOfConnections if x not in allConnectionsOfPersonalDB]
+        print(idsToAddToDB)
+
+        if idsToDeleteFromDB:
+            for i in idsToDeleteFromDB:
+                cursor1 = connection.cursor()
+                cursor1.execute("DELETE FROM Personal_Spoj WHERE id_personalu = '%s' and id_spoju = '%s'" % (idOfPersonal, i))
+                connection.commit()
+                cursor1.close()
+
+        if idsToAddToDB:
+            for i in idsToAddToDB:
+                cursor = connection.cursor()
+                cursor.execute(
+                    "insert into `Personal_Spoj` (id_personalu, id_spoju) VALUES (%s, %s)",
+                    (idOfPersonal, i))
+                connection.commit()
+                cursor.close()
 
     return ''
 
