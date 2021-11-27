@@ -1310,7 +1310,7 @@ def administratorEditor():
     data = {'vehicles': allVehicles, 'connections': allConnections,
             'personal': allPersonal,
             'availablePersonalAndVehicles': availablePersonalAndVehicles, 'suggestions': allSuggestions,
-            'carrierName': carrierName}  # TODO doplnit navrhy zastavok
+            'carrierName': carrierName}
     print(data)
     return render_template("administratorEditor.html", data=data, cities=allNamesOfCities)
 
@@ -1754,6 +1754,54 @@ def registration():
         if email == user_email:
             cursor1 = connection.cursor()
             cursor1.execute("SELECT heslo FROM Cestujuci WHERE email='%s';" % email)
+            passwordOfEmail = cursor1.fetchone()
+            cursor1.close()
+            cursor.close()
+            passwordOfEmail = passwordOfEmail[0]
+            if passwordOfEmail != ' ':
+                data = {'error': 'reg', 'email': user_email}
+                return render_template('signIn.html', data=data)
+    cursor.close()
+
+    cursor = connection.cursor()
+    cursor.execute("SELECT email FROM Dopravca")
+    for (email) in cursor:
+        email = ''.join(email)
+        if email == user_email:
+            cursor1 = connection.cursor()
+            cursor1.execute("SELECT heslo FROM Dopravca WHERE email='%s';" % email)
+            passwordOfEmail = cursor1.fetchone()
+            cursor1.close()
+            cursor.close()
+            passwordOfEmail = passwordOfEmail[0]
+            if passwordOfEmail != ' ':
+                data = {'error': 'reg', 'email': user_email}
+                return render_template('signIn.html', data=data)
+    cursor.close()
+
+    cursor = connection.cursor()
+    cursor.execute("SELECT email FROM Administrator")
+    for (email) in cursor:
+        email = ''.join(email)
+        if email == user_email:
+            cursor1 = connection.cursor()
+            cursor1.execute("SELECT heslo FROM Administrator WHERE email='%s';" % email)
+            passwordOfEmail = cursor1.fetchone()
+            cursor1.close()
+            cursor.close()
+            passwordOfEmail = passwordOfEmail[0]
+            if passwordOfEmail != ' ':
+                data = {'error': 'reg', 'email': user_email}
+                return render_template('signIn.html', data=data)
+    cursor.close()
+
+    cursor = connection.cursor()
+    cursor.execute("SELECT email FROM Personal")
+    for (email) in cursor:
+        email = ''.join(email)
+        if email == user_email:
+            cursor1 = connection.cursor()
+            cursor1.execute("SELECT heslo FROM Personal WHERE email='%s';" % email)
             passwordOfEmail = cursor1.fetchone()
             cursor1.close()
             cursor.close()
