@@ -137,6 +137,11 @@ def resetPassword():
     user_email = request.form['email']
     print(user_email)
     password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+    # aktualizacia hesla pouzivatela podla jeho emailu - funkcia obnovit heslo
+    cursor1 = connection.cursor()
+    cursor1.execute("UPDATE Cestujuci SET heslo = '%s' WHERE email = '%s'" % (password, user_email))
+    connection.commit()
+    cursor1.close()
     return sendEmail(user_email, password, "")
 
 

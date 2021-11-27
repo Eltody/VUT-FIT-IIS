@@ -1052,7 +1052,7 @@
                     buttons: {
                         "Potvrdiť": function() {
                             $("#successfulDialog").removeClass("hidden");
-                            $.post('/deleteConnection', {"id": $('#vehicles').find(":selected").val()}, function(result) {});
+                            $.post('/deleteConnection', {"id": $('#connections').find(":selected").val()}, function(result) {});
                             $('#deleteConnection').remove();
                             $("#connections option[value='" + $('#connections').find(":selected").val() + "']").remove()
                             $('#connections').val('none');
