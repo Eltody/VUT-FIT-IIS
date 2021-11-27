@@ -96,7 +96,7 @@
             </header>
         </div>
         <div id="confirmDialog" class="hidden">
-            <p style="color: black">Prajete si obnoviť heslo pre nasledujúci email?</p>
+            <p id="message" style="color: black">Prajete si obnoviť heslo pre nasledujúci email?</p>
         </div>
         <div id="successfulDialog" class="hidden">
             <p style="color: green">Nové heslo vám bolo odoslané na email.</p>
@@ -135,45 +135,73 @@
         </script>
         <script>
             $(document).on('click','#resetPassword', function() {
-                addEmail($("#lEmail").val());
-                $("#confirmDialog").removeClass("hidden");
-                $("#confirmDialog").dialog({
-                    draggable: false,
-                    resizable: false,
-                    height: 225,
-                    width: 275,
-                    modal: true,
-                    buttons: {
-                        "Potvrdiť": function() {
-                            $("#successfulDialog").removeClass("hidden");
-                            $.post('/resetPassword', {"email": $("#lEmail").val()}, function(result) {});
-                            $(this).dialog("close");
-                            $("#successfulDialog").dialog({
-                                draggable: false,
-                                resizable: false,
-                                height: 150,
-                                width: 250,
-                                modal: true,
-                                hide: {effect: 'fade', duration: 500},
-                                open: function(event, ui){
-                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
-                                }
-                            });
-                            $(".ui-dialog-titlebar").hide();
-                        },
-                        "Zrušiť": function() {
-                            $(this).dialog("close");
+                if (addEmail($("#lEmail").val())) {
+                    $("#confirmDialog").removeClass("hidden");
+                    $("#confirmDialog").dialog({
+                        draggable: false,
+                        resizable: false,
+                        height: 225,
+                        width: 275,
+                        modal: true,
+                        buttons: {
+                            "Potvrdiť": function() {
+                                $("#successfulDialog").removeClass("hidden");
+                                $.post('/resetPassword', {"email": $("#lEmail").val()}, function(result) {});
+                                $(this).dialog("close");
+                                $("#successfulDialog").dialog({
+                                    draggable: false,
+                                    resizable: false,
+                                    height: 150,
+                                    width: 250,
+                                    modal: true,
+                                    hide: {effect: 'fade', duration: 500},
+                                    open: function(event, ui){
+                                        setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                    }
+                                });
+                                $(".ui-dialog-titlebar").hide();
+                            },
+                            "Zrušiť": function() {
+                                $(this).dialog("close");
+                            }
                         }
-                    }
-                });
-                $(".ui-dialog-titlebar").hide();
+                    });
+                    $(".ui-dialog-titlebar").hide();
+                };
             });
             function addEmail(email) {
-            document.getElementById("email").remove();
-            var p = document.createElement("p");
-            p.setAttribute("id", "email");
-            p.innerHTML = email;
-            document.getElementById("confirmDialog").appendChild(p);
+                var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+                if (!regex.test(email)) {
+                    document.getElementById("email").remove();
+                    document.getElementById("message").classList.add("hidden");
+                    var p = document.createElement("p");
+                        p.setAttribute("id", "email");
+                        p.innerHTML = "Prosím skontrolujte zadaný email";
+                    document.getElementById("confirmDialog").appendChild(p);
+
+                    $("#confirmDialog").removeClass("hidden");
+                    $("#confirmDialog").dialog({
+                        draggable: false,
+                        resizable: false,
+                        width: 275,
+                        modal: true,
+                        buttons: {
+                            "Zrušiť": function() {
+                                $(this).dialog("close");
+                                document.getElementById("message").classList.remove("hidden");
+                                return false;
+                            }
+                        }
+                    });
+                    $(".ui-dialog-titlebar").hide();
+                } else {
+                    document.getElementById("email").remove();
+                    var p = document.createElement("p");
+                        p.setAttribute("id", "email");
+                        p.innerHTML = email;
+                    document.getElementById("confirmDialog").appendChild(p);
+                    return true;
+                };
             };
         </script>
         <script>
