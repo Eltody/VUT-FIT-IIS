@@ -881,6 +881,7 @@
                                     var selectVehicle = document.createElement("select");
                                         selectVehicle.setAttribute("name", "vehicleSelect");
                                         selectVehicle.setAttribute("id", "vehicleSelect");
+                                        selectVehicle.required = true;
                                     var labelVehicle = document.createElement("label");
                                         labelVehicle.setAttribute("for", "vehicleSelect");
                                         labelVehicle.innerHTML = "Vozidlo";
@@ -893,6 +894,7 @@
                                     var selectPersonal = document.createElement("select");
                                         selectPersonal.setAttribute("name", "personalSelect");
                                         selectPersonal.setAttribute("id", "personalSelect");
+                                        selectPersonal.required = true;
                                     var labelPersonal = document.createElement("label");
                                         labelPersonal.setAttribute("for", "personalSelect");
                                         labelPersonal.innerHTML = "Personál";
