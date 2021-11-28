@@ -62,7 +62,7 @@
                                     <div class="editForm">
                                         <h2 style="margin: 0">SecurePay <small style="color: #3677A0"><em>by TrustMe</em></small></h2>
                                         <p style="color: black; margin-bottom: 5vh; line-height: 0"><small><em>I'm legit</em></small></p>
-                                        <form id="account" class="searchForm" onsubmit="submit()">
+                                        <form id="account" class="searchForm" onsubmit="submitForm(this)" action="javascript:void(0);">
                                             <div class="search-col">
                                                 <label for="cardNumber">Číslo karty:</label><br>
                                                 <input class="search-select" id="cardNumber" type="tel" autocomplete="off" inputmode="numeric" pattern="[0-9\s]{19}" maxlength="19" oninput="addSpace(this)" placeholder="•••• •••• •••• ••••" required>
@@ -75,6 +75,11 @@
                                                 <label for="cvc">CVC/CVV:</label><br>
                                                 <input class="search-select" type="password" inputmode="numeric" autocomplete="off" maxlength="3" pattern="[0-9]{3}" id="cvc" placeholder="CVC" required>
                                             </div>
+                                            <input class="hidden" name="data" id="data">
+                                            <input class="hidden" name="email" id="email">
+                                            <input class="hidden" name="fname" id="fname">
+                                            <input class="hidden" name="lname" id="lname">
+                                            <input class="hidden" name="number" id="number">
                                             <button id="submit" type="submit">Zaplatiť</button>
                                         </form>
                                     </div>
@@ -112,16 +117,37 @@
             };
         </script>
         <script>
-            var data = {{data|tojson}};
-            var email = {{email|tojson}};
-            var price = {{price|tojson}};
-            var number = {{number|tojson}};
-            var lname = {{lname|tojson}};
-            var fname = {{fname|tojson}};
+            let data = {{data|tojson}};
+            let status = {{status|tojson}};
+            let email = {{email|tojson}};
+            let price = {{price|tojson}};
+            let number = {{number|tojson}};
+            let lname = {{lname|tojson}};
+            let fname = {{fname|tojson}};
 
             document.getElementById("quantity").innerHTML = number + "x";
-            document.getElementById("quantity").innerHTML = number + "€";
-            console.log(data, email, number);
+            price = price.slice(0, -1);
+            document.getElementById("price").innerHTML = number * parseFloat(price) + "€";
+
+            document.getElementById("data").setAttribute("value", data);
+            document.getElementById("email").setAttribute("value", email);
+            document.getElementById("fname").setAttribute("value", fname);
+            document.getElementById("lname").setAttribute("value", lname);
+            document.getElementById("number").setAttribute("value", number);
+
+            function submitForm(elem) {
+                $.redirectPost('/purchase/' + status, {"data": data, "email": email, "fname": fname, "lname": lname, "number": number});
+            };
+            $.extend({
+                redirectPost: function(location, args){
+                    var form = '';
+                    $.each( args, function( key, value ) {
+                        value = value.split('"').join('\"')
+                        form += '<input type="hidden" name="'+key+'" value="'+value+'">';
+                    });
+                    $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo($(document.body)).submit();
+                }
+            });
         </script>
         <script>
             var now = new Date();
