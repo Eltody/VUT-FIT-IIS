@@ -1084,10 +1084,10 @@
                 });
             };
             function formOneTime() {
-                $.redirectPost('/purchase/oneTime', {"data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val(), "fname": $('#fname').val(), "lname": $('#lname').val()});
+                $.redirectPost('/pay', {"data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val(), "fname": $('#fname').val(), "lname": $('#lname').val()});
             };
             function formSignedIn() {
-                $.redirectPost('/purchase/signedIn', {"data": $('#data').val(), "email": document.cookie.split('; ')[1].split('=')[1], "number": $('#number').val()});
+                $.redirectPost('/pay', {"data": $('#data').val(), "email": document.cookie.split('; ')[1].split('=')[1], "number": $('#number').val()});
             };
             $.extend({
                 redirectPost: function(location, args){

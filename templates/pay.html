@@ -1,0 +1,168 @@
+﻿<!doctype html>
+<html lang="sk">
+    <!-- Head -->
+    <head>
+        <title>CP by (j)Elita</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" type="text/css" href="/static/style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+        <script src="https://kit.fontawesome.com/6079958bc1.js" crossorigin="anonymous"></script>
+        <script src="/static/html5-qr-code.js"></script>
+    </head>
+    <!-- Main body -->
+    <body class="background" style="background-image: url('../../static/background.jpg');">
+	    <div id="page">
+            <!-- Navigation bar -->
+            <nav class="navbar">
+                <div class="container">
+                    <!-- Logo -->
+                    <div id="logo">
+                        <a href='/'>CP <em>by (j)Elita</em></a>
+                    </div>
+                    <!-- Menu -->
+                    <div id="menu">
+                        <ul>
+                            <a href='/preSignIn' id="login">Prihlásiť sa</a>
+                            <!-- Logged in dropdown -->
+                            <div class="dropdown">
+                                <a href="#" class="hidden" id="user"></a>
+                                <div class="dropdown-content">
+                                    <a id="status" href="#">Lístky</a>
+                                    <a href="/profile">Profil</a>
+                                    <a onclick="signOut()" href="#">Odhlásiť sa</a>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- Header -->
+            <header id="header">
+                <div class="container">
+                    <div class="payFlex">
+                        <div class="animate__animated animate__fadeIn animate__faster">
+                            <div class="payWrap">
+                                <div class="payContent" id="content">
+                                    <div class="sidebar">
+                                        <img src="/static/payment.png">
+                                        <strong>Zhrnutie objednávky:</strong>
+                                        <div class="paySummary">
+                                            <p>Cestovný lístok <strong id="quantity">10x</strong></p>
+                                        </div>
+                                        <br>
+                                        <strong>Celková cena:</strong>
+                                        <h2 id="price">50.67€</h2>
+                                        <a href="#" onclick="history.back()">Zrušiť platbu a vrátiť sa&nbsp;späť</a>
+                                    </div>
+                                    <div class="editForm">
+                                        <h2 style="margin: 0">SecurePay <small style="color: #3677A0"><em>by TrustMe</em></small></h2>
+                                        <p style="color: black; margin-bottom: 5vh; line-height: 0"><small><em>I'm legit</em></small></p>
+                                        <form id="account" class="searchForm" onsubmit="submit()">
+                                            <div class="search-col">
+                                                <label for="cardNumber">Číslo karty:</label><br>
+                                                <input class="search-select" id="cardNumber" type="tel" autocomplete="off" inputmode="numeric" pattern="[0-9\s]{19}" maxlength="19" oninput="addSpace(this)" placeholder="•••• •••• •••• ••••" required>
+                                            </div>
+                                            <div class="search-col">
+                                                <label for="expiry">Platnosť:</label><br>
+                                                <input class="search-select" type="tel" maxlength="5" autocomplete="off" pattern="(0?[1-9]|1[0-2])/(\d{2})" inputmode="numeric" id="expiry" placeholder="MM / YY" oninput="addSlash(this)" required>
+                                            </div>
+                                            <div class="search-col">
+                                                <label for="cvc">CVC/CVV:</label><br>
+                                                <input class="search-select" type="password" inputmode="numeric" autocomplete="off" maxlength="3" pattern="[0-9]{3}" id="cvc" placeholder="CVC" required>
+                                            </div>
+                                            <button id="submit" type="submit">Zaplatiť</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Footer -->
+            <footer id="footer">
+                <p>Copyright © reserved, Website by <a href="mailto:cp.poriadne.sk@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
+            </footer>
+        </div>
+        <!-- Scripts -->
+        <script>
+            var cookies = document.cookie.split('; ');
+            var c = [];
+            for (var i = 0; i < cookies.length; i++) {
+                c.push(cookies[i].split('='));
+            };
+            if (c[0][0] === "name") {
+                document.getElementById("user").classList.remove("hidden");
+                document.getElementById("login").classList.add("hidden");
+                document.getElementById("user").innerHTML = c[0][1];
+            };
+            function signOut() {
+                document.cookie = "name=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                document.cookie = "email=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                document.cookie = "status=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+                document.cookie = "name=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+                document.cookie = "email=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+                document.cookie = "status=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+                location.replace("/");
+            };
+        </script>
+        <script>
+            var data = {{data|tojson}};
+            var email = {{email|tojson}};
+            var price = {{price|tojson}};
+            var number = {{number|tojson}};
+            var lname = {{lname|tojson}};
+            var fname = {{fname|tojson}};
+
+            document.getElementById("quantity").innerHTML = number + "x";
+            document.getElementById("quantity").innerHTML = number + "€";
+            console.log(data, email, number);
+        </script>
+        <script>
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = ('0'+(now.getMonth()+1)).slice(-2);
+            document.getElementById('expiry').setAttribute("min", year + "-" + month);
+            document.getElementById('expiry').setAttribute("max", year+8 + "-12");
+        </script>
+        <script>
+            function addSpace(elem) {
+                if (!/[0-9]/.test(elem.value.split("").pop())) {
+                    elem.value = elem.value.slice(0, -1);;
+                };
+                if (elem.value.length == 5 || elem.value.length == 10 || elem.value.length == 15) {
+                    elem.value = elem.value.slice(0, -1) + " " + elem.value.split("").pop();
+                };
+            };
+            function addSlash(elem) {
+                if (!/[0-9]/.test(elem.value.split("").pop())) {
+                    elem.value = elem.value.slice(0, -1);
+                };
+                if (elem.value.length == 1) {
+                    if (!/[0-1]/.test(elem.value.split("").pop())) {
+                        elem.value = elem.value.slice(0, -1);
+                    };
+                } else if (elem.value.length == 2) {
+                    if ((elem.value.charAt(0) == "1" && !/[0-2]/.test(elem.value.split("").pop())) || (elem.value.charAt(0) == "0" && !/[1-9]/.test(elem.value.split("").pop()))) {
+                        elem.value = elem.value.slice(0, -1);
+                    };
+                } else if (elem.value.length == 3) {
+                    if (elem.value.split("").pop() != "2") {
+                        elem.value = elem.value.slice(0, -1);
+                    } else {
+                        elem.value = elem.value.slice(0, -1) + "/" + elem.value.split("").pop();
+                    };
+                } else if (elem.value.length == 5) {
+                    if (!/[1-8]/.test(elem.value.split("").pop())) {
+                        elem.value = elem.value.slice(0, -1);
+                    };
+                };
+            };
+        </script>
+    </body>
+</html>

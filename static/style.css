@@ -615,6 +615,15 @@ h1, h2, h3, h4, h5, h6, figure {
         font-size: 14px;
         font-weight: 600;
     }
+    .payContent p, a, strong {
+        font-size: 14px;
+    }
+    .payContent h2 {
+        font-size: 20px;
+    }
+    .payContent .editForm h2 {
+        font-size: 24px;
+    }
 }
 @media screen and (max-width: 585px) {
     .resultConFooter a i, .resultConFooter a p {
@@ -642,6 +651,18 @@ h1, h2, h3, h4, h5, h6, figure {
     .purchaseNotLoggedForm a {
         font-size: 12px;
         font-weight: 600;
+    }
+    .payContent p, a, strong {
+        font-size: 12px;
+    }
+    .payContent h2 {
+        font-size: 18px;
+    }
+    .payContent .editForm h2 {
+        font-size: 20px;
+    }
+    .payContent .sidebar {
+        width: 25% !important;
     }
 }
 @media screen and (max-width: 550px) {
@@ -1023,4 +1044,83 @@ input::-webkit-inner-spin-button {
 }
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+.payFlex {
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 15vh;
+}
+.payWrap {
+    border-top: 10px solid rgba(128, 128, 128, 0.8);
+    border-radius: 10px 10px 0 0;
+    text-align: center;
+    position: relative;
+    min-width: 310px;
+    max-width: 750px;
+    width: 90vw;
+}
+.payContent {
+    z-index: 10;
+    clear: both;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 15vh;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 0 0 10px 10px;
+    box-shadow: inset 1px 1px 15px #333;
+    padding: 15px 35px 15px 35px;
+}
+.payContent .sidebar {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    height: 55vh;
+    width: 40%;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 1px 1px 15px #333;
+    padding: 15px 25px;
+}
+.payContent .sidebar img {
+    height: 12vh;
+    width: auto;
+    margin-bottom: 5vh;
+}
+.payContent .editForm {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    border: none;
+    height: 55vh;
+    max-width: 500px;
+    width: -webkit-fill-available;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 1px 1px 15px #333;
+    padding: 15px 25px;
+    margin: 0;
+}
+.payContent .search-select {
+    max-width: 200px;
+}
+.paySummary {
+    z-index: 10;
+    position: relative;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: inset 1px 1px 15px #333;
+    padding: 15px 0;
+    width: -webkit-fill-available;
+}
+.paySummary p {
+    color: black;
+    padding: 0;
+}
+.editForm h2 {
+    font-size: 28px;
 }
