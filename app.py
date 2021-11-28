@@ -110,7 +110,8 @@ To: {}{} <{}>
 Subject: Registrácia na webe CP.poriadne.sk
 
 Práve ste boli zaregistrovaný na portáli CP.poriadne.sk. 
-Vaše prihlasovacie údaje sú {} {}.
+Vaše prihlasovacie údaje sú
+email: {}, heslo: {}.
 """.format(lName, fName, email, email, status)
         message = message.encode('utf-8')
     elif status == "ticket":
