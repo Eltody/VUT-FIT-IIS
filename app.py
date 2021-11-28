@@ -75,6 +75,11 @@ def sendEmail(email, status, ticket):
     personal.close()
     carrier.close()
 
+    cursor = connection.cursor()
+    cursor.execute("SELECT symbol from Symboly")
+    symbols = cursor.fetchall()
+    cursor.close()
+
     if status == "error":
         message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
 To: {}{} <{}>
@@ -84,51 +89,19 @@ There is an error with the IIS server.
 """.format(lName, fName, email)
         message = message.encode('utf-8')
     elif status == "loginError":
-        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
-To: {}{} <{}>
-Subject: Upozornenie na podozrivú aktivitu
-
-Niekto sa pokúša prihlásiť do Vášho účtu na portáli CP.poriadne.sk. Ak ste to neboli Vy odporúčame Vám si zmeniť heslo.
-""".format(lName, fName, email)
+        message = symbols[8][0].format(lName, fName, email)
         message = message.encode('utf-8')
     elif status == "register":
-        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
-To: {}{} <{}>
-Subject: Registrácia na webe CP.poriadne.sk
-
-Úspešne sme Vás zaregistrovali na portáli CP.poriadne.sk.
-""".format(lName, fName, email)
+        message = symbols[7][0].format(lName, fName, email)
         message = message.encode('utf-8')
     elif ticket == "register":
-        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
-To: {}{} <{}>
-Subject: Registrácia na webe CP.poriadne.sk
-
-Práve ste boli zaregistrovaný na portáli CP.poriadne.sk. 
-Vaše prihlasovacie údaje sú
-email: {}, heslo: {}.
-""".format(lName, fName, email, email, status)
+        message = symbols[9][0].format(lName, fName, email, email, status)
         message = message.encode('utf-8')
     elif status == "ticket":
-        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
-To: {}{} <{}>
-Subject: CP cestovný lístok
-
-Ďakujeme za zakúpenie cestovného lístka cez portál CP.poriadne.sk.
-Váš cestovný lístok nájdete na adrese {}.
-
-
-""".format(lName, fName, email, ticket)
+        message = symbols[10][0].format(lName, fName, email, ticket)
         message = message.encode('utf-8')
     else:
-        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
-To: {}{} <{}>
-Subject: CP obnova hesla
-
-Na Vašu žiadosť Vám bolo vygenerované nové heslo pre prístup na stránku CP.poriadne.sk. Odporúčame Vám toto heslo čo najskôr zmeniť.
-
-Vaše nové heslo: {}
-""".format(lName, fName, email, status)
+        message = symbols[11][0].format(lName, fName, email, status)
         message = message.encode('utf-8')
 
     with smtplib.SMTP(smtp_server, port) as server:
