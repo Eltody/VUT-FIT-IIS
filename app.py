@@ -766,17 +766,24 @@ def deleteVehicle():
 @app.route('/addVehicle', methods=['GET', 'POST'])
 def addVehicle():
     numberOfSeats = request.form['seats']
-    print(numberOfSeats)
     descriptionOfVehicle = request.form['text']
-    print(descriptionOfVehicle)
     carrierEmail = request.form['carrier']
-    print(carrierEmail)
     # ziskanie id dopravcu, ktory pridava nove vozidlo
     cursor1 = connection.cursor()
     cursor1.execute("SELECT id FROM Dopravca WHERE email='%s';" % carrierEmail)
     idOfCarrier = cursor1.fetchone()
     cursor1.close()
-    idOfCarrier = idOfCarrier[0]
+    # admin - dopravca, posiela mi Martin nazov dopravcu
+    if idOfCarrier is None:
+        # ziskanie id dopravcu, ktory pridava nove vozidlo
+        cursor1 = connection.cursor()
+        cursor1.execute("SELECT id FROM Dopravca WHERE nazov='%s';" % carrierEmail)
+        idOfCarrier = cursor1.fetchone()
+        cursor1.close()
+        idOfCarrier = idOfCarrier[0]
+    # dopravca, posiela mi Martin email
+    else:
+        idOfCarrier = idOfCarrier[0]
 
     # pridanie noveho vozidla dopravcom
     cursor = connection.cursor()
