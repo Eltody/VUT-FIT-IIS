@@ -2324,6 +2324,7 @@ def pay():
     fname = request.form['fname']
     lname = request.form['lname']
     number = request.form['number']
+    data = list(data.split(","))
     price = data[9]
     return render_template('pay.html', data=data, email=email, fname=fname, lname=lname, number=number, price=price)
 
