@@ -2400,7 +2400,7 @@ def purchase(signedInOrOneTime):
         generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1],
                     timeToCity,
                     carrier_name, user_email, idOfTicket)
-
+        idOfTicket = str(idOfTicket[0])
         sendEmail(user_email, "ticket", os.path.dirname(
             os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
 
