@@ -700,7 +700,7 @@ def carrier():
     # martin mi z vehicles posiela id a text vo formularoch pre editVehicleInfo
     # vymazanie vozidla - funkcia deleteVehicle, posiela len id a pole spojov cez ktore prechadza connections
     # /editPersonalInfo pre zmenu info o zamestnancovi - id, fname, lname, email, ids
-    # /deletePersonal, posiela mi id daneho zamestnanca
+    # /deleteAccount, posiela mi id daneho zamestnanca
     # /deleteConnection posiela mi id - je to string ktory treba splitnut a vybrat z toho to id
 
 
@@ -766,9 +766,11 @@ def deleteVehicle():
 @app.route('/addVehicle', methods=['GET', 'POST'])
 def addVehicle():
     numberOfSeats = request.form['seats']
+    print(numberOfSeats)
     descriptionOfVehicle = request.form['text']
+    print(descriptionOfVehicle)
     carrierEmail = request.form['carrier']
-
+    print(carrierEmail)
     # ziskanie id dopravcu, ktory pridava nove vozidlo
     cursor1 = connection.cursor()
     cursor1.execute("SELECT id FROM Dopravca WHERE email='%s';" % carrierEmail)
@@ -844,7 +846,8 @@ def editPersonalInfo():
         if idsToDeleteFromDB:
             for i in idsToDeleteFromDB:
                 cursor1 = connection.cursor()
-                cursor1.execute("DELETE FROM Personal_Spoj WHERE id_personalu = '%s' and id_spoju = '%s'" % (idOfPersonal, i))
+                cursor1.execute(
+                    "DELETE FROM Personal_Spoj WHERE id_personalu = '%s' and id_spoju = '%s'" % (idOfPersonal, i))
                 connection.commit()
                 cursor1.close()
 
@@ -904,11 +907,11 @@ def addPersonal():
     return ""
 
 
-# funkcia pre vymazanie uctu personalu
-@app.route('/deletePersonal', methods=['GET', 'POST'])
-def deletePersonal():
+# funkcia pre vymazanie uctu personalu dopravcom alebo vymazanie uctu administratorom
+@app.route('/deleteAccount', methods=['GET', 'POST'])
+def deleteAccount():
     idOfPersonal = request.form['id']
-
+    print(idOfPersonal)
     # odstranenie vsetkych zaznamov v spojoch, ktore obsluhoval personal - spoje samostatne ostavaju v tabulke ale nemmusia uz mat ziadny personal
     cursor1 = connection.cursor()
     cursor1.execute("DELETE FROM Personal_Spoj WHERE id_personalu = '%s'" % idOfPersonal)
@@ -928,6 +931,7 @@ def deletePersonal():
 @app.route('/addConnection', methods=['GET', 'POST'])
 def addConnection():
     carrierEmail = request.form['carrier']
+    print(carrierEmail)
     # ziskanie id dopravcu podla emailu
     cursor1 = connection.cursor()
     cursor1.execute("SELECT id FROM Dopravca WHERE email='%s';" % carrierEmail)
@@ -1039,12 +1043,14 @@ def addConnection():
 
     return ''
 
+
 # funkcia pre vymazanie spoju
 @app.route('/deleteConnection', methods=['GET', 'POST'])
 def deleteConnection():
     connectionToDelete = request.form['id']
     connectionToDelete = connectionToDelete.split('|')
     connectionToDelete = connectionToDelete[0]
+    print(connectionToDelete)
 
     # odstranenie zaznamu z tabulky Personal_Spoj
     cursor1 = connection.cursor()
@@ -1071,6 +1077,7 @@ def deleteConnection():
     cursor1.close()
 
     return ''
+
 
 # funkcia pre navrh novej zastavky navrhovanu od dopravcu
 @app.route('/addStop', methods=['GET', 'POST'])
@@ -1126,7 +1133,6 @@ def administrator():
     cursor1.close()
     tmp_allUsers2 = list(tmp_allUsers2)
     allUsers = tmp_allUsers + tmp_allUsers2
-    print(allUsers)
 
     # ziskanie vsetkych id nepotvrdenych navrhov zastavok od dopravcov
     cursor = connection.cursor()
@@ -1152,19 +1158,15 @@ def administrator():
                 oneSuggestion.append(n)
         allSuggestions.append(oneSuggestion)
 
-    cursor1 = connection.cursor()
-    cursor1.execute("SELECT id, nazov, email, heslo FROM Dopravca")
-    tmp_allCarriersInfo = cursor1.fetchall()
-    cursor1.close()
-    tmp_allCarriersInfo = list(tmp_allCarriersInfo)
-
-    return render_template("administrator.html", carriers=allCarriers, users=allUsers, editCarriers=tmp_allCarriersInfo, suggestions=allSuggestions)
+    print(allCarriers)
+    return render_template("administrator.html", carriers=allCarriers, users=allUsers,
+                           suggestions=allSuggestions)
 
 
 @app.route('/administratorEditor', methods=['GET', 'POST'])
 def administratorEditor():
     carrierName = request.form['carrier']
-
+    print(carrierName)
     cursor = connection.cursor()
     cursor.execute("SELECT symbol from Symboly")
     symbols = cursor.fetchall()
@@ -1402,7 +1404,76 @@ def administratorEditor():
             'availablePersonalAndVehicles': availablePersonalAndVehicles,
             'carrierName': carrierName}
     print(data)
-    return render_template("administratorEditor.html", data=data, cities=allNamesOfCities)
+
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id, nazov, email, heslo FROM Dopravca WHERE nazov = '%s';" % carrierName)
+    carrierInfo = cursor1.fetchall()
+    cursor1.close()
+    carrierInfo = list(carrierInfo)
+    print(carrierInfo)
+
+    return render_template("administratorEditor.html", data=data, cities=allNamesOfCities, carrierInfo=carrierInfo)
+
+
+# funkcia pre vytvorenie uctu pre dopravcu administratorom
+@app.route('/addCarrier', methods=['GET', 'POST'])
+def addCarrier():
+    # name, email, password
+    carrierName = request.form['name']
+    carrierEmail = request.form['email']
+    carrierPassword = request.form['password']
+
+    print(carrierName, carrierEmail, carrierPassword)
+
+    cursor = connection.cursor()
+    cursor.execute("insert into `Dopravca` (nazov, email, heslo) VALUES (%s, %s, %s)",
+                   (carrierName, carrierEmail, carrierPassword))
+    connection.commit()
+    cursor.close()
+
+    return''
+
+# funkcia pre upravu uctu administratorom - vsektych uctov a zaroven je dostupna z profil zmeny
+@app.route('/editAccount', methods=['GET', 'POST'])
+def editAccount():
+    userFname = request.form['fName']
+    userLname = request.form['lName']
+    userEmail = request.form['email']
+    userPassword = request.form['password']
+
+    print(userFname, userLname, userEmail, userPassword)
+
+    # ziskanie id podla emailu
+    cursor1 = connection.cursor()
+    cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % userEmail)
+    idOfUser = cursor1.fetchall()
+    cursor1.close()
+    if idOfUser is None:
+        cursor1 = connection.cursor()
+        cursor1.execute("SELECT id FROM Personal WHERE email='%s';" % userEmail)
+        idOfUser = cursor1.fetchall()
+        cursor1.close()
+        idOfUser = idOfUser[0]
+    else:
+        idOfUser = idOfUser[0]
+
+    # update bez zmeny povodneho hesla
+    if userPassword == '':
+        cursor1 = connection.cursor()
+        cursor1.execute("UPDATE Cestujuci SET meno = '%s', priezvisko = '%s', email = '%s' WHERE id = '%s'" % (
+        userFname, userLname, userEmail, idOfUser))
+        connection.commit()
+        cursor1.close()
+    # update so zmenou povodneho hesla
+    else:
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "UPDATE Cestujuci SET meno = '%s', priezvisko = '%s', email = '%s', heslo = '%s', WHERE id = '%s'" % (
+                userFname, userLname, userEmail, userPassword, idOfUser))
+        connection.commit()
+        cursor1.close()
+
+    return ''
 
 
 @app.route('/suggestionConfirmation', methods=['GET', 'POST'])
