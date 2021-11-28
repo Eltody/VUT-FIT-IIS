@@ -12,6 +12,7 @@ import random
 import pymysql  # pip install pymysql
 import datetime  # pip install datetime
 import requests  # pip install requests
+from math import sin, cos, sqrt, atan2, radians
 
 app = Flask(__name__)
 try:
@@ -942,9 +943,17 @@ def addConnection():
     # ziskanie id dopravcu podla emailu
     cursor1 = connection.cursor()
     cursor1.execute("SELECT id FROM Dopravca WHERE email='%s';" % carrierEmail)
-    carrierID = cursor1.fetchone()  # ziskanie id_dopravcu_spoje
+    carrierID = cursor1.fetchone()
     cursor1.close()
-    carrierID = carrierID[0]
+    if carrierID is None:
+        # ziskanie id dopravcu podla nazvu - funkcia cez admin - dopravca
+        cursor1 = connection.cursor()
+        cursor1.execute("SELECT id FROM Dopravca WHERE nazov='%s';" % carrierEmail)
+        carrierID = cursor1.fetchone()
+        cursor1.close()
+        carrierID = carrierID[0]
+    else:   # funkcia cez dopravca
+        carrierID = carrierID[0]
     fromCity = request.form['fromCity']
     fromCityTime = request.form['fromCityTime']
     toCity = request.form['toCity']
@@ -1040,6 +1049,8 @@ def addConnection():
     cursor1.close()
     idOfToCity = idOfToCity[0]
 
+    print('new id of connection, id of to city, to city time')
+    print(newConnectionID, idOfToCity, toCityTime)
     # do tabulky Spoj_Zastavka pridam id zastavok, cas prejazdu a nove id spoju
     cursor = connection.cursor()
     cursor.execute(
@@ -1716,9 +1727,9 @@ def search(boolLoadMore, lastConnectionOnWeb):
 
                         # vypocitanie ceny na zaklade doby trvania spoju v minutach a ceny za jednu minutu
                         int(connectionTimeMinutes)
-                        priceOfConnection = connectionTimeMinutes * 0.08
-                        priceOfConnection = str(round(priceOfConnection, 2))
-                        priceOfConnection = priceOfConnection + ''.join(symbols[1])
+                        #priceOfConnection = connectionTimeMinutes * 0.08
+                        #priceOfConnection = str(round(priceOfConnection, 2))
+                        #priceOfConnection = priceOfConnection + ''.join(symbols[1])
 
                         # formatovanie casu
                         if tmp_timeFromCity < 959:
@@ -1786,6 +1797,42 @@ def search(boolLoadMore, lastConnectionOnWeb):
                             availableSeats -= reservedNumberOfSeats
                             if availableSeats < 0:
                                 availableSeats = 0
+
+                            # vypocitanie poctu km z latitude and longitude dvoch miest
+                            cursor1 = connection.cursor()
+                            cursor1.execute("SELECT geograficka_poloha FROM Zastavky WHERE nazov_zastavky='%s';" % fromCity)
+                            geoLocationOfFromCity = cursor1.fetchone()
+                            cursor1.close()
+                            geoLocationOfFromCity = geoLocationOfFromCity[0]
+                            geoLocationOfFromCity = geoLocationOfFromCity.split(',')
+                            geoLocationOfFromCity = [float(i) for i in geoLocationOfFromCity]
+
+                            cursor1 = connection.cursor()
+                            cursor1.execute(
+                                "SELECT geograficka_poloha FROM Zastavky WHERE nazov_zastavky='%s';" % toCity)
+                            geoLocationOfToCity = cursor1.fetchone()
+                            cursor1.close()
+                            geoLocationOfToCity = geoLocationOfToCity[0]
+                            geoLocationOfToCity = geoLocationOfToCity.split(',')
+                            geoLocationOfToCity = [float(i) for i in geoLocationOfToCity]
+
+                            R = 6373.0  # approximate radius of earth in km
+                            lat1 = radians(geoLocationOfFromCity[0])
+                            lon1 = radians(geoLocationOfFromCity[1])
+                            lat2 = radians(geoLocationOfToCity[0])
+                            lon2 = radians(geoLocationOfToCity[1])
+                            dlon = lon2 - lon1
+                            dlat = lat2 - lat1
+                            a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+                            c = 2 * atan2(sqrt(a), sqrt(1 - a))
+                            distance = R * c
+                            print("Result in km:", distance)
+                            priceOfConnection = distance * 0.04
+                            priceOfConnection = str(round(priceOfConnection, 2))
+                            priceOfConnection = priceOfConnection + ''.join(symbols[1])
+
+                            #################################################################
+
                             possibleBusConnections.append(
                                 [connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name,
                                  availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection,
@@ -1809,6 +1856,43 @@ def search(boolLoadMore, lastConnectionOnWeb):
                             availableSeats -= reservedNumberOfSeats
                             if availableSeats < 0:
                                 availableSeats = 0
+
+                            # vypocitanie poctu km z latitude and longitude dvoch miest
+                            cursor1 = connection.cursor()
+                            cursor1.execute(
+                                "SELECT geograficka_poloha FROM Zastavky WHERE nazov_zastavky='%s';" % fromCity)
+                            geoLocationOfFromCity = cursor1.fetchone()
+                            cursor1.close()
+                            geoLocationOfFromCity = geoLocationOfFromCity[0]
+                            geoLocationOfFromCity = geoLocationOfFromCity.split(',')
+                            geoLocationOfFromCity = [float(i) for i in geoLocationOfFromCity]
+
+                            cursor1 = connection.cursor()
+                            cursor1.execute(
+                                "SELECT geograficka_poloha FROM Zastavky WHERE nazov_zastavky='%s';" % toCity)
+                            geoLocationOfToCity = cursor1.fetchone()
+                            cursor1.close()
+                            geoLocationOfToCity = geoLocationOfToCity[0]
+                            geoLocationOfToCity = geoLocationOfToCity.split(',')
+                            geoLocationOfToCity = [float(i) for i in geoLocationOfToCity]
+
+                            R = 6373.0  # approximate radius of earth in km
+                            lat1 = radians(geoLocationOfFromCity[0])
+                            lon1 = radians(geoLocationOfFromCity[1])
+                            lat2 = radians(geoLocationOfToCity[0])
+                            lon2 = radians(geoLocationOfToCity[1])
+                            dlon = lon2 - lon1
+                            dlat = lat2 - lat1
+                            a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+                            c = 2 * atan2(sqrt(a), sqrt(1 - a))
+                            distance = R * c
+                            print("Result in km:", distance)
+                            priceOfConnection = distance * 0.04
+                            priceOfConnection = str(round(priceOfConnection, 2))
+                            priceOfConnection = priceOfConnection + ''.join(symbols[1])
+
+                            ################################################################
+
                             laterPossibleBusConnections.append(
                                 [connectionNumber, fromCity, fromCityTime, toCity, toCityTime, carrier_name,
                                  availableSeats, dateAndDayOfConnection, connectionTimeHours, priceOfConnection,
