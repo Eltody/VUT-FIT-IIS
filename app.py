@@ -2320,7 +2320,11 @@ def validate(regOrSignIn):
 @app.route('/pay', methods=['GET', 'POST'])
 def pay():
     data = request.form['data']
-    return render_template('pay.html', data=data)
+    email = request.form['email']
+    fname = request.form['fname']
+    lname = request.form['lname']
+    number = request.form['number']
+    return render_template('pay.html', data=data, email=email, fname=fname, lname=lname, number=number)
 
 # nakup listkana konkretny spoj
 @app.route('/purchase/<signedInOrOneTime>', methods=['GET', 'POST'])
