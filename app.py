@@ -2430,7 +2430,7 @@ def purchase(signedInOrOneTime):
         # Generovanie PDF
         generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1],
                     timeToCity,
-                    carrier_name, user_email, idOfTicket)
+                    carrier_name, user_email, idOfTicket, price)
         idOfTicket = str(idOfTicket[0])
         sendEmail(user_email, "ticket", os.path.dirname(
             os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
@@ -2441,7 +2441,7 @@ def purchase(signedInOrOneTime):
         idOfTicket = str(idOfTicket[0])
         generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1],
                     timeToCity,
-                    carrier_name, user_email, idOfTicket)
+                    carrier_name, user_email, idOfTicket, price)
 
         sendEmail(user_email, "ticket", os.path.dirname(
         os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
@@ -2466,11 +2466,13 @@ def purchase(signedInOrOneTime):
 
 
 def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCity, timeFrom, toCity, timeTo,
-                carrier_name, user_email, idOfTicket):
+                carrier_name, user_email, idOfTicket, price):
     cursor = connection.cursor()
     cursor.execute("SELECT symbol from Symboly")
     symbols = cursor.fetchall()
     cursor.close()
+
+    print(price)
 
     # GENEROVANIE PDF
 

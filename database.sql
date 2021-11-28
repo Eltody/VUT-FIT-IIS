@@ -79,9 +79,7 @@ CREATE TABLE Jizdenka(
 		ON DELETE CASCADE,
     CONSTRAINT PK_id_cestujuci_jizdenka
 		FOREIGN KEY (id_cestujuci_jizdenka) REFERENCES Cestujuci (id)
-		ON DELETE CASCADE,
-	stav VARCHAR(20),			-- zaplatena, nezaplatena
-	potvrdenie VARCHAR (20)		-- potvrdena, nepotvrdena
+		ON DELETE CASCADE
 );
 CREATE TABLE NavrhZastavky(
     id INT(11) NOT NULL AUTO_INCREMENT,
