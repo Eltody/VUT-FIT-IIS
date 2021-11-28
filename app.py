@@ -104,6 +104,15 @@ Subject: Registrácia na webe CP.poriadne.sk
 Úspešne sme Vás zaregistrovali na portáli CP.poriadne.sk.
 """.format(lName, fName, email)
         message = message.encode('utf-8')
+    elif ticket == "register":
+        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: Registrácia na webe CP.poriadne.sk
+
+Práve ste boli zaregistrovaný na portáli CP.poriadne.sk. 
+Vaše prihlasovacie údaje sú {} {}.
+""".format(lName, fName, email, email, status)
+        message = message.encode('utf-8')
     elif status == "ticket":
         ticketAddress = ""
         message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
@@ -136,7 +145,6 @@ Vaše nové heslo: {}
 @app.route('/resetPassword', methods=['GET', 'POST'])
 def resetPassword():
     user_email = request.form['email']
-    print(user_email)
     password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
     # aktualizacia hesla pouzivatela podla jeho emailu - funkcia obnovit heslo
     cursor1 = connection.cursor()
