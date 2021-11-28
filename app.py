@@ -2319,6 +2319,7 @@ def validate(regOrSignIn):
 # platobna brana - medzikrok pred purchase - overenie platby
 @app.route('/pay', methods=['GET', 'POST'])
 def pay():
+    status = request.form['status']
     data = request.form['data']
     email = request.form['email']
     fname = request.form['fname']
@@ -2326,7 +2327,7 @@ def pay():
     number = request.form['number']
     tmp_data = list(data.split(","))
     price = tmp_data[9]
-    return render_template('pay.html', data=data, email=email, fname=fname, lname=lname, number=number, price=price)
+    return render_template('pay.html', data=data, email=email, fname=fname, lname=lname, number=number, price=price, status=status)
 
 # nakup listkana konkretny spoj
 @app.route('/purchase/<signedInOrOneTime>', methods=['GET', 'POST'])
