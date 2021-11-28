@@ -2322,10 +2322,18 @@ def pay():
     status = request.form['status']
     data = request.form['data']
     email = request.form['email']
-    fname = request.form['fname']
-    lname = request.form['lname']
+    if status != 'signIn' and status != 'signedIn':
+        fname = request.form['fname']
+        lname = request.form['lname']
+        if status != 'oneTime':
+            password = request.form['password']
+    if status == 'signIn' or status == 'signedIn':
+        fname = ''
+        lname = ''
+        password = ''
+    if status == 'oneTime':
+        password = ''
     number = request.form['number']
-    password = request.form['password']
     tmp_data = list(data.split(","))
     price = tmp_data[9]
     return render_template('pay.html', data=data, email=email, fname=fname, lname=lname, number=number, price=price, status=status, password=password)
