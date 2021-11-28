@@ -879,7 +879,7 @@ def editPersonalInfo():
     return ''
 
 
-# funkcia pre pridanie noveho uctu personalu
+# funkcia pre pridanie noveho uctu personalu dopravcom
 @app.route('/addPersonal', methods=['GET', 'POST'])
 def addPersonal():
     fname = request.form['fname']
@@ -920,7 +920,7 @@ def addPersonal():
         connection.commit()
         cursor.close()
 
-    return ""
+    return sendEmail(email, password, "register")
 
 
 # funkcia pre vymazanie uctu personalu dopravcom alebo vymazanie uctu administratorom
@@ -1457,7 +1457,7 @@ def addCarrier():
     connection.commit()
     cursor.close()
 
-    return''
+    return sendEmail(carrierEmail, carrierPassword, "register")
 
 # funkcia pre upravu uctu administratorom - vsektych uctov a zaroven je dostupna z profil zmeny
 @app.route('/editAccount', methods=['GET', 'POST'])
@@ -1801,7 +1801,6 @@ def search(boolLoadMore, lastConnectionOnWeb):
                                 for j in i:
                                     reservedNumberOfSeats.append(int(''.join(str(j))))
                             reservedNumberOfSeats = sum(reservedNumberOfSeats)
-                            print(availableSeats, reservedNumberOfSeats)
                             availableSeats -= reservedNumberOfSeats
                             if availableSeats < 0:
                                 availableSeats = 0
@@ -1834,7 +1833,6 @@ def search(boolLoadMore, lastConnectionOnWeb):
                             a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
                             c = 2 * atan2(sqrt(a), sqrt(1 - a))
                             distance = R * c
-                            print("Result in km:", distance)
                             priceOfConnection = distance * 0.04
                             priceOfConnection = str(round(priceOfConnection, 2))
                             priceOfConnection = priceOfConnection + ''.join(symbols[1])
@@ -1894,7 +1892,6 @@ def search(boolLoadMore, lastConnectionOnWeb):
                             a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
                             c = 2 * atan2(sqrt(a), sqrt(1 - a))
                             distance = R * c
-                            print("Result in km:", distance)
                             priceOfConnection = distance * 0.04
                             priceOfConnection = str(round(priceOfConnection, 2))
                             priceOfConnection = priceOfConnection + ''.join(symbols[1])
