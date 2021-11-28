@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for  # pip install flask
-from flask_apscheduler import APScheduler  # pip install flask-apscheduler
+from math import sin, cos, sqrt, atan2, radians
 from fpdf import FPDF  # fpdf class
 import smtplib
 import base64
@@ -11,16 +11,11 @@ import string
 import random
 import pymysql  # pip install pymysql
 import datetime  # pip install datetime
-import requests  # pip install requests
-from math import sin, cos, sqrt, atan2, radians
 
 app = Flask(__name__)
-try:
-    connection = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
-except pymysql.Error as error:
-    webhookUrl = 'https://maker.ifttt.com/trigger/error/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
-    requests.post(webhookUrl, headers={'Content-Type': 'application/json'})
-    print("Cannot connect to database. Error: " + str(error))
+
+connection = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
+
 emails = ["", "", ""]
 loginData = {}
 profileNameMainPage = ''
@@ -33,18 +28,10 @@ password = "matono12"
 context = ssl.create_default_context()
 
 
-class Config:
-    SCHEDULER_API_ENABLED = True
-
-
-scheduler = APScheduler()
-scheduler.init_app(app)
-scheduler.start()
-
-
 #############################################
 @app.route('/')
 def index():
+    databaseCheck()
     global profileNameMainPage
     global loginData
     cursor = connection.cursor()
@@ -88,7 +75,15 @@ def sendEmail(email, status, ticket):
     personal.close()
     carrier.close()
 
-    if status == "loginError":
+    if status == "error":
+        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: Error with IIS server
+
+There is an error with the IIS server.
+""".format(lName, fName, email)
+        message = message.encode('utf-8')
+    elif status == "loginError":
         message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
 To: {}{} <{}>
 Subject: Upozornenie na podozrivú aktivitu
@@ -2604,17 +2599,15 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     savePDFname = os.path.dirname(
         os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
     pdf.output(savePDFname, 'F')
-    return
+    return ''
 
 
-@scheduler.task('interval', id='databaseCheck', seconds=300, misfire_grace_time=900)
 def databaseCheck():
     try:
         conn = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
     except pymysql.Error as error:
-        webhookUrl = 'https://maker.ifttt.com/trigger/error/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
-        requests.post(webhookUrl, headers={'Content-Type': 'application/json'})
-        print("Cannot connect to database.")
+        sendEmail("martin.rakus1@gmail.com", "error", "")
+        sendEmail("tomas.zatko.ms@gmail.com", "error", "")
 
     # ziskanie vsetkych id jizdeniek
     cursor = conn.cursor()
