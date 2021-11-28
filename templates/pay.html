@@ -75,11 +75,6 @@
                                                 <label for="cvc">CVC/CVV:</label><br>
                                                 <input class="search-select" type="password" inputmode="numeric" autocomplete="off" maxlength="3" pattern="[0-9]{3}" id="cvc" placeholder="CVC" required>
                                             </div>
-                                            <input class="hidden" name="data" id="data">
-                                            <input class="hidden" name="email" id="email">
-                                            <input class="hidden" name="fname" id="fname">
-                                            <input class="hidden" name="lname" id="lname">
-                                            <input class="hidden" name="number" id="number">
                                             <button id="submit" type="submit">Zaplatiť</button>
                                         </form>
                                     </div>
@@ -124,19 +119,14 @@
             let number = {{number|tojson}};
             let lname = {{lname|tojson}};
             let fname = {{fname|tojson}};
+            let password = {{password|tojson}};
 
             document.getElementById("quantity").innerHTML = number + "x";
             price = price.slice(0, -1);
             document.getElementById("price").innerHTML = number * parseFloat(price) + "€";
 
-            document.getElementById("data").setAttribute("value", data);
-            document.getElementById("email").setAttribute("value", email);
-            document.getElementById("fname").setAttribute("value", fname);
-            document.getElementById("lname").setAttribute("value", lname);
-            document.getElementById("number").setAttribute("value", number);
-
             function submitForm(elem) {
-                $.redirectPost('/purchase/' + status, {"data": data, "email": email, "fname": fname, "lname": lname, "number": number});
+                $.redirectPost('/purchase/' + status, {"data": data, "email": email, "fname": fname, "lname": lname, "password": password, "number": number});
             };
             $.extend({
                 redirectPost: function(location, args){
