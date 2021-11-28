@@ -700,7 +700,7 @@ def carrier():
     # martin mi z vehicles posiela id a text vo formularoch pre editVehicleInfo
     # vymazanie vozidla - funkcia deleteVehicle, posiela len id a pole spojov cez ktore prechadza connections
     # /editPersonalInfo pre zmenu info o zamestnancovi - id, fname, lname, email, ids
-    # /deletePersonal, posiela mi id daneho zamestnanca
+    # /deleteAccount, posiela mi id daneho zamestnanca
     # /deleteConnection posiela mi id - je to string ktory treba splitnut a vybrat z toho to id
 
 
@@ -907,11 +907,11 @@ def addPersonal():
     return ""
 
 
-# funkcia pre vymazanie uctu personalu
-@app.route('/deletePersonal', methods=['GET', 'POST'])
-def deletePersonal():
+# funkcia pre vymazanie uctu personalu dopravcom alebo vymazanie uctu administratorom
+@app.route('/deleteAccount', methods=['GET', 'POST'])
+def deleteAccount():
     idOfPersonal = request.form['id']
-
+    print(idOfPersonal)
     # odstranenie vsetkych zaznamov v spojoch, ktore obsluhoval personal - spoje samostatne ostavaju v tabulke ale nemmusia uz mat ziadny personal
     cursor1 = connection.cursor()
     cursor1.execute("DELETE FROM Personal_Spoj WHERE id_personalu = '%s'" % idOfPersonal)
