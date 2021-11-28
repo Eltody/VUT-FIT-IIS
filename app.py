@@ -812,7 +812,6 @@ def editPersonalInfo():
     idOfPersonal = request.form['id']
     fname = request.form['fname']
     lname = request.form['lname']
-    email = request.form['email']
     idsOfConnections = request.form['ids']
     # odstranenie prazdnych hodnot z pola, aby mi zostalo len pole hodnot id spojov
     idsOfConnections = idsOfConnections.split(' ')
@@ -822,8 +821,8 @@ def editPersonalInfo():
 
     # aktualizacia uctu konkretneho personalu dopravcu
     cursor1 = connection.cursor()
-    cursor1.execute("UPDATE Personal SET meno = '%s', priezvisko = '%s', email = '%s' WHERE id = '%s'" % (
-        fname, lname, email, idOfPersonal))
+    cursor1.execute("UPDATE Personal SET meno = '%s', priezvisko = '%s' WHERE id = '%s'" % (
+        fname, lname, idOfPersonal))
     connection.commit()
     cursor1.close()
 
@@ -927,20 +926,28 @@ def addPersonal():
 # funkcia pre vymazanie uctu personalu dopravcom alebo vymazanie uctu administratorom
 @app.route('/deleteAccount', methods=['GET', 'POST'])
 def deleteAccount():
-    idOfPersonal = request.form['id']
-    print(idOfPersonal)
-    # odstranenie vsetkych zaznamov v spojoch, ktore obsluhoval personal - spoje samostatne ostavaju v tabulke ale nemmusia uz mat ziadny personal
+    idOfUser = request.form['id']
     cursor1 = connection.cursor()
-    cursor1.execute("DELETE FROM Personal_Spoj WHERE id_personalu = '%s'" % idOfPersonal)
-    connection.commit()
+    cursor1.execute("SELECT id FROM Cestujuci WHERE id='%s';" % idOfUser)
+    try_idOfUser = cursor1.fetchone()
     cursor1.close()
+    if try_idOfUser is None:
+        # odstranenie vsetkych zaznamov v spojoch, ktore obsluhoval personal - spoje samostatne ostavaju v tabulke ale nemmusia uz mat ziadny personal
+        cursor1 = connection.cursor()
+        cursor1.execute("DELETE FROM Personal_Spoj WHERE id_personalu = '%s'" % idOfUser)
+        connection.commit()
+        cursor1.close()
 
-    # odstranenie uctu personalu dopravcom
-    cursor1 = connection.cursor()
-    cursor1.execute("DELETE FROM Personal WHERE id = '%s'" % idOfPersonal)
-    connection.commit()
-    cursor1.close()
-
+        # odstranenie uctu personalu dopravcom
+        cursor1 = connection.cursor()
+        cursor1.execute("DELETE FROM Personal WHERE id = '%s'" % idOfUser)
+        connection.commit()
+        cursor1.close()
+    else:
+        cursor1 = connection.cursor()
+        cursor1.execute("DELETE FROM Cestujuci WHERE id = '%s'" % idOfUser)
+        connection.commit()
+        cursor1.close()
     return ''
 
 
@@ -1463,42 +1470,73 @@ def addCarrier():
 # funkcia pre upravu uctu administratorom - vsektych uctov a zaroven je dostupna z profil zmeny
 @app.route('/editAccount', methods=['GET', 'POST'])
 def editAccount():
+    boolIsPersonal = False
     userFname = request.form['fName']
     userLname = request.form['lName']
-    userEmail = request.form['email']
+    userEmailEdited = request.form['email']   # email zmeneny
+    userEmail = request.form['emailEdited']   # email povodny, ano su zamenene nazvy premennych ...
     userPassword = request.form['password']
 
-    print(userFname, userLname, userEmail, userPassword)
+    print(userFname, userLname, userEmailEdited, userEmail, userPassword)
 
     # ziskanie id podla emailu
     cursor1 = connection.cursor()
     cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % userEmail)
-    idOfUser = cursor1.fetchall()
+    idOfUser = cursor1.fetchone()
     cursor1.close()
     if idOfUser is None:
         cursor1 = connection.cursor()
         cursor1.execute("SELECT id FROM Personal WHERE email='%s';" % userEmail)
-        idOfUser = cursor1.fetchall()
+        idOfUser = cursor1.fetchone()
         cursor1.close()
         idOfUser = idOfUser[0]
+        boolIsPersonal = True
     else:
         idOfUser = idOfUser[0]
+        boolIsPersonal = False
 
     # update bez zmeny povodneho hesla
-    if userPassword == '':
+    if userPassword == '' and boolIsPersonal == False and userEmail == userEmailEdited:     # nejde to z profile, ale admin - dopravca alebo dopravca
         cursor1 = connection.cursor()
         cursor1.execute("UPDATE Cestujuci SET meno = '%s', priezvisko = '%s', email = '%s' WHERE id = '%s'" % (
         userFname, userLname, userEmail, idOfUser))
         connection.commit()
         cursor1.close()
+    elif userPassword == '' and boolIsPersonal == False and userEmail != userEmailEdited:     # nejde to z profile, ale admin - dopravca alebo dopravca
+        cursor1 = connection.cursor()
+        cursor1.execute("UPDATE Cestujuci SET meno = '%s', priezvisko = '%s', email = '%s' WHERE id = '%s'" % (
+        userFname, userLname, userEmailEdited, idOfUser))
+        connection.commit()
+        cursor1.close()
     # update so zmenou povodneho hesla
-    else:
+    elif userPassword == '' and boolIsPersonal == True and userEmail == userEmailEdited:     # nejde to z profile ale z admin-dopravca alebo dopravca
+        cursor1 = connection.cursor()
+        cursor1.execute("UPDATE Personal SET meno = '%s', priezvisko = '%s', email = '%s' WHERE id = '%s'" % (
+            userFname, userLname, userEmail, idOfUser))
+        connection.commit()
+        cursor1.close()
+    elif userPassword == '' and boolIsPersonal == True and userEmail != userEmailEdited:     # nejde to z profile ale z admin-dopravca alebo dopravca
+        cursor1 = connection.cursor()
+        cursor1.execute("UPDATE Personal SET meno = '%s', priezvisko = '%s', email = '%s' WHERE id = '%s'" % (
+            userFname, userLname, userEmailEdited, idOfUser))
+        connection.commit()
+        cursor1.close()
+    elif userPassword != '' and boolIsPersonal == False:    # ideme z profile
         cursor1 = connection.cursor()
         cursor1.execute(
             "UPDATE Cestujuci SET meno = '%s', priezvisko = '%s', email = '%s', heslo = '%s', WHERE id = '%s'" % (
                 userFname, userLname, userEmail, userPassword, idOfUser))
         connection.commit()
         cursor1.close()
+    elif userPassword != '' and boolIsPersonal == True:     # ideme z profile
+        cursor1 = connection.cursor()
+        cursor1.execute(
+            "UPDATE Personal SET meno = '%s', priezvisko = '%s', email = '%s', heslo = '%s', WHERE id = '%s'" % (
+                userFname, userLname, userEmail, userPassword, idOfUser))
+        connection.commit()
+        cursor1.close()
+
+
 
     return ''
 
