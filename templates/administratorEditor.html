@@ -296,7 +296,7 @@
                     buttons: {
                         "Uložiť": function() {
                             $("#successfulDialog").removeClass("hidden");
-                            $.post('/addVehicle', {"carrier": $('#carrierName').val(), "seats": $('#addSeats').val(), "text": $('#addDescription').val()}, function(result) {});
+                            $.post('/addVehicle', {"carrier": $('#carrierName').text(), "seats": $('#addSeats').val(), "text": $('#addDescription').val()}, function(result) {});
                             $('#vehicleAddForm').remove();
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({
@@ -652,7 +652,7 @@
                                 stops = stops.concat(" - ", $('#time' + i).val());
                                 i++;
                             };
-                            $.post('/addConnection', {"carrier": $('#carrierName').val(), "fromCity": $('#fromCity').find(":selected").val(), "fromCityTime": $('#timeFrom').val(), "toCity": $('#fromCity').find(":selected").val(), "toCityTime": $('#timeTo').val(), "stops": stops, "vehicle": $('#vehicleSelect').find(":selected").val(), "personal": $('#personalSelect').find(":selected").val()}, function(result) {});
+                            $.post('/addConnection', {"carrier": $('#carrierName').text(), "fromCity": $('#fromCity').find(":selected").val(), "fromCityTime": $('#timeFrom').val(), "toCity": $('#fromCity').find(":selected").val(), "toCityTime": $('#timeTo').val(), "stops": stops, "vehicle": $('#vehicleSelect').find(":selected").val(), "personal": $('#personalSelect').find(":selected").val()}, function(result) {});
                             $('#connectionAddForm').remove();
                             $(this).dialog("close");
                             $("#successfulDialog").dialog({
@@ -686,7 +686,7 @@
                     buttons: {
                         "Potvrdiť": function() {
                             $("#successfulDialog").removeClass("hidden");
-                            $.post('/deleteConnection', {"id": $('#vehicles').find(":selected").val()}, function(result) {});
+                            $.post('/deleteConnection', {"id": $('#connections').find(":selected").val()}, function(result) {});
                             $('#deleteConnection').remove();
                             $("#connections option[value='" + $('#connections').find(":selected").val() + "']").remove()
                             $('#connections').val('none');
