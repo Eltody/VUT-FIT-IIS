@@ -2316,6 +2316,11 @@ def validate(regOrSignIn):
         # loginData = json.dumps(loginData)
         return loginData
 
+# platobna brana - medzikrok pred purchase - overenie platby
+@app.route('/pay', methods=['GET', 'POST'])
+def pay():
+    data = request.form['data']
+    return render_template('pay.html', data=data)
 
 # nakup listkana konkretny spoj
 @app.route('/purchase/<signedInOrOneTime>', methods=['GET', 'POST'])
