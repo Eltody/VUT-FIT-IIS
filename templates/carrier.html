@@ -304,7 +304,7 @@
                                 buttonSubmit.innerHTML = ("Upraviť účet");
                             div.appendChild(buttonSubmit);
                             var buttonSubmit = document.createElement("button");
-                                buttonSubmit.setAttribute("id", "deletePersonal");
+                                buttonSubmit.setAttribute("id", "deleteAccount");
                                 buttonSubmit.setAttribute("type", "button");
                                 buttonSubmit.style.float = "right";
                                 buttonSubmit.style.color = "red"
@@ -559,7 +559,7 @@
                 });
                 $(".ui-dialog-titlebar").hide();
             };
-            $(document).on('click','#deletePersonal', function() {
+            $(document).on('click','#deleteAccount', function() {
                 $("#confirmPersonalDeleteDialog").removeClass("hidden");
                 $("#confirmPersonalDeleteDialog").dialog({
                     draggable: false,
@@ -570,7 +570,7 @@
                     buttons: {
                         "Potvrdiť": function() {
                             $("#successfulDialog").removeClass("hidden");
-                            $.post('/deletePersonal', {"id": $('#personal').find(":selected").val()}, function(result) {});
+                            $.post('/deleteAccount', {"id": $('#personal').find(":selected").val()}, function(result) {});
                             $('#personalForm').remove();
                             $('#labelIds').remove();
                             $('#ids').remove();
