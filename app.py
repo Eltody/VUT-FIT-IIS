@@ -147,11 +147,42 @@ Vaše nové heslo: {}
 def resetPassword():
     user_email = request.form['email']
     password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
-    # aktualizacia hesla pouzivatela podla jeho emailu - funkcia obnovit heslo
+
+    # zistovanie, ci je uzivatel cestujuci/personal/dopravca
     cursor1 = connection.cursor()
-    cursor1.execute("UPDATE Cestujuci SET heslo = '%s' WHERE email = '%s'" % (password, user_email))
-    connection.commit()
+    cursor1.execute("SELECT id FROM Cestujuci WHERE email='%s';" % user_email)
+    try_userId = cursor1.fetchone()
     cursor1.close()
+
+    if try_userId is None:
+        cursor1 = connection.cursor()
+        cursor1.execute("SELECT id FROM Personal WHERE email='%s';" % user_email)
+        try_userId = cursor1.fetchone()
+        cursor1.close()
+        if try_userId is None:
+            cursor1 = connection.cursor()
+            cursor1.execute("SELECT id FROM Dopravca WHERE email='%s';" % user_email)
+            try_userId = cursor1.fetchone()
+            cursor1.close()
+            if try_userId is None:
+                pass
+            else:
+                cursor1 = connection.cursor()
+                cursor1.execute("UPDATE Dopravca SET heslo = '%s' WHERE email = '%s'" % (password, user_email))
+                connection.commit()
+                cursor1.close()
+        else:
+            cursor1 = connection.cursor()
+            cursor1.execute("UPDATE Personal SET heslo = '%s' WHERE email = '%s'" % (password, user_email))
+            connection.commit()
+            cursor1.close()
+    # aktualizacia hesla pouzivatela podla jeho emailu - funkcia obnovit heslo
+    else:
+        cursor1 = connection.cursor()
+        cursor1.execute("UPDATE Cestujuci SET heslo = '%s' WHERE email = '%s'" % (password, user_email))
+        connection.commit()
+        cursor1.close()
+
     return sendEmail(user_email, password, "")
 
 
