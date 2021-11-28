@@ -212,7 +212,10 @@
                                         strong4.innerHTML = data[i][9];
                                     p10.appendChild(strong4);
                                 div3.appendChild(p10);
-                                if (data[i][6] != "0" && document.cookie.split('; ')[2].split('=')[1] != "administrator" && document.cookie.split('; ')[2].split('=')[1] != "carrier") {
+                                if (document.cookie != '') {
+                                    var cookies = document.cookie.split('; ')[2].split('=')[1];
+                                };
+                                if (data[i][6] != "0" && cookies != "administrator" && cookies != "carrier") {
                                     var a2 = document.createElement("a");
                                     a2.setAttribute("onclick", "buy(this); return false;");
                                     a2.setAttribute("href", "#");

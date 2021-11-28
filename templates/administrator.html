@@ -205,7 +205,7 @@
                             var div = document.createElement("div");
                                 var inputEmail = document.createElement("input");
                                     inputEmail.setAttribute("id", "email");
-                                    inputEmail.setAttribute("name", "email");
+                                    inputEmail.setAttribute("name", accounts[i][3]);
                                     inputEmail.setAttribute("type", "email");
                                     inputEmail.value = accounts[i][3];
                                     inputEmail.style.textAlign = "center";
@@ -398,7 +398,7 @@
                             };
                             $(this).dialog("close");
                             var email = cookie();
-                            $.post('/editAccount', {"fName": $('#fName').val(), "lName": $('#lName').val(), "email": $('#email').val(), "password": ""}, function(result) {});
+                            $.post('/editAccount', {"fName": $('#fName').val(), "lName": $('#lName').val(), "email": $('#email').val(), "emailEdited": $('#email').attr('name'), "password": ""}, function(result) {});
                             $("#successfulDialog").dialog({
                                 draggable: false,
                                 resizable: false,

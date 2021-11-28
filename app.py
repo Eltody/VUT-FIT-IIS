@@ -115,15 +115,15 @@ email: {}, heslo: {}.
 """.format(lName, fName, email, email, status)
         message = message.encode('utf-8')
     elif status == "ticket":
-        ticketAddress = ""
         message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
 To: {}{} <{}>
 Subject: CP cestovný lístok
 
-Ďakujeme za zakúpenie cestovného lístka cez portál CP.poriadne.sk. Váš cestovný lístok nájdete v prílohe tohoto emailu.
+Ďakujeme za zakúpenie cestovného lístka cez portál CP.poriadne.sk.
+Váš cestovný lístok nájdete na adrese {}.
 
 
-""".format(lName, fName, email, status)
+""".format(lName, fName, email, ticket)
         message = message.encode('utf-8')
     else:
         message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
@@ -2363,6 +2363,9 @@ def purchase(signedInOrOneTime):
                     timeToCity,
                     carrier_name, user_email, idOfTicket)
 
+        sendEmail(user_email, "ticket", os.path.dirname(
+            os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
+
         return tickets()
     if signedInOrOneTime == 'oneTime':
         data = []
@@ -2370,6 +2373,9 @@ def purchase(signedInOrOneTime):
         generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1],
                     timeToCity,
                     carrier_name, user_email, idOfTicket)
+
+        sendEmail(user_email, "ticket", os.path.dirname(
+        os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
 
         cursor1 = connection.cursor()
         cursor1.execute(
@@ -2386,7 +2392,6 @@ def purchase(signedInOrOneTime):
         cursor1.close()
 
         data.append([user_email, idOfTicket, currentLocation])
-        print(data)
 
         return render_template('ticket.html', data=data)
 

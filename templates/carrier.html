@@ -239,23 +239,6 @@
                                 div.appendChild(labelLName);
                                 div.appendChild(inputLName);
                             div1.appendChild(div);
-                            var div = document.createElement("div");
-                                var inputEmail = document.createElement("input");
-                                    inputEmail.setAttribute("id", "email");
-                                    inputEmail.setAttribute("name", "email");
-                                    inputEmail.setAttribute("type", "email");
-                                    inputEmail.value = personals[i][3];
-                                    inputEmail.style.textAlign = "center";
-                                    inputEmail.style.width = "95%";
-                                    inputEmail.style.maxWidth = "300px";
-                                    inputEmail.style.marginBottom = "5px";
-                                    inputEmail.required = true;
-                                var labelEmail = document.createElement("label");
-                                    labelEmail.setAttribute("for", "email");
-                                    labelEmail.innerHTML = "Email";
-                                div.appendChild(labelEmail);
-                                div.appendChild(inputEmail);
-                            div1.appendChild(div);
                         document.getElementById('personal').appendChild(div1);
                         var id = personalsSelect.value;
                         var labelIds = document.createElement("label");
@@ -538,7 +521,7 @@
                             };
                             $(this).dialog("close");
                             var email = cookie();
-                            $.post('/editPersonalInfo', {"carrier": email, "id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "email": $('#email').val(), "ids": ids}, function(result) {});
+                            $.post('/editPersonalInfo', {"carrier": email, "id": $('#personal').find(":selected").val(), "fname": $('#fName').val(), "lname": $('#lName').val(), "ids": ids}, function(result) {});
                             $("#successfulDialog").dialog({
                                 draggable: false,
                                 resizable: false,
