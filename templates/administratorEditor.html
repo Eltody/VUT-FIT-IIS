@@ -537,40 +537,41 @@
                                 buttonSubmit.innerHTML = ("Vytvoriť spoj");
                             form.appendChild(buttonSubmit);
                         document.getElementById('addConnection').parentNode.insertBefore(form, document.getElementById('addConnection').nextSibling);
+
+                    var cities = {{cities|tojson}};
+                    var data = {{data.availablePersonalAndVehicles|tojson}};
+                    var vehicleData = data[0];
+                    var personalData = data[1];
+
+                    cities = cities.sort(Intl.Collator().compare);
+                    var fromCity = document.getElementById('fromCity');
+                    var toCity = document.getElementById('toCity');
+                    var vehicle = document.getElementById('vehicleSelect');
+                    var personal = document.getElementById('personalSelect');
+                    for (var i in cities) {
+                        var option = document.createElement('option');
+                            option.value = cities[i];
+                            option.innerHTML = cities[i];
+                        fromCity.add(option);
+                        var option = document.createElement('option');
+                            option.value = cities[i];
+                            option.innerHTML = cities[i];
+                        toCity.add(option);
+                    };
+                    for (var i in vehicleData) {
+                        var option = document.createElement('option');
+                            option.value = vehicleData[i];
+                            option.innerHTML = vehicleData[i];
+                        vehicle.add(option);
+                    };
+                    for (var i in personalData) {
+                        var option = document.createElement('option');
+                            option.value = personalData[i];
+                            option.innerHTML = personalData[i];
+                        personal.add(option);
+                    };
                 } else {
                     document.getElementById("connectionAddForm").remove();
-                };
-                var cities = {{cities|tojson}};
-                var data = {{data.availablePersonalAndVehicles|tojson}};
-                var vehicleData = data[0];
-                var personalData = data[1];
-
-                cities = cities.sort(Intl.Collator().compare);
-                var fromCity = document.getElementById('fromCity');
-                var toCity = document.getElementById('toCity');
-                var vehicle = document.getElementById('vehicleSelect');
-                var personal = document.getElementById('personalSelect');
-                for (var i in cities) {
-                    var option = document.createElement('option');
-                        option.value = cities[i];
-                        option.innerHTML = cities[i];
-                    fromCity.add(option);
-                    var option = document.createElement('option');
-                        option.value = cities[i];
-                        option.innerHTML = cities[i];
-                    toCity.add(option);
-                };
-                for (var i in vehicleData) {
-                    var option = document.createElement('option');
-                        option.value = vehicleData[i];
-                        option.innerHTML = vehicleData[i];
-                    vehicle.add(option);
-                };
-                for (var i in personalData) {
-                    var option = document.createElement('option');
-                        option.value = personalData[i];
-                        option.innerHTML = personalData[i];
-                    personal.add(option);
                 };
             };
             function addBetweenStop() {
@@ -709,7 +710,7 @@
                 $(".ui-dialog-titlebar").hide();
             });
             $(document).on("submit", "form", function(e){
-                if (document.getElementById("status").innerHTML != "Editor." {
+                if (document.getElementById("status").innerHTML != "Editor.") {
                     e.preventDefault();
                     return false;
                 };
