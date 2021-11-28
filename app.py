@@ -2324,7 +2324,8 @@ def pay():
     fname = request.form['fname']
     lname = request.form['lname']
     number = request.form['number']
-    return render_template('pay.html', data=data, email=email, fname=fname, lname=lname, number=number)
+    price = data[9]
+    return render_template('pay.html', data=data, email=email, fname=fname, lname=lname, number=number, price=price)
 
 # nakup listkana konkretny spoj
 @app.route('/purchase/<signedInOrOneTime>', methods=['GET', 'POST'])
