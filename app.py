@@ -31,7 +31,7 @@ context = ssl.create_default_context()
 #############################################
 @app.route('/')
 def index():
-    databaseCheck()
+#    databaseCheck()
     global profileNameMainPage
     global loginData
     cursor = connection.cursor()
@@ -185,7 +185,7 @@ def profile(email):
     personal.close()
     carrier.close()
 
-    data = {'fName': fName, 'lName': lName, 'password': password}
+    data = {'fName': fName, 'lName': lName}
 
     return render_template("profile.html", data=data)
 
@@ -2574,78 +2574,78 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     return ''
 
 
-def databaseCheck():
-    try:
-        conn = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
-    except pymysql.Error as error:
-        sendEmail("martin.rakus1@gmail.com", "error", "")
-        sendEmail("tomas.zatko.ms@gmail.com", "error", "")
+#def databaseCheck():
+#    try:
+#        conn = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
+#    except pymysql.Error as error:
+#        sendEmail("martin.rakus1@gmail.com", "error", "")
+#        sendEmail("tomas.zatko.ms@gmail.com", "error", "")
 
-    # ziskanie vsetkych id jizdeniek
-    cursor = conn.cursor()
-    cursor.execute("SELECT id from Jizdenka")
-    tmp_ids = cursor.fetchall()
-    cursor.close()
+#    # ziskanie vsetkych id jizdeniek
+#    cursor = conn.cursor()
+#    cursor.execute("SELECT id from Jizdenka")
+#    tmp_ids = cursor.fetchall()
+#    cursor.close()
 
-    allIds = []
-    for m in tmp_ids:
-        for n in m:
-            allIds.append(n)
+#    allIds = []
+#    for m in tmp_ids:
+#        for n in m:
+#            allIds.append(n)
 
-    # ziskanie vsetkych id jizdeniek
-    cursor = conn.cursor()
-    cursor.execute("SELECT id_cestujuci_jizdenka from Jizdenka")
-    tmp_passenger_ids = cursor.fetchall()
-    cursor.close()
+#    # ziskanie vsetkych id jizdeniek
+#    cursor = conn.cursor()
+#    cursor.execute("SELECT id_cestujuci_jizdenka from Jizdenka")
+#    tmp_passenger_ids = cursor.fetchall()
+#    cursor.close()
 
-    allPassengerIds = []
-    for m in tmp_passenger_ids:
-        for n in m:
-            allPassengerIds.append(n)
+#    allPassengerIds = []
+#    for m in tmp_passenger_ids:
+#        for n in m:
+#            allPassengerIds.append(n)
 
-    tmp_emails = []
-    for i in reversed(range(len(allPassengerIds))):
-        # ziskanie vsetkych emailov
-        cursor = connection.cursor()
-        cursor.execute("SELECT email from Cestujuci WHERE id=%s" % allPassengerIds[i])
-        tmp_emails.append(cursor.fetchall())
-        cursor.close()
+#    tmp_emails = []
+#    for i in reversed(range(len(allPassengerIds))):
+#        # ziskanie vsetkych emailov
+#        cursor = connection.cursor()
+#        cursor.execute("SELECT email from Cestujuci WHERE id=%s" % allPassengerIds[i])
+#        tmp_emails.append(cursor.fetchall())
+#        cursor.close()
 
-    allEmails = []
-    for m in tmp_emails:
-        for n in m:
-            for o in n:
-                allEmails.append(''.join(str(o)))
+#    allEmails = []
+#    for m in tmp_emails:
+#        for n in m:
+#            for o in n:
+#                allEmails.append(''.join(str(o)))
 
-    allEmailsWithIdsPdf = []
-    allEmailsWithIdsPng = []
-    allIds.sort()
-    for i in range(len(allEmails)):
-        idAndEmailPdf = allEmails[i] + '_' + str(allIds[i]) + '.pdf'  # format nazvu stiahnuteho listku: email_id.pdf
-        allEmailsWithIdsPdf.append(idAndEmailPdf)
-        idAndEmailPng = allEmails[i] + '_' + str(allIds[i]) + '.png'  # format nazvu stiahnuteho listku: email_id.pdf
-        allEmailsWithIdsPng.append(idAndEmailPng)
+#    allEmailsWithIdsPdf = []
+#    allEmailsWithIdsPng = []
+#    allIds.sort()
+#    for i in range(len(allEmails)):
+#        idAndEmailPdf = allEmails[i] + '_' + str(allIds[i]) + '.pdf'  # format nazvu stiahnuteho listku: email_id.pdf
+#        allEmailsWithIdsPdf.append(idAndEmailPdf)
+#        idAndEmailPng = allEmails[i] + '_' + str(allIds[i]) + '.png'  # format nazvu stiahnuteho listku: email_id.pdf
+#        allEmailsWithIdsPng.append(idAndEmailPng)
 
-    boolRemoveTicket = True
-    for item in os.listdir(os.path.dirname(os.path.realpath(__file__)) + '/static/tickets/'):
-        if os.path.isfile(os.path.join(os.path.dirname(os.path.realpath(__file__)) + '/static/tickets/', item)):
-            for k in allEmailsWithIdsPdf:
-                if k == item:
-                    boolRemoveTicket = False
-            if boolRemoveTicket:
-                removeTicket = os.path.dirname(os.path.realpath(__file__)) + '/static/tickets/' + item
-                os.remove(removeTicket)
-            boolRemoveTicket = True
+#    boolRemoveTicket = True
+#    for item in os.listdir(os.path.dirname(os.path.realpath(__file__)) + '/static/tickets/'):
+#        if os.path.isfile(os.path.join(os.path.dirname(os.path.realpath(__file__)) + '/static/tickets/', item)):
+#            for k in allEmailsWithIdsPdf:
+#                if k == item:
+#                    boolRemoveTicket = False
+#            if boolRemoveTicket:
+#                removeTicket = os.path.dirname(os.path.realpath(__file__)) + '/static/tickets/' + item
+#                os.remove(removeTicket)
+#            boolRemoveTicket = True
 
-    for item in os.listdir(os.path.dirname(os.path.realpath(__file__)) + '/static/qr/'):
-        if os.path.isfile(os.path.join(os.path.dirname(os.path.realpath(__file__)) + '/static/qr/', item)):
-            for k in allEmailsWithIdsPng:
-                if k == item:
-                    boolRemoveTicket = False
-            if boolRemoveTicket:
-                removeTicket = os.path.dirname(os.path.realpath(__file__)) + '/static/qr/' + item
-                os.remove(removeTicket)
-            boolRemoveTicket = True
+#    for item in os.listdir(os.path.dirname(os.path.realpath(__file__)) + '/static/qr/'):
+#        if os.path.isfile(os.path.join(os.path.dirname(os.path.realpath(__file__)) + '/static/qr/', item)):
+#            for k in allEmailsWithIdsPng:
+#                if k == item:
+#                    boolRemoveTicket = False
+#            if boolRemoveTicket:
+#                removeTicket = os.path.dirname(os.path.realpath(__file__)) + '/static/qr/' + item
+#                os.remove(removeTicket)
+#            boolRemoveTicket = True
 
 
 if __name__ == '__main__':

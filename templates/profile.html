@@ -33,7 +33,7 @@
                                 <a href="#" class="hidden" id="user"></a>
                                 <div class="dropdown-content">
                                     <a id="status" href="#">Lístky</a>
-                                    <a href="/profile">Profil</a>
+                                    <a id="profile" href="#">Profil</a>
                                     <a onclick="signOut()" href="#">Odhlásiť sa</a>
                                 </div>
                             </div>
@@ -50,7 +50,7 @@
                                 <div class="resultContent" id="content">
                                     <h3 id="carrierName" style="color: red"></h3>
                                     <div class="editForm">
-                                        <form id="account" class="searchForm" onsubmit="submit()">
+                                        <form id="account" class="searchForm" onsubmit="submitAccount()" action="javascript:void(0);">
                                             <div class="search-col">
                                                 <label for="fname">Meno:</label><br>
                                                 <input class="search-select" type="text" id="fname" name="fname" pattern="[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z]+" required>
@@ -58,14 +58,6 @@
                                             <div class="search-col">
                                                 <label for="lname">Priezvisko:</label><br>
                                                 <input class="search-select" type="text" id="lname" name="lname" pattern="[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z]+" required>
-                                            </div>
-                                            <div class="search-col">
-                                                <label for="email">Email:</label><br>
-                                                <input class="search-select" type="email" id="email" name="email" required>
-                                            </div>
-                                            <div class="search-col">
-                                                <label for="password">Heslo:</label><br>
-                                                <input class="search-select" type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
                                             </div>
                                             <button id="submit" type="submit">Potvrdiť</button>
                                         </form>
@@ -81,6 +73,12 @@
                 <p>Copyright © reserved, Website by <a href="mailto:cp.poriadne.sk@gmail.com?Subject=Email%20z%20webstránky%20CP" target="_top"><i><u>Slovenská (j)Elita.</u></i></a></p>
             </footer>
         </div>
+        <div id="confirmDialog" class="hidden">
+            <p>Prajete si uložiť zmeny?</p>
+        </div>
+        <div id="successfulDialog" class="hidden">
+            <p style="color: green">Zmeny boli vykonané</p>
+        </div>
         <!-- Scripts -->
         <script>
             var cookies = document.cookie.split('; ');
@@ -92,6 +90,7 @@
                 document.getElementById("user").classList.remove("hidden");
                 document.getElementById("login").classList.add("hidden");
                 document.getElementById("user").innerHTML = c[0][1];
+                document.getElementById("profile").setAttribute("href", "/profile/" + c[1][1]);
             } else {
                 location.replace("/");
             };
@@ -107,17 +106,46 @@
         </script>
         <script>
             var fName = {{data.fName|tojson}};
+            var lName = {{data.lName|tojson}};
 
-            var carriersSelect = document.getElementById('carriers');
-            for (var i in carriers) {
-                var option = document.createElement('option');
-                    option.value = carriers[i];
-                    option.innerHTML = carriers[i];
-                carriersSelect.add(option);
+            document.getElementById("fname").value = fName;
+            document.getElementById("lname").value = lName;
+
+            function submitAccount() {
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            $(this).dialog("close");
+                            var email = cookie();
+                            $.post('/editAccount', {"fName": $('#fname').val(), "lName": $('#lname').val(), "email": email, "emailEdited": email, "password": ""}, function(result) {});
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
             };
-            carriersSelect.onchange = function() {
-                $.redirectPost('/administratorEditor', {"carrier": $('#carriers').find(":selected").val()});
-            };
+
             $("#status").click(function (event) {
                 if (document.getElementById("status").innerHTML == "Lístky") {
                     $.redirectPost('/tickets', {"email": document.cookie.split('; ')[1].split('=')[1]});
@@ -135,6 +163,9 @@
                     $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo($(document.body)).submit();
                 }
             });
+            function cookie() {
+                return document.cookie.split('; ')[1].split('=')[1];
+            };
         </script>
     </body>
 </html>
