@@ -151,7 +151,7 @@ CREATE TABLE Personal_Spoj(
 CREATE TABLE Symboly(
     id INT(11) NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (id),
-    symbol VARCHAR(20)
+    symbol VARCHAR(500)
 );
 
 CREATE TABLE Jizdenka_Zastavky(
@@ -192,6 +192,55 @@ VALUES('↔');
 
 INSERT INTO Symboly(symbol)
 VALUES('→');
+
+INSERT INTO Symboly(symbol)
+VALUES('From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: Registrácia na webe CP.poriadne.sk
+
+Úspešne sme Vás zaregistrovali na portáli CP.poriadne.sk.
+');
+
+INSERT INTO Symboly(symbol)
+VALUES('From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: Upozornenie na podozrivú aktivitu
+
+Niekto sa pokúša prihlásiť do Vášho účtu na portáli CP.poriadne.sk. Ak ste to neboli Vy odporúčame Vám si zmeniť heslo.
+');
+
+INSERT INTO Symboly(symbol)
+VALUES('From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: Registrácia na webe CP.poriadne.sk
+
+Práve ste boli zaregistrovaný na portáli CP.poriadne.sk.
+Vaše prihlasovacie údaje sú
+email: {}, heslo: {}.
+');
+
+INSERT INTO Symboly(symbol)
+VALUES('From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: CP cestovný lístok
+
+Ďakujeme za zakúpenie cestovného lístka cez portál CP.poriadne.sk.
+Váš cestovný lístok nájdete na adrese {}.
+
+
+');
+
+INSERT INTO Symboly(symbol)
+VALUES('From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: CP obnova hesla
+
+Na Vašu žiadosť Vám bolo vygenerované nové heslo pre prístup na stránku CP.poriadne.sk. Odporúčame Vám toto heslo čo najskôr zmeniť.
+
+Vaše nové heslo: {}
+');
+
+
 
 INSERT INTO Administrator (meno, priezvisko, email, heslo)
 VALUES ('Admin', 'Admin', 'admin@admin.com', 'password');
@@ -410,10 +459,6 @@ INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
 VALUES ('12', '5', '9:30'); -- Liberec
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
 VALUES ('12', '2', '11:25'); -- Hradec Kralove
-INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('12', '1', '11:55'); -- Brno
-INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('12', '10', '11:56'); -- Praha
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
 VALUES ('12', '8', '12:24'); -- Pardubice
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
