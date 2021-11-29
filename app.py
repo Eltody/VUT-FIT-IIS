@@ -1,9 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for  # pip install flask
 from math import sin, cos, sqrt, atan2, radians
 from fpdf import FPDF  # fpdf class
-import smtplib
-import base64
-import ssl
 import os
 import json
 import qrcode
@@ -11,22 +8,15 @@ import string
 import random
 import pymysql  # pip install pymysql
 import datetime  # pip install datetime
+import requests # pip install requests
 
 app = Flask(__name__)
 
-connection = pymysql.connect(host='92.52.58.251', user='admin', password='password', db='iis')
+connection = pymysql.connect(host='92.52.58.251', port=3306, user='admin', password='password', db='iis', charset='utf8')
 
 emails = ["", "", ""]
 loginData = {}
 profileNameMainPage = ''
-
-port = 587  # For starttls
-smtp_server = "smtp.gmail.com"
-sender_email = "cp.poriadne.sk@gmail.com"
-password = "matono12"
-
-context = ssl.create_default_context()
-
 
 #############################################
 @app.route('/')
@@ -48,73 +38,59 @@ def index():
     return render_template("index.html", cities=cities, data=data, name=profileNameMainPage)
 
 
-# @app.route('/sendEmail/<email>/<status>/<ticket>')
-# def sendEmail(email, status, ticket):
-#    cestujuci = connection.cursor()
-#    administrator = connection.cursor()
-#    personal = connection.cursor()
-#    carrier = connection.cursor()
-#    cestujuci.execute("SELECT meno, priezvisko FROM Cestujuci WHERE email='%s';" % email)
-#    administrator.execute("SELECT meno, priezvisko FROM Administrator WHERE email='%s';" % email)
-#    personal.execute("SELECT meno, priezvisko FROM Personal WHERE email='%s';" % email)
-#    carrier.execute("SELECT nazov FROM Dopravca WHERE email='%s';" % email)
-#    for (meno, priezvisko) in cestujuci:
-#        fName = meno
-#        lName = priezvisko
-#    for (meno, priezvisko) in administrator:
-#        fName = meno
-#        lName = priezvisko
-#    for (meno, priezvisko) in personal:
-#        fName = meno
-#        lName = priezvisko
-#    for (nazov) in carrier:
-#        fName = nazov
-#        lName = ''
-#    cestujuci.close()
-#    administrator.close()
-#    personal.close()
-#    carrier.close()
+@app.route('/sendEmail/<email>/<status>/<ticket>')
+def sendEmail(email, status, ticket):
+    cestujuci = connection.cursor()
+    administrator = connection.cursor()
+    personal = connection.cursor()
+    carrier = connection.cursor()
+    cestujuci.execute("SELECT meno, priezvisko FROM Cestujuci WHERE email='%s';" % email)
+    administrator.execute("SELECT meno, priezvisko FROM Administrator WHERE email='%s';" % email)
+    personal.execute("SELECT meno, priezvisko FROM Personal WHERE email='%s';" % email)
+    carrier.execute("SELECT nazov FROM Dopravca WHERE email='%s';" % email)
+    for (meno, priezvisko) in cestujuci:
+        fName = meno
+        lName = priezvisko
+    for (meno, priezvisko) in administrator:
+        fName = meno
+        lName = priezvisko
+    for (meno, priezvisko) in personal:
+        fName = meno
+        lName = priezvisko
+    for (nazov) in carrier:
+        fName = nazov
+        lName = ''
+    cestujuci.close()
+    administrator.close()
+    personal.close()
+    carrier.close()
 
-#    cursor = connection.cursor()
-#    cursor.execute("SELECT symbol from Symboly")
-#    symbols = cursor.fetchall()
-#    cursor.close()
+    report = {}
+    report["value1"] = email
+    report["value2"] = fName
+    report["value3"] = status
 
-#    if status == "error":
-#        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
-# To: {}{} <{}>
-# Subject: Error with IIS server
+    if status == "error":
+        webhookUrl = 'https://maker.ifttt.com/trigger/error/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
+    elif status == "loginError":
+        webhookUrl = 'https://maker.ifttt.com/trigger/loginError/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
+    elif status == "register":
+        webhookUrl = 'https://maker.ifttt.com/trigger/registerAcc/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
+    elif ticket == "register":
+        webhookUrl = 'https://maker.ifttt.com/trigger/register/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
+    elif ticket == "ticket":
+        webhookUrl = 'https://maker.ifttt.com/trigger/ticket/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
+    else:
+        webhookUrl = 'https://maker.ifttt.com/trigger/password/with/key/jglncn-jhDn3EyEKlB3nkuB2VDNC8Rs4Fuxg5IpNE4'
 
-# There is an error with the IIS server.
-# """.format(lName, fName, email)
-#        message = message.encode('utf-8')
-#    elif status == "loginError":
-#        message = symbols[8][0].format(lName, fName, email)
-#        message = message.encode('utf-8')
-#    elif status == "register":
-#        message = symbols[7][0].format(lName, fName, email)
-#        message = message.encode('utf-8')
-#    elif ticket == "register":
-#        message = symbols[9][0].format(lName, fName, email, email, status)
-#        message = message.encode('utf-8')
-#    elif status == "ticket":
-#        message = symbols[10][0].format(lName, fName, email, ticket)
-#        message = message.encode('utf-8')
-#    else:
-#        message = symbols[11][0].format(lName, fName, email, status)
-#        message = message.encode('utf-8')
-
-#    with smtplib.SMTP(smtp_server, port) as server:
-#        server.starttls(context=context)
-#        server.login(sender_email, password)
-#        server.sendmail(sender_email, email, message)
-#    return ""
+    requests.post(webhookUrl, data=report)
+    return ""
 
 
 @app.route('/resetPassword', methods=['GET', 'POST'])
 def resetPassword():
     user_email = request.form['email']
-    password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+    password = ''.join(random.sample("ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789", k=8))
 
     # zistovanie, ci je uzivatel cestujuci/personal/dopravca
     cursor1 = connection.cursor()
@@ -151,8 +127,7 @@ def resetPassword():
         connection.commit()
         cursor1.close()
 
-    #    return sendEmail(user_email, password, "")
-    return ''
+    return sendEmail(user_email, password, "")
 
 
 @app.route('/profile/<email>')
@@ -259,10 +234,7 @@ def tickets():
             currentLocations.append([tmp_currectLocations])
             cursor1.close()
 
-        allCurrentLocations = []
-        for k in currentLocations:
-            for l in k:
-                allCurrentLocations.append(''.join(str(l)))
+        allCurrentLocations = currentLocations
 
         for y in range(len(allCurrentLocations)):
             currentLocation = allCurrentLocations[y]
@@ -920,8 +892,7 @@ def addPersonal():
         connection.commit()
         cursor.close()
 
-    #    return sendEmail(email, password, "register")
-    return ''
+    return sendEmail(email, password, "register")
 
 
 # funkcia pre vymazanie uctu personalu dopravcom alebo vymazanie uctu administratorom
@@ -1466,8 +1437,7 @@ def addCarrier():
     connection.commit()
     cursor.close()
 
-    #    return sendEmail(carrierEmail, carrierPassword, "register")
-    return ''
+    return sendEmail(carrierEmail, carrierPassword, "register")
 
 
 # funkcia pre upravu uctu administratorom - vsektych uctov a zaroven je dostupna z profil zmeny
@@ -2054,7 +2024,7 @@ def signIn():
     if user_email == emails[0]:
         if user_email == emails[1]:
             emails = ['', '']
-        #            sendEmail(user_email, "loginError", "")
+            sendEmail(user_email, "loginError", "")
         elif emails[1] == '':
             emails[1] = user_email
         else:
@@ -2146,7 +2116,7 @@ def registration():
                    (fname, lname, user_email, password))
     connection.commit()
     cursor.close()
-    #    sendEmail(user_email, "register", "")
+    sendEmail(user_email, "register", "")
     profileNameMainPage = fname
     loginData = {'message': 'login', 'email': user_email, 'status': 'cestujuci'}
     return redirect(url_for('index'))
@@ -2459,8 +2429,7 @@ def purchase(signedInOrOneTime):
         generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1],
                     timeToCity,
                     carrier_name, user_email, idOfTicket, price)
-        #        sendEmail(user_email, "ticket", os.path.dirname(
-        #            os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
+        sendEmail(user_email, user_email + '_' + idOfTicket + '.pdf', "ticket")
 
         return tickets()
     if signedInOrOneTime == 'oneTime':
@@ -2470,8 +2439,7 @@ def purchase(signedInOrOneTime):
                     timeToCity,
                     carrier_name, user_email, idOfTicket, price)
 
-        #        sendEmail(user_email, "ticket", os.path.dirname(
-        #        os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
+        sendEmail(user_email, user_email + '_' + idOfTicket + '.pdf', "ticket")
 
         cursor1 = connection.cursor()
         cursor1.execute(
