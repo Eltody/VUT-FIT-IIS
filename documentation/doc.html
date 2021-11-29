@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0070)https://www.fit.vutbr.cz/study/courses/IIS/private/projekt/doc.html.cs -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-2">
+    
+    <title>Projekt IIS</title>
+    <style type="text/css">
+    	table { border-collapse: collapse; }
+    	td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    	dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+</head>
+<body>
+
+<!-- Zkontrolujte prosím nastavení kódování v hlavičce dokumentu 
+     podle použitého editoru -->
+
+<h1>3. Hromadná doprava: zadávání, vyhledávání spojů a rezervaci jízdenek</h1> <!-- Nahradte názvem svého zadání -->
+
+<dl>
+	<dt>Autoři</dt>
+	<dd>Tomáš Zaťko <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xzatko02@stud.fit.vutbr.cz">xzatko02@stud.fit.vutbr.cz</a> -
+		vytvorenie/správa databázi (MySQL), backend (Python-Flask), dokumentácia - 35%
+	</dd>
+	<dd>Martin Rakús <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xrakus04@stud.fit.vutbr.cz">xrakus04@stud.fit.vutbr.cz</a> - 
+		zabezpečenie a spojazdnenie aplikácie na serveri, frontend (HTML, CSS, jQuery, JavaScript) - 35%
+	</dd>
+  <dd>Milan Koval <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xkoval18@stud.fit.vutbr.cz">xkoval18@stud.fit.vutbr.cz</a> - 
+		pomoc pri návrhu databázi - 30%
+	</dd>
+	<dt>URL aplikace</dt>
+	<dd><a href="http://167.172.167.233/">http://167.172.167.233/</a></dd>
+</dl>
+
+<h2>Uživatelé systému pro testování</h2>
+<table>
+<tbody><tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
+<tr><td>admin@admin.com</td><td>password</td><td>Administrátor</td></tr>
+<tr><td>flixmotors@flixbus.com</td><td>flexiBuZzes4596</td><td>Dopravca</td></tr>
+<tr><td>slunskavanesa1@seznam.cz</td><td>van95Sluun</td><td>Personál</td></tr>
+<tr><td>zlotir.vanda95@seznam.cz</td><td>aJzvsm04</td><td>Personál</td></tr>
+<tr><td>tomas.zatko.ms@gmail.com</td><td>Password1</td><td>Cestujúci</td></tr>
+</tbody></table>
+
+<h2>Implementace</h2>
+<h3>Backend</h3>
+<p> Ako implementačný jazyk sme si vybrali Python3. Po výbere daného jazyka sa nám zdal ako vhodný framework pre programovanie webových služieb framework Flask. Pre pripojenie a na dotazy s databázou sme použili PyMySQL. V súbore app.py sa vykonáva logika aplikácie a podľa vyvolávaných funkcií z frontendu vyberá HTML template, ktorý sa bude renderovať.
+</p>
+<h3>Frontend</h3>
+<p> Templates sú napísané pomocu CSS a HTML, ktoré obsahujú miesta, kde sa generujú prvky a informácie dynamicky pomocou jQuery a JavaScript.
+</p>
+<h3>Databáza</h3>
+<p> Ako relačnú databázu sme si vybrali MariaDB, ktorá je hostovaná na našom súkromnom serveri, ktorý sme zabezpečili proti neočakávanému pádu odoslaním informačného emailu, aby sme vedeli včas zareagovať.
+</p>
+
+<h3>Databáze</h3>
+
+<image src="https://raw.githubusercontent.com/Eltody/VUT_FIT_IIS_proj1/main/documentation/ER.png"></image>
+
+<h2>Instalace</h2>
+<ul>
+<li>skopírovanie všetkých súborov na server, inštalácia Apache2.</li>
+<li>verzia pythonu: python 3.8</li>
+<li>databáza: inštalácia MariaDB na serveri</li>
+<li>verzia MariaDB: MariaDB 10.3.31</li>
+<li>inicializácia databázi: použitý bol MySQL Workbench 8.0 CE, kde bol inicializovaný skript database.sql</li>
+<li>import modulov/knižníc: flask, render_template, fpdf, qrcode, pymysql, datetime, json</li>
+</ul>
+
+<h2>Známé problémy</h2>
+<p>-</p>
+
+<h2>Hosting aplikácie</h2>
+Z nemožnosti hostovania našej aplikácie na školských serveroch Eva/Merlin, sme sa rozhodli pre hosting portál Digital Ocean. Na danej platforme beží aplikácia, ktorá sa pripája na databázu hostovanú na našom súkromnom serveri.
+<h2>Tipy pre ovládanie aplikácie</h2>
+<li>Odporúčané vyhľadanie spojov: Brno-Praha, Plzeň-Praha, Liberec-Hradec Králové-Pardubice, Ostrava-Olomouc.</li>
+<li>V prípadoch zobrazenie okna o potvrdení zmien je nutné znova načítať stránku, aby sa vytvorené údaje zobrazili v požadovaných poliach pre výber tejto položky.</li>
+<li>Dopravcovia pri vkladaní čísiel spojov pre nový personál si dokážu vyhľadať dané spoje na hlavnej stránke - bez možnosti kúpiť lístok, aby si nemuseli pamätať čísla spojov.</li>
+<li>Zobrazenie informácie o danom vozidle je možné po vyhľadaní spoju pomocou kliknutia na vrchnú lištu daného spoju.</li>
+<li>Implementované boli aj funkcie ako: informačný email po troch nesprávne zadaných heslách, po nakúpe jízdenky je jízdenka odoslaná aj na email, po registrácii príde informačný email o registrácii, po registrácii personálu dopravcom príde personálu informačný email o prístupových údajoch a ako posledná funkcia zabudnutého hesla, kedy je na daný email odoslané vygenerované, nové heslo.</li>
+
+<br><br>
+</body></html>
