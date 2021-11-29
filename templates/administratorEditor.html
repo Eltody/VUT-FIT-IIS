@@ -73,11 +73,21 @@
                                     </div>
                                     <div class="editForm">
                                         <h3>Úprava účtu</h3>
-                                        <form id="carrier" class="searchForm" onsubmit="submitCarrier()">
-                                            <select name="carriers" id="carriers" class="search-select">
-                                                <option value="none" disabled selected>Vyberte dopravcu pre úpravu</option>
-                                            </select>
-                                            <br>
+                                        <form id="account" class="searchForm" onsubmit="submitAccount()">
+                                            <div id="accountForm" class="editorForm" style="margin: 10px 0px;">
+                                                <div>
+                                                    <label for="name">Meno</label>
+                                                    <input id="name" name="name" required>
+                                                </div>
+                                                <div>
+                                                    <label for="email">Email</label>
+                                                    <input id="email" type="email" required>
+                                                </div>
+                                            </div>
+                                            <div id="accountButtons" class="search-col">
+                                                <button type="submit" style="float: left;">Upraviť účet</button>
+                                                <button id="deleteAccount" type="button" style="float: right; color: red;">Odstrániť účet</button>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
@@ -97,6 +107,9 @@
         </div>
         <div id="confirmConnectionDeleteDialog" class="hidden">
             <p>Prajete si vymazať spoj?</p>
+        </div>
+        <div id="confirmAccountDeleteDialog" class="hidden">
+            <p>Prajete si vymazať dopravcu?</p>
         </div>
         <div id="confirmDialog" class="hidden">
             <p>Prajete si uložiť zmeny?</p>
@@ -153,6 +166,7 @@
             document.getElementById("carrierName").innerHTML = {{data.carrierName|tojson}};
             var vehicles = {{data.vehicles|tojson}};
             var connections = {{data.connections|tojson}};
+            var carrier = {{carrierInfo|tojson}};
 
             var vehiclesSelect = document.getElementById('vehicles');
             var connectionsSelect = document.getElementById('connections');
@@ -173,6 +187,11 @@
                     option.innerHTML = connections[i][0];
                 connectionsSelect.add(option);
             };
+
+            document.getElementById("name").setAttribute("value", carrier[0][1]);
+            document.getElementById("email").setAttribute("value", carrier[0][2]);
+            document.getElementById("email").setAttribute("name", carrier[0][2]);
+
             vehiclesSelect.onchange = function() {
                 while (document.getElementById('vehicle').children.length > 2) {
                     document.getElementById('vehicle').removeChild(document.getElementById('vehicle').lastChild);
@@ -688,6 +707,72 @@
                             $('#deleteConnection').remove();
                             $("#connections option[value='" + $('#connections').find(":selected").val() + "']").remove()
                             $('#connections').val('none');
+                            $(this).dialog( "close" );
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            });
+            function submitAccount() {
+                $("#confirmDialog").removeClass("hidden");
+                $("#confirmDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Uložiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            $(this).dialog("close");
+                            $.post('/editCarrierInfo', {"emailEdited": $('#email').attr('name'), "email": $('#email').val(), "name": $('#name').val()}, function(result) {});
+                            $("#successfulDialog").dialog({
+                                draggable: false,
+                                resizable: false,
+                                height: 100,
+                                width: 250,
+                                modal: true,
+                                hide: {effect: 'fade', duration: 500},
+                                open: function(event, ui){
+                                    setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                }
+                            });
+                            $(".ui-dialog-titlebar").hide();
+                        },
+                        "Zrušiť": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                $(".ui-dialog-titlebar").hide();
+            };
+            $(document).on('click','#deleteAccount', function() {
+                $("#confirmAccountDeleteDialog").removeClass("hidden");
+                $("#confirmAccountDeleteDialog").dialog({
+                    draggable: false,
+                    resizable: false,
+                    height: 150,
+                    width: 250,
+                    modal: true,
+                    buttons: {
+                        "Potvrdiť": function() {
+                            $("#successfulDialog").removeClass("hidden");
+                            $.post('/deleteCarrierInfo', {"email": $('#email').attr('name')}, function(result) {});
                             $(this).dialog( "close" );
                             $("#successfulDialog").dialog({
                                 draggable: false,

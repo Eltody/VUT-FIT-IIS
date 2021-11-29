@@ -48,67 +48,67 @@ def index():
     return render_template("index.html", cities=cities, data=data, name=profileNameMainPage)
 
 
-@app.route('/sendEmail/<email>/<status>/<ticket>')
-def sendEmail(email, status, ticket):
-    cestujuci = connection.cursor()
-    administrator = connection.cursor()
-    personal = connection.cursor()
-    carrier = connection.cursor()
-    cestujuci.execute("SELECT meno, priezvisko FROM Cestujuci WHERE email='%s';" % email)
-    administrator.execute("SELECT meno, priezvisko FROM Administrator WHERE email='%s';" % email)
-    personal.execute("SELECT meno, priezvisko FROM Personal WHERE email='%s';" % email)
-    carrier.execute("SELECT nazov FROM Dopravca WHERE email='%s';" % email)
-    for (meno, priezvisko) in cestujuci:
-        fName = meno
-        lName = priezvisko
-    for (meno, priezvisko) in administrator:
-        fName = meno
-        lName = priezvisko
-    for (meno, priezvisko) in personal:
-        fName = meno
-        lName = priezvisko
-    for (nazov) in carrier:
-        fName = nazov
-        lName = ''
-    cestujuci.close()
-    administrator.close()
-    personal.close()
-    carrier.close()
+#@app.route('/sendEmail/<email>/<status>/<ticket>')
+#def sendEmail(email, status, ticket):
+#    cestujuci = connection.cursor()
+#    administrator = connection.cursor()
+#    personal = connection.cursor()
+#    carrier = connection.cursor()
+#    cestujuci.execute("SELECT meno, priezvisko FROM Cestujuci WHERE email='%s';" % email)
+#    administrator.execute("SELECT meno, priezvisko FROM Administrator WHERE email='%s';" % email)
+#    personal.execute("SELECT meno, priezvisko FROM Personal WHERE email='%s';" % email)
+#    carrier.execute("SELECT nazov FROM Dopravca WHERE email='%s';" % email)
+#    for (meno, priezvisko) in cestujuci:
+#        fName = meno
+#        lName = priezvisko
+#    for (meno, priezvisko) in administrator:
+#        fName = meno
+#        lName = priezvisko
+#    for (meno, priezvisko) in personal:
+#        fName = meno
+#        lName = priezvisko
+#    for (nazov) in carrier:
+#        fName = nazov
+#        lName = ''
+#    cestujuci.close()
+#    administrator.close()
+#    personal.close()
+#    carrier.close()
 
-    cursor = connection.cursor()
-    cursor.execute("SELECT symbol from Symboly")
-    symbols = cursor.fetchall()
-    cursor.close()
+#    cursor = connection.cursor()
+#    cursor.execute("SELECT symbol from Symboly")
+#    symbols = cursor.fetchall()
+#    cursor.close()
 
-    if status == "error":
-        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
-To: {}{} <{}>
-Subject: Error with IIS server
+#    if status == "error":
+#        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+#To: {}{} <{}>
+#Subject: Error with IIS server
 
-There is an error with the IIS server.
-""".format(lName, fName, email)
-        message = message.encode('utf-8')
-    elif status == "loginError":
-        message = symbols[8][0].format(lName, fName, email)
-        message = message.encode('utf-8')
-    elif status == "register":
-        message = symbols[7][0].format(lName, fName, email)
-        message = message.encode('utf-8')
-    elif ticket == "register":
-        message = symbols[9][0].format(lName, fName, email, email, status)
-        message = message.encode('utf-8')
-    elif status == "ticket":
-        message = symbols[10][0].format(lName, fName, email, ticket)
-        message = message.encode('utf-8')
-    else:
-        message = symbols[11][0].format(lName, fName, email, status)
-        message = message.encode('utf-8')
+#There is an error with the IIS server.
+#""".format(lName, fName, email)
+#        message = message.encode('utf-8')
+#    elif status == "loginError":
+#        message = symbols[8][0].format(lName, fName, email)
+#        message = message.encode('utf-8')
+#    elif status == "register":
+#        message = symbols[7][0].format(lName, fName, email)
+#        message = message.encode('utf-8')
+#    elif ticket == "register":
+#        message = symbols[9][0].format(lName, fName, email, email, status)
+#        message = message.encode('utf-8')
+#    elif status == "ticket":
+#        message = symbols[10][0].format(lName, fName, email, ticket)
+#        message = message.encode('utf-8')
+#    else:
+#        message = symbols[11][0].format(lName, fName, email, status)
+#        message = message.encode('utf-8')
 
-    with smtplib.SMTP(smtp_server, port) as server:
-        server.starttls(context=context)
-        server.login(sender_email, password)
-        server.sendmail(sender_email, email, message)
-    return ""
+#    with smtplib.SMTP(smtp_server, port) as server:
+#        server.starttls(context=context)
+#        server.login(sender_email, password)
+#        server.sendmail(sender_email, email, message)
+#    return ""
 
 
 @app.route('/resetPassword', methods=['GET', 'POST'])
@@ -151,8 +151,8 @@ def resetPassword():
         connection.commit()
         cursor1.close()
 
-    return sendEmail(user_email, password, "")
-
+#    return sendEmail(user_email, password, "")
+    return ''
 
 @app.route('/profile/<email>')
 def profile(email):
@@ -919,8 +919,8 @@ def addPersonal():
         connection.commit()
         cursor.close()
 
-    return sendEmail(email, password, "register")
-
+#    return sendEmail(email, password, "register")
+    return ''
 
 # funkcia pre vymazanie uctu personalu dopravcom alebo vymazanie uctu administratorom
 @app.route('/deleteAccount', methods=['GET', 'POST'])
@@ -1464,7 +1464,8 @@ def addCarrier():
     connection.commit()
     cursor.close()
 
-    return sendEmail(carrierEmail, carrierPassword, "register")
+#    return sendEmail(carrierEmail, carrierPassword, "register")
+    return ''
 
 # funkcia pre upravu uctu administratorom - vsektych uctov a zaroven je dostupna z profil zmeny
 @app.route('/editAccount', methods=['GET', 'POST'])
@@ -2019,7 +2020,7 @@ def signIn():
     if user_email == emails[0]:
         if user_email == emails[1]:
             emails = ['', '']
-            sendEmail(user_email, "loginError", "")
+#            sendEmail(user_email, "loginError", "")
         elif emails[1] == '':
             emails[1] = user_email
         else:
@@ -2111,7 +2112,7 @@ def registration():
                    (fname, lname, user_email, password))
     connection.commit()
     cursor.close()
-    sendEmail(user_email, "register", "")
+#    sendEmail(user_email, "register", "")
     profileNameMainPage = fname
     loginData = {'message': 'login', 'email': user_email, 'status': 'cestujuci'}
     return redirect(url_for('index'))
@@ -2417,12 +2418,12 @@ def purchase(signedInOrOneTime):
 
     if signedInOrOneTime == 'register' or signedInOrOneTime == 'signIn' or signedInOrOneTime == 'signedIn':
         # Generovanie PDF
+        idOfTicket = str(idOfTicket[0])
         generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1],
                     timeToCity,
                     carrier_name, user_email, idOfTicket, price)
-        idOfTicket = str(idOfTicket[0])
-        sendEmail(user_email, "ticket", os.path.dirname(
-            os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
+#        sendEmail(user_email, "ticket", os.path.dirname(
+#            os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
 
         return tickets()
     if signedInOrOneTime == 'oneTime':
@@ -2432,8 +2433,8 @@ def purchase(signedInOrOneTime):
                     timeToCity,
                     carrier_name, user_email, idOfTicket, price)
 
-        sendEmail(user_email, "ticket", os.path.dirname(
-        os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
+#        sendEmail(user_email, "ticket", os.path.dirname(
+#        os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
 
         cursor1 = connection.cursor()
         cursor1.execute(
@@ -2461,7 +2462,6 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     symbols = cursor.fetchall()
     cursor.close()
 
-    print(price)
 
     # GENEROVANIE PDF
 
@@ -2473,17 +2473,16 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     numberOfConnection = numberOfConnection + '  ' + carrier_name
     numberOfTickets = 'Miest: ' + numberOfTickets
 
-    data = name + "; " + numberOfConnection + "; " + fromCity + "; " + toCity + "; " + timeFromTo + "; " + numberOfTickets
+    data = numberOfConnection + "; " + fromCity + "; " + toCity + "; " + timeFromTo + "; " + numberOfTickets
     qr = qrcode.QRCode(version=None, box_size=10, border=0)
     qr.add_data(data)
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
-    if type(idOfTicket) == tuple:
-        idOfTicket = idOfTicket[0]
-    if type(idOfTicket) == int:
-        idOfTicket = str(idOfTicket)
-    img.save(os.path.dirname(
-        os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png')
+#    if type(idOfTicket) == tuple:
+#        idOfTicket = idOfTicket[0]
+#    if type(idOfTicket) == int:
+#        idOfTicket = str(idOfTicket)
+    img.save(os.path.dirname(os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png')
 
     pdf = PDF(orientation='L', format='A5')
     pdf.add_font("OpenSans", "", os.path.dirname(os.path.realpath(__file__)) + '/static/OpenSans.ttf', uni=True)
@@ -2566,11 +2565,11 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.cell(0, 2, txt=numberOfTickets, ln=1)  # pocet miest
     pdf.ln(30)
     pdf.cell(64)
-    pdf.image(name=os.path.dirname(
-        os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png', w=55)
 
-    savePDFname = os.path.dirname(
-        os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
+    idOfTicket = str(idOfTicket)
+    pdf.image(os.path.dirname(os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png', w=55)
+
+    savePDFname = os.path.dirname(os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
     pdf.output(savePDFname, 'F')
     return ''
 

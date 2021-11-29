@@ -377,7 +377,7 @@
                     } else if (personal == true) {
                         var formBuy = document.createElement("form");
                             formBuy.classList.add("purchaseNotLoggedForm");
-                            formBuy.setAttribute("action", "/purchase/oneTime");
+                            formBuy.setAttribute("onsubmit", "formPersonal()");
                             formBuy.setAttribute("method", "POST");
                             formBuy.setAttribute("id", "formBuy" + buy2);
                             var formBuyForm = document.createElement("div");
@@ -562,7 +562,7 @@
                             buy2 = buy.id;
                             var formBuy = document.createElement("form");
                                 formBuy.classList.add("purchaseNotLoggedForm");
-                                formBuy.setAttribute("action", "/purchase/oneTime");
+                                formBuy.setAttribute("onsubmit", "formPersonal()");
                                 formBuy.setAttribute("method", "POST");
                                 formBuy.setAttribute("id", "formBuy" + buy2);
                                 var formBuyForm = document.createElement("div");
@@ -1082,6 +1082,9 @@
                         $.redirectPost('/pay', {"status": "register", "data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val(), "fname": $('#fname').val(), "lname": $('#lname').val(), "password": $('#password').val()});
                     };
                 });
+            };
+            function formPersonal() {
+                $.redirectPost('/purchase/oneTime', {"status": "oneTime", "data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val(), "fname": $('#fname').val(), "lname": $('#lname').val()});
             };
             function formOneTime() {
                 $.redirectPost('/pay', {"status": "oneTime", "data": $('#data').val(), "email": $('#email').val(), "number": $('#number').val(), "fname": $('#fname').val(), "lname": $('#lname').val()});

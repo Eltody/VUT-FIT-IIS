@@ -88,6 +88,8 @@
                ids.push(data[i][1]);
                locations.push(data[i][0]);
             };
+            ids.reverse();
+            locations.reverse();
             for (i in ids) {
                 var div = document.getElementsByClassName('ticketsFlex')[0];
                 if (locations[i] != null) {
