@@ -48,8 +48,8 @@ def index():
     return render_template("index.html", cities=cities, data=data, name=profileNameMainPage)
 
 
-#@app.route('/sendEmail/<email>/<status>/<ticket>')
-#def sendEmail(email, status, ticket):
+# @app.route('/sendEmail/<email>/<status>/<ticket>')
+# def sendEmail(email, status, ticket):
 #    cestujuci = connection.cursor()
 #    administrator = connection.cursor()
 #    personal = connection.cursor()
@@ -82,11 +82,11 @@ def index():
 
 #    if status == "error":
 #        message = """From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
-#To: {}{} <{}>
-#Subject: Error with IIS server
+# To: {}{} <{}>
+# Subject: Error with IIS server
 
-#There is an error with the IIS server.
-#""".format(lName, fName, email)
+# There is an error with the IIS server.
+# """.format(lName, fName, email)
 #        message = message.encode('utf-8')
 #    elif status == "loginError":
 #        message = symbols[8][0].format(lName, fName, email)
@@ -151,8 +151,9 @@ def resetPassword():
         connection.commit()
         cursor1.close()
 
-#    return sendEmail(user_email, password, "")
+    #    return sendEmail(user_email, password, "")
     return ''
+
 
 @app.route('/profile/<email>')
 def profile(email):
@@ -919,8 +920,9 @@ def addPersonal():
         connection.commit()
         cursor.close()
 
-#    return sendEmail(email, password, "register")
+    #    return sendEmail(email, password, "register")
     return ''
+
 
 # funkcia pre vymazanie uctu personalu dopravcom alebo vymazanie uctu administratorom
 @app.route('/deleteAccount', methods=['GET', 'POST'])
@@ -967,7 +969,7 @@ def addConnection():
         carrierID = cursor1.fetchone()
         cursor1.close()
         carrierID = carrierID[0]
-    else:   # funkcia cez dopravca
+    else:  # funkcia cez dopravca
         carrierID = carrierID[0]
     fromCity = request.form['fromCity']
     fromCityTime = request.form['fromCityTime']
@@ -1464,8 +1466,9 @@ def addCarrier():
     connection.commit()
     cursor.close()
 
-#    return sendEmail(carrierEmail, carrierPassword, "register")
+    #    return sendEmail(carrierEmail, carrierPassword, "register")
     return ''
+
 
 # funkcia pre upravu uctu administratorom - vsektych uctov a zaroven je dostupna z profil zmeny
 @app.route('/editAccount', methods=['GET', 'POST'])
@@ -1473,8 +1476,8 @@ def editAccount():
     boolIsPersonal = False
     userFname = request.form['fName']
     userLname = request.form['lName']
-    userEmailEdited = request.form['email']   # email zmeneny
-    userEmail = request.form['emailEdited']   # email povodny, ano su zamenene nazvy premennych ...
+    userEmailEdited = request.form['email']  # email zmeneny
+    userEmail = request.form['emailEdited']  # email povodny, ano su zamenene nazvy premennych ...
     userPassword = request.form['password']
 
     print(userFname, userLname, userEmailEdited, userEmail, userPassword)
@@ -1496,39 +1499,39 @@ def editAccount():
         boolIsPersonal = False
 
     # update bez zmeny povodneho hesla
-    if userPassword == '' and boolIsPersonal == False and userEmail == userEmailEdited:     # nejde to z profile, ale admin - dopravca alebo dopravca
+    if userPassword == '' and boolIsPersonal == False and userEmail == userEmailEdited:  # nejde to z profile, ale admin - dopravca alebo dopravca
         cursor1 = connection.cursor()
         cursor1.execute("UPDATE Cestujuci SET meno = '%s', priezvisko = '%s', email = '%s' WHERE id = '%s'" % (
-        userFname, userLname, userEmail, idOfUser))
+            userFname, userLname, userEmail, idOfUser))
         connection.commit()
         cursor1.close()
-    elif userPassword == '' and boolIsPersonal == False and userEmail != userEmailEdited:     # nejde to z profile, ale admin - dopravca alebo dopravca
+    elif userPassword == '' and boolIsPersonal == False and userEmail != userEmailEdited:  # nejde to z profile, ale admin - dopravca alebo dopravca
         cursor1 = connection.cursor()
         cursor1.execute("UPDATE Cestujuci SET meno = '%s', priezvisko = '%s', email = '%s' WHERE id = '%s'" % (
-        userFname, userLname, userEmailEdited, idOfUser))
+            userFname, userLname, userEmailEdited, idOfUser))
         connection.commit()
         cursor1.close()
     # update so zmenou povodneho hesla
-    elif userPassword == '' and boolIsPersonal == True and userEmail == userEmailEdited:     # nejde to z profile ale z admin-dopravca alebo dopravca
+    elif userPassword == '' and boolIsPersonal == True and userEmail == userEmailEdited:  # nejde to z profile ale z admin-dopravca alebo dopravca
         cursor1 = connection.cursor()
         cursor1.execute("UPDATE Personal SET meno = '%s', priezvisko = '%s', email = '%s' WHERE id = '%s'" % (
             userFname, userLname, userEmail, idOfUser))
         connection.commit()
         cursor1.close()
-    elif userPassword == '' and boolIsPersonal == True and userEmail != userEmailEdited:     # nejde to z profile ale z admin-dopravca alebo dopravca
+    elif userPassword == '' and boolIsPersonal == True and userEmail != userEmailEdited:  # nejde to z profile ale z admin-dopravca alebo dopravca
         cursor1 = connection.cursor()
         cursor1.execute("UPDATE Personal SET meno = '%s', priezvisko = '%s', email = '%s' WHERE id = '%s'" % (
             userFname, userLname, userEmailEdited, idOfUser))
         connection.commit()
         cursor1.close()
-    elif userPassword != '' and boolIsPersonal == False:    # ideme z profile
+    elif userPassword != '' and boolIsPersonal == False:  # ideme z profile
         cursor1 = connection.cursor()
         cursor1.execute(
             "UPDATE Cestujuci SET meno = '%s', priezvisko = '%s', email = '%s', heslo = '%s', WHERE id = '%s'" % (
                 userFname, userLname, userEmail, userPassword, idOfUser))
         connection.commit()
         cursor1.close()
-    elif userPassword != '' and boolIsPersonal == True:     # ideme z profile
+    elif userPassword != '' and boolIsPersonal == True:  # ideme z profile
         cursor1 = connection.cursor()
         cursor1.execute(
             "UPDATE Personal SET meno = '%s', priezvisko = '%s', email = '%s', heslo = '%s', WHERE id = '%s'" % (
@@ -1536,8 +1539,38 @@ def editAccount():
         connection.commit()
         cursor1.close()
 
+    return ''
 
 
+@app.route('/editCarrierInfo', methods=['GET', 'POST'])
+def editCarrierInfo():
+    emailEdited = request.form['email']  # zmenit na tento
+    email = request.form['emailEdited']  # povodny email, ano su vymenene premenne ...
+    nameCarrier = request.form['name']
+    print(email, emailEdited, nameCarrier)
+
+    if email == emailEdited:
+        cursor1 = connection.cursor()
+        cursor1.execute("UPDATE Dopravca SET nazov = '%s' WHERE email = '%s'" % (nameCarrier, email))
+        connection.commit()
+        cursor1.close()
+    else:
+        cursor1 = connection.cursor()
+        cursor1.execute("UPDATE Dopravca SET email = '%s', nazov = '%s' WHERE email = '%s'" % (emailEdited, nameCarrier, email))
+        connection.commit()
+        cursor1.close()
+
+    return ''
+
+
+@app.route('/deleteCarrierInfo', methods=['GET', 'POST'])
+def deleteCarrierInfo():
+    email = request.form['email']
+    cursor1 = connection.cursor()
+    cursor1.execute("DELETE FROM Dopravca WHERE email = '%s'" % email)
+    connection.commit()
+    cursor1.close()
+    # TODO VYMAZAT VSETKY DOPRAVCOVE SPOJE, PERSONAL,....
     return ''
 
 
@@ -1774,9 +1807,9 @@ def search(boolLoadMore, lastConnectionOnWeb):
 
                         # vypocitanie ceny na zaklade doby trvania spoju v minutach a ceny za jednu minutu
                         int(connectionTimeMinutes)
-                        #priceOfConnection = connectionTimeMinutes * 0.08
-                        #priceOfConnection = str(round(priceOfConnection, 2))
-                        #priceOfConnection = priceOfConnection + ''.join(symbols[1])
+                        # priceOfConnection = connectionTimeMinutes * 0.08
+                        # priceOfConnection = str(round(priceOfConnection, 2))
+                        # priceOfConnection = priceOfConnection + ''.join(symbols[1])
 
                         # formatovanie casu
                         if tmp_timeFromCity < 959:
@@ -1846,7 +1879,8 @@ def search(boolLoadMore, lastConnectionOnWeb):
 
                             # vypocitanie poctu km z latitude and longitude dvoch miest
                             cursor1 = connection.cursor()
-                            cursor1.execute("SELECT geograficka_poloha FROM Zastavky WHERE nazov_zastavky='%s';" % fromCity)
+                            cursor1.execute(
+                                "SELECT geograficka_poloha FROM Zastavky WHERE nazov_zastavky='%s';" % fromCity)
                             geoLocationOfFromCity = cursor1.fetchone()
                             cursor1.close()
                             geoLocationOfFromCity = geoLocationOfFromCity[0]
@@ -2020,7 +2054,7 @@ def signIn():
     if user_email == emails[0]:
         if user_email == emails[1]:
             emails = ['', '']
-#            sendEmail(user_email, "loginError", "")
+        #            sendEmail(user_email, "loginError", "")
         elif emails[1] == '':
             emails[1] = user_email
         else:
@@ -2112,7 +2146,7 @@ def registration():
                    (fname, lname, user_email, password))
     connection.commit()
     cursor.close()
-#    sendEmail(user_email, "register", "")
+    #    sendEmail(user_email, "register", "")
     profileNameMainPage = fname
     loginData = {'message': 'login', 'email': user_email, 'status': 'cestujuci'}
     return redirect(url_for('index'))
@@ -2285,6 +2319,7 @@ def validate(regOrSignIn):
         # loginData = json.dumps(loginData)
         return loginData
 
+
 # platobna brana - medzikrok pred purchase - overenie platby
 @app.route('/pay', methods=['GET', 'POST'])
 def pay():
@@ -2305,7 +2340,9 @@ def pay():
     number = request.form['number']
     tmp_data = list(data.split(","))
     price = tmp_data[9]
-    return render_template('pay.html', data=data, email=email, fname=fname, lname=lname, number=number, price=price, status=status, password=password)
+    return render_template('pay.html', data=data, email=email, fname=fname, lname=lname, number=number, price=price,
+                           status=status, password=password)
+
 
 # nakup listkana konkretny spoj
 @app.route('/purchase/<signedInOrOneTime>', methods=['GET', 'POST'])
@@ -2422,8 +2459,8 @@ def purchase(signedInOrOneTime):
         generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, cities[0], timeFromCity, cities[1],
                     timeToCity,
                     carrier_name, user_email, idOfTicket, price)
-#        sendEmail(user_email, "ticket", os.path.dirname(
-#            os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
+        #        sendEmail(user_email, "ticket", os.path.dirname(
+        #            os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
 
         return tickets()
     if signedInOrOneTime == 'oneTime':
@@ -2433,8 +2470,8 @@ def purchase(signedInOrOneTime):
                     timeToCity,
                     carrier_name, user_email, idOfTicket, price)
 
-#        sendEmail(user_email, "ticket", os.path.dirname(
-#        os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
+        #        sendEmail(user_email, "ticket", os.path.dirname(
+        #        os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf')
 
         cursor1 = connection.cursor()
         cursor1.execute(
@@ -2462,7 +2499,6 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     symbols = cursor.fetchall()
     cursor.close()
 
-
     # GENEROVANIE PDF
 
     class PDF(FPDF):
@@ -2478,10 +2514,10 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     qr.add_data(data)
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
-#    if type(idOfTicket) == tuple:
-#        idOfTicket = idOfTicket[0]
-#    if type(idOfTicket) == int:
-#        idOfTicket = str(idOfTicket)
+    #    if type(idOfTicket) == tuple:
+    #        idOfTicket = idOfTicket[0]
+    #    if type(idOfTicket) == int:
+    #        idOfTicket = str(idOfTicket)
     img.save(os.path.dirname(os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png')
 
     pdf = PDF(orientation='L', format='A5')
@@ -2567,9 +2603,11 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.cell(64)
 
     idOfTicket = str(idOfTicket)
-    pdf.image(os.path.dirname(os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png', w=55)
+    pdf.image(os.path.dirname(os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png',
+              w=55)
 
-    savePDFname = os.path.dirname(os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
+    savePDFname = os.path.dirname(
+        os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
     pdf.output(savePDFname, 'F')
     return ''
 
