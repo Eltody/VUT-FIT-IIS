@@ -460,10 +460,6 @@ VALUES ('12', '5', '9:30'); -- Liberec
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
 VALUES ('12', '2', '11:25'); -- Hradec Kralove
 INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('12', '1', '11:55'); -- Brno
-INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
-VALUES ('12', '10', '11:56'); -- Praha
-INSERT INTO Spoj_Zastavka (id_spoju, id_zastavky, cas_prejazdu)
 VALUES ('12', '8', '12:24'); -- Pardubice
 INSERT INTO Vozidlo_Spoj (id_vozidla, id_spoju)
 VALUES ('6', '12'); -- flix bus, Liberec-Hradec Kralove-
