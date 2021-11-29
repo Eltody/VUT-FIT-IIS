@@ -151,7 +151,7 @@ CREATE TABLE Personal_Spoj(
 CREATE TABLE Symboly(
     id INT(11) NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (id),
-    symbol VARCHAR(20)
+    symbol VARCHAR(500)
 );
 
 CREATE TABLE Jizdenka_Zastavky(
@@ -192,6 +192,55 @@ VALUES('↔');
 
 INSERT INTO Symboly(symbol)
 VALUES('→');
+
+INSERT INTO Symboly(symbol)
+VALUES('From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: Registrácia na webe CP.poriadne.sk
+
+Úspešne sme Vás zaregistrovali na portáli CP.poriadne.sk.
+');
+
+INSERT INTO Symboly(symbol)
+VALUES('From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: Upozornenie na podozrivú aktivitu
+
+Niekto sa pokúša prihlásiť do Vášho účtu na portáli CP.poriadne.sk. Ak ste to neboli Vy odporúčame Vám si zmeniť heslo.
+');
+
+INSERT INTO Symboly(symbol)
+VALUES('From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: Registrácia na webe CP.poriadne.sk
+
+Práve ste boli zaregistrovaný na portáli CP.poriadne.sk.
+Vaše prihlasovacie údaje sú
+email: {}, heslo: {}.
+');
+
+INSERT INTO Symboly(symbol)
+VALUES('From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: CP cestovný lístok
+
+Ďakujeme za zakúpenie cestovného lístka cez portál CP.poriadne.sk.
+Váš cestovný lístok nájdete na adrese {}.
+
+
+');
+
+INSERT INTO Symboly(symbol)
+VALUES('From: CP.poriadne.sk <cp.poriadne.sk@gmail.com>
+To: {}{} <{}>
+Subject: CP obnova hesla
+
+Na Vašu žiadosť Vám bolo vygenerované nové heslo pre prístup na stránku CP.poriadne.sk. Odporúčame Vám toto heslo čo najskôr zmeniť.
+
+Vaše nové heslo: {}
+');
+
+
 
 INSERT INTO Administrator (meno, priezvisko, email, heslo)
 VALUES ('Admin', 'Admin', 'admin@admin.com', 'password');
