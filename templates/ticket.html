@@ -56,7 +56,7 @@
         <!-- Scripts -->
         <script>
             var data = {{data|tojson}}
-            document.getElementsByClassName('pdf')[0].data = "https://drive.google.com/viewerng/viewer?embedded=true&url=http://92.52.58.251/static/tickets/" + data[0][0] + "_" + data[0][1] + ".pdf";
+            document.getElementsByClassName('pdf')[0].data = "http://167.172.167.233/static/tickets/" + data[0][0] + "_" + data[0][1] + ".pdf";
             var div = document.getElementsByClassName('ticketsFlex')[0];
             if (data[0][2] != null) {
                 var p = document.createElement("p");
@@ -69,6 +69,12 @@
                         em.innerHTML = data[0][2];
                     p.appendChild(em);
                 div.appendChild(p);
+                var a = document.createElement("a");
+                    a.style.color = "white";
+                    a.style.fontSize = "18px";
+                    a.innerHTML = "Lístok: " + data[0][0] + "_" + data[0][1] + ".pdf";
+                    a.setAttribute("href", "http://167.172.167.233/static/tickets/" + data[0][0] + "_" + data[0][1] + ".pdf");
+                div.appendChild(a);
             };
         </script>
         <script>
