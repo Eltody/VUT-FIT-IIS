@@ -2467,6 +2467,39 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     symbols = cursor.fetchall()
     cursor.close()
 
+    # vypocitanie poctu km z latitude and longitude dvoch miest
+    cursor1 = connection.cursor()
+    cursor1.execute(
+        "SELECT geograficka_poloha FROM Zastavky WHERE nazov_zastavky='%s';" % fromCity)
+    geoLocationOfFromCity = cursor1.fetchone()
+    cursor1.close()
+    geoLocationOfFromCity = geoLocationOfFromCity[0]
+    geoLocationOfFromCity = geoLocationOfFromCity.split(',')
+    geoLocationOfFromCity = [float(i) for i in geoLocationOfFromCity]
+
+    cursor1 = connection.cursor()
+    cursor1.execute(
+        "SELECT geograficka_poloha FROM Zastavky WHERE nazov_zastavky='%s';" % toCity)
+    geoLocationOfToCity = cursor1.fetchone()
+    cursor1.close()
+    geoLocationOfToCity = geoLocationOfToCity[0]
+    geoLocationOfToCity = geoLocationOfToCity.split(',')
+    geoLocationOfToCity = [float(i) for i in geoLocationOfToCity]
+
+    R = 6373.0  # approximate radius of earth in km
+    lat1 = radians(geoLocationOfFromCity[0])
+    lon1 = radians(geoLocationOfFromCity[1])
+    lat2 = radians(geoLocationOfToCity[0])
+    lon2 = radians(geoLocationOfToCity[1])
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    distance = R * c
+    CO2saved_bus = distance * 0.102 # co2 saved in kilograms 102g/km -> 0.102kg/km by BUS
+    CO2saved_car = distance * 0.201 # co2 saved in kilograms 201g/km -> 0.201kg/km by CAR
+    CO2saved = CO2saved_car - CO2saved_bus  # co2 saved by travelling by bus instead of using car
+
     # GENEROVANIE PDF
 
     class PDF(FPDF):
@@ -2534,27 +2567,27 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     str_from = 'Z'
     pdf.cell(0, 2, txt=str_from, ln=1)
     pdf.ln(-2)
-    pdf.cell(73)
-    pdf.set_font('OpenSans', size=13)
-    str_time = 'Odchod - ' + symbols[3][0]
-    pdf.cell(0, 2, txt=str_time, ln=1)
+    pdf.cell(86)
+    pdf.set_font('Times', 'B', size=13)
+    str_to = 'DO'
+    pdf.cell(0, 2, txt=str_to, ln=1)
     pdf.ln(-12)
     pdf.cell(80)
     pdf.set_font('OpenSans', size=13)
     pdf.cell(0, 2, txt=numberOfConnection, ln=1)
     pdf.ln(8)
-    pdf.cell(150)
-    pdf.set_font('Times', 'B', size=13)
-    str_to = 'DO'
-    pdf.cell(0, 2, txt=str_to, ln=1)
+    pdf.cell(135)
+    pdf.set_font('OpenSans', size=13)
+    str_time = 'Odchod - ' + symbols[3][0]
+    pdf.cell(0, 2, txt=str_time, ln=1)
     pdf.ln(8)
-    pdf.cell(63)
+    pdf.cell(65)
     pdf.set_font('OpenSans', size=10)
-    pdf.cell(0, 2, txt=timeFromTo, ln=1)  # datumy casy
-    pdf.ln(-2)
-    pdf.cell(129)
-    pdf.set_font('OpenSans', size=12)
     pdf.cell(0, 2, txt=toCity, ln=1)  # kam
+    pdf.ln(-2)
+    pdf.cell(125)
+    pdf.set_font('OpenSans', size=12)
+    pdf.cell(0, 2, txt=timeFromTo, ln=1)   # datumy casy
     pdf.ln(-2)
     pdf.cell(10)
     pdf.set_font('OpenSans', size=12)
@@ -2567,12 +2600,21 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.cell(25)
     pdf.set_font('OpenSans', size=10)
     pdf.cell(0, 2, txt=numberOfTickets, ln=1)  # pocet miest
-    pdf.ln(30)
+    pdf.ln(26)
     pdf.cell(64)
-
     idOfTicket = str(idOfTicket)
     pdf.image(os.path.dirname(os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png',
               w=55)
+    pdf.ln(3)
+    pdf.cell(47)
+    pdf.set_font('OpenSans', size=10)
+    co2saved_txt = 'Kúpou tohto lístka ste práve ušetrili '
+    pdf.cell(0, 2, txt=co2saved_txt, ln=1)
+    CO2saved = round(CO2saved, 2)
+    pdf.ln(-2)
+    pdf.cell(106)
+    CO2saved = str(CO2saved) + ' kg emisií CO2.'
+    pdf.cell(0, 2, txt=CO2saved, ln=1)
 
     savePDFname = os.path.dirname(
         os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf'

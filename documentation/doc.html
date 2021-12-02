@@ -46,13 +46,15 @@
 
 <h2>Implementace</h2>
 <h3>Backend</h3>
-<p> Ako implementaèný jazyk sme si vybrali Python3. Po výbere daného jazyka sa nám zdal ako vhodný framework pre programovanie webových slu¾ieb framework Flask. Pre pripojenie a na dotazy s databázou sme pou¾ili PyMySQL. V súbore app.py sa vykonáva logika aplikácie a podµa vyvolávaných funkcií z frontendu vyberá HTML template, ktorý sa bude renderova».
+<p> Ako implementaèný jazyk sme si vybrali Python3. Po výbere daného jazyka sa nám zdal ako vhodný framework pre programovanie webových slu¾ieb framework Flask. Pre pripojenie a na dotazy s databázou sme pou¾ili PyMySQL. V súbore app.py (na serveri treba premenova» na __init.py__) sa vykonáva logika aplikácie a podµa vyvolávaných funkcií z frontendu vyberá HTML template, ktorý sa bude renderova».
+<li>app.py - logika aplikácie, pripojenie a dotazy na databázu</li>
 </p>
 <h3>Frontend</h3>
-<p> Templates sú napísané pomocu CSS a HTML, ktoré obsahujú miesta, kde sa generujú prvky a informácie dynamicky pomocou jQuery a JavaScript.
+<p> Templates sú napísané pomocou CSS a HTML, ktoré obsahujú miesta, kde sa generujú prvky a informácie dynamicky pomocou jQuery a JavaScript.
 </p>
 <h3>Databáza</h3>
 <p> Ako relaènú databázu sme si vybrali MariaDB, ktorá je hostovaná na na¹om súkromnom serveri, ktorý sme zabezpeèili proti neoèakávanému pádu odoslaním informaèného emailu, aby sme vedeli vèas zareagova».
+<li>database.sql - skript pre inicializáciu databázi a naplnenie dátami</li>
 </p>
 
 <h3>Databáze</h3>
