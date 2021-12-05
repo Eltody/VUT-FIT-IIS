@@ -1,3 +1,5 @@
+# Created By  : Zatko Tomas (xzatko02)
+# Created Date: 5.10.2021
 from flask import Flask, render_template, request, redirect, url_for  # pip install flask
 from math import sin, cos, sqrt, atan2, radians
 from fpdf import FPDF  # fpdf class
