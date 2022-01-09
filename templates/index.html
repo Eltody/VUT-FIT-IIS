@@ -55,21 +55,17 @@
                                 <div class="form-content">
                                     <h3>Vyhľadajte spoj:</h3>
                                     <form action="/search/connections/bus" method="POST">
-                                        <div class="search-col" style="padding-bottom: 10px;">
-                                            <label for="fromCity">Odkiaľ:</label><br>
-                                            <select name="fromCity" id="fromCity" class="search-select"></select>
-                                        </div>
-                                        <div class="search-col">
-                                            <a class="swap" href="#" onclick="swap()"><i class="fas fa-exchange-alt"></i></a>
-                                            <label for="toCity" style="margin-right: -28px">Kam:</label><br>
-						                    <select name="toCity" id="toCity" class="search-select"></select>
-                                        </div>
+                                        <p id="error" class="hidden" style="color: red; padding: 0">Zvolené neznáme mesto</p>
+                                        <input class="search-select" type="text" placeholder="Odkiaľ" id="fromCity" name="fromCity" oninput="showFrom('in', this)" onfocusout="showFrom('out', this)" onkeyup="filterFunctionFrom()" required>
+                                        <div id="from" class="dropDown show"></div>
+                                        <input class="search-select" type="text" placeholder="Kam" id="toCity" name="toCity" oninput="showTo('in', this)" onfocusout="showTo('out', this)" onkeyup="filterFunctionTo()" required>
+                                        <div id="to" class="dropDown show"></div>
                                         <div class="search-col">
                                             <label for="date">Dátum:</label><br>
                                             <input type="datetime-local" name="date" id="date" class="search-select" required>
                                         </div>
                                         <div class="search-col" style="height: 40px;">
-                                            <button type="submit" style="width: 100%;" class="buttonSearch"><a>Hľadať</a></button>
+                                            <button id="submit" type="submit" style="width: 100%;" class="buttonSearch"><a>Hľadať</a></button>
                                         </div>
                                     </form>
                                 </div>
@@ -87,20 +83,94 @@
         <script>
             var cities = {{cities|tojson}};
             cities = cities.sort(Intl.Collator().compare);
-            var fromCity = document.getElementById('fromCity');
-            var toCity = document.getElementById('toCity');
+            var fromCity = document.getElementById('from');
+            var toCity = document.getElementById('to');
             for (var i in cities) {
-                var option = document.createElement('option');
-                option.value = cities[i];
-                option.innerHTML = cities[i];
-                fromCity.add(option);
+                var a = document.createElement('a');
+                a.href = "#";
+                a.addEventListener("click", function(e) {
+                    document.getElementById('fromCity').value = e.currentTarget.innerHTML;
+                    document.getElementById("from").classList.toggle("show");
+                }, false);
+                a.innerHTML = cities[i];
+                fromCity.appendChild(a);
             };
             for (var i in cities) {
-                var option = document.createElement('option');
-                option.value = cities[i];
-                option.innerHTML = cities[i];
-                toCity.add(option);
+                var a = document.createElement('a');
+                a.href = "#";
+                a.addEventListener("click", function(e) {
+                    document.getElementById('toCity').value = e.currentTarget.innerHTML;
+                    document.getElementById("to").classList.toggle("show");
+                }, false);
+                a.innerHTML = cities[i];
+                toCity.appendChild(a);
             };
+
+            function showFrom(param, e) {
+                if (param == 'out') {
+                    setTimeout(function(){ document.getElementById("from").classList.add("show"); }, 200);
+                    setTimeout(function(){
+                        if (!cities.includes(e.value) && e.value != '') {
+                            document.getElementById("error").classList.remove("hidden");
+                            document.getElementById('submit').disabled = true;
+                        } else {
+                            document.getElementById("error").classList.add("hidden");
+                            document.getElementById('submit').disabled = false;
+                        }
+                    }, 200);
+                } else {
+                    document.getElementById("from").classList.remove("show");
+                }
+            }
+
+            function showTo(param, e) {
+                if (param == 'out') {
+                    setTimeout(function(){ document.getElementById("to").classList.add("show"); }, 200);
+                    setTimeout(function(){
+                        if (!cities.includes(e.value) && e.value != '') {
+                            document.getElementById("error").classList.remove("hidden");
+                            document.getElementById('submit').disabled = true;
+                        } else {
+                            document.getElementById("error").classList.add("hidden");
+                            document.getElementById('submit').disabled = false;
+                        }
+                    }, 200);
+                } else {
+                    document.getElementById("to").classList.remove("show");
+                }
+            }
+
+            function filterFunctionFrom() {
+                var input, filter, a, i;
+                input = document.getElementById("fromCity");
+                filter = input.value.toUpperCase();
+                div = document.getElementById("from");
+                a = div.getElementsByTagName("a");
+                for (i = 0; i < a.length; i++) {
+                    txtValue = a[i].textContent || a[i].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        a[i].style.display = "";
+                    } else {
+                        a[i].style.display = "none";
+                    }
+                }
+            }
+
+            function filterFunctionTo() {
+                var input, filter, a, i;
+                input = document.getElementById("toCity");
+                filter = input.value.toUpperCase();
+                div = document.getElementById("to");
+                a = div.getElementsByTagName("a");
+                for (i = 0; i < a.length; i++) {
+                    txtValue = a[i].textContent || a[i].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        a[i].style.display = "";
+                    } else {
+                        a[i].style.display = "none";
+                    }
+                }
+            }
         </script>
         <script>
             var cookies = document.cookie.split('; ');

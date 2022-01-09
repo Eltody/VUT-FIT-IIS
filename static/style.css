@@ -214,6 +214,7 @@ h1, h2, h3, h4, h5, h6, figure {
     font-weight: 300;
     padding-left: 15px;
     padding-right: 15px;
+    margin-bottom: 5px;
     border-radius: 7px;
 }
 .search-select:active, .search-select:focus {
@@ -1137,4 +1138,34 @@ input[type=number] {
 }
 .editForm h2 {
     font-size: 28px;
+}
+
+.dropDown {
+    position: absolute;
+    background-color: #f1f1f1;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    width: 22vw;
+    min-width: 250px;
+    height: fit-content;
+    max-height: -webkit-fill-available;
+    overflow-y: scroll;
+    right: 0;
+}
+
+.dropDown a {
+    color: black;
+    padding: 6px 16px;
+    text-decoration: none;
+    border-style: dotted;
+    border-width: 0.1px;
+    display: block;
+}
+
+.dropDown a:hover {
+    background-color: #00000
+}
+
+.show {
+    display: none;
 }
