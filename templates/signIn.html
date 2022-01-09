@@ -72,11 +72,11 @@
                                     </div>
                                     <div class="search-col">
                                         <label for="email">Email:</label><br>
-                                        <input class="search-select" type="email" id="email" name="email" required>
+                                        <input class="search-select" type="email" id="email" name="email" pattern="/^\S+@\S+\.\S+$/" required title="Email musí byť vo formáte xxx@xxx.xxx">
                                     </div>
                                     <div class="search-col">
                                         <label for="password">Heslo:</label><br>
-                                        <input class="search-select" type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onkeyup="validatePassword()" required>
+                                        <input class="search-select" type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onkeyup="validatePassword()" required title="Heslo musí obsahovať minimálne 8 znakov, jedno číslo a jedno veľké písmeno.">
                                     </div>
                                     <div class="search-col">
                                         <label for="passwordConfirm">Potvrďte heslo:</label><br>

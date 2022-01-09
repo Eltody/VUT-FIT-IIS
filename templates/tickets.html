@@ -108,14 +108,14 @@
                 };
                 var object = document.createElement("object");
                     object.classList.add("pdf");
-                    object.data = "http://167.172.167.233/static/tickets/" + email + "_" + ids[i] + ".pdf";
+                    object.data = "http://127.0.0.1:5000/static/tickets/" + email + "_" + ids[i] + ".pdf";
                 div.appendChild(object);
                 var a = document.createElement("a");
                     a.classList.add("link");
                     a.style.color = "white";
                     a.style.fontSize = "18px";
                     a.innerHTML = "Lístok: " + email + "_" + ids[i] + ".pdf";
-                    a.setAttribute("href", "http://167.172.167.233/static/tickets/" + email + "_" + ids[i] + ".pdf");
+                    a.setAttribute("href", "http://127.0.0.1:5000/static/tickets/" + email + "_" + ids[i] + ".pdf");
                 div.appendChild(a);
             };
         </script>

@@ -2521,10 +2521,10 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     #        idOfTicket = idOfTicket[0]
     #    if type(idOfTicket) == int:
     #        idOfTicket = str(idOfTicket)
-    img.save(os.path.dirname(os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png')
+    img.save('C:/Users/Martin/Documents/GitHub/VUT_FIT_IIS_proj1/static/qr/' + user_email + '_' + idOfTicket + '.png')
 
     pdf = PDF(orientation='L', format='A5')
-    pdf.add_font("OpenSans", "", os.path.dirname(os.path.realpath(__file__)) + '/static/OpenSans.ttf', uni=True)
+    pdf.add_font("OpenSans", "", 'C:/Users/Martin/Documents/GitHub/VUT_FIT_IIS_proj1/static/OpenSans.ttf', uni=True)
     pdf.add_page()
     pdf.set_line_width(0.0)
     pdf.set_font('Times', 'B', size=17)
@@ -2605,8 +2605,7 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.ln(26)
     pdf.cell(64)
     idOfTicket = str(idOfTicket)
-    pdf.image(os.path.dirname(os.path.realpath(__file__)) + '/static/qr/' + user_email + '_' + idOfTicket + '.png',
-              w=55)
+    pdf.image('C:/Users/Martin/Documents/GitHub/VUT_FIT_IIS_proj1/static/qr/' + user_email + '_' + idOfTicket + '.png', w=55)
     pdf.ln(3)
     pdf.cell(47)
     pdf.set_font('OpenSans', size=10)
@@ -2618,8 +2617,7 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     CO2saved = str(CO2saved) + ' kg emisií CO2.'
     pdf.cell(0, 2, txt=CO2saved, ln=1)
 
-    savePDFname = os.path.dirname(
-        os.path.realpath(__file__)) + '/static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
+    savePDFname = 'C:/Users/Martin/Documents/GitHub/VUT_FIT_IIS_proj1/static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
     pdf.output(savePDFname, 'F')
     return ''
 

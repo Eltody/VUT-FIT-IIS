@@ -258,6 +258,20 @@ h1, h2, h3, h4, h5, h6, figure {
     float: left;
     color: black;
 }
+.buttonSwap {
+    width: 15%;
+    height: 40px;
+    cursor: pointer;
+    text-align: center;
+    background: rgba(128, 128, 128, 0.6);
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 1px 7px #333;
+    font-size: 16px;
+    padding: 5px 15px;
+    border-radius: 7px;
+    float: right;
+    color: black;
+}
 .buttonRegister {
     height: 20px;
     cursor: pointer;
