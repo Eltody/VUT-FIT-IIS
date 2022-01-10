@@ -56,9 +56,9 @@
                                     <h3>Vyhľadajte spoj:</h3>
                                     <form action="/search/connections/bus" method="POST">
                                         <p id="error" class="hidden" style="color: red; padding: 0">Zvolené neznáme mesto</p>
-                                        <input class="search-select" type="text" placeholder="Odkiaľ" id="fromCity" name="fromCity" oninput="showFrom('in', this)" onfocusout="showFrom('out', this)" onkeyup="filterFunctionFrom()" required>
+                                        <input class="search-select" type="text" placeholder="Odkiaľ" id="fromCity" name="fromCity" onfocus="showFrom('in', this)" onfocusout="showFrom('out', this)" onkeyup="filterFunctionFrom()" required>
                                         <div id="from" class="dropDown show"></div>
-                                        <input class="search-select" type="text" placeholder="Kam" id="toCity" name="toCity" oninput="showTo('in', this)" onfocusout="showTo('out', this)" onkeyup="filterFunctionTo()" required>
+                                        <input class="search-select" type="text" placeholder="Kam" id="toCity" name="toCity" onfocus="showTo('in', this)" onfocusout="showTo('out', this)" onkeyup="filterFunctionTo()" required>
                                         <div id="to" class="dropDown show"></div>
                                         <div class="search-col">
                                             <label for="date">Dátum:</label><br>

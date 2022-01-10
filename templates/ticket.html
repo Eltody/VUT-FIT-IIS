@@ -46,7 +46,8 @@
                     <div class="ticketsFlex">
                         <div id="spacer"></div>
                         <h3 style="color: red; margin-bottom: 15px">Lístok si stiahnite a uschovajte!</h3>
-                        <object class="pdf"></object>
+                        <object class="pdf">
+                        </object>
                     </div>
                 </div>
             </header>
@@ -58,7 +59,7 @@
         <!-- Scripts -->
         <script>
             var data = {{data|tojson}}
-            document.getElementsByClassName('pdf')[0].data = "http://167.172.167.233/static/tickets/" + data[0][0] + "_" + data[0][1] + ".pdf";
+            document.getElementsByClassName('pdf')[0].data = "http://127.0.0.1:5000/static/tickets/" + data[0][0] + "_" + data[0][1] + ".pdf";
             var div = document.getElementsByClassName('ticketsFlex')[0];
             if (data[0][2] != null) {
                 var p = document.createElement("p");
@@ -75,7 +76,7 @@
                     a.style.color = "white";
                     a.style.fontSize = "18px";
                     a.innerHTML = "Lístok: " + data[0][0] + "_" + data[0][1] + ".pdf";
-                    a.setAttribute("href", "http://167.172.167.233/static/tickets/" + data[0][0] + "_" + data[0][1] + ".pdf");
+                    a.setAttribute("href", "http://127.0.0.1:5000/static/tickets/" + data[0][0] + "_" + data[0][1] + ".pdf");
                 div.appendChild(a);
             };
         </script>
