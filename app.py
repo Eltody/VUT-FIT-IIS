@@ -1978,12 +1978,12 @@ def preSignIn():
     return render_template('signIn.html', data="")
 
 
-@app.route('/signIn/<x>')
-def signIn(x):
+@app.route('/signIn/<signInEmail>/<signInPwd>')
+def signIn(signInPwd, signInEmail):
     global loginData
     global profileNameMainPage
-    user_email = str(request.form['lEmail'])
-    password = str(request.form['lPassword'])
+    user_email = str(signInEmail)
+    password = str(signInPwd)
     # kontrola spravnosti prihlasovacich udajov z webu a DB
     cestujuci = connection.cursor()
     administrator = connection.cursor()
@@ -2004,7 +2004,9 @@ def signIn(x):
             cestujuci.close()
             profileNameMainPage = meno
             loginData = {'message': 'login', 'email': user_email, 'status': 'cestujuci'}
-            return redirect(url_for('index'))
+            loginDataNotGlobal = json.dumps(loginData)
+            return loginDataNotGlobal
+            # return redirect(url_for('index'))
     for (meno, email, heslo) in personal:
         if email == user_email and heslo == password:
             personal.close()
@@ -2521,10 +2523,10 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     #        idOfTicket = idOfTicket[0]
     #    if type(idOfTicket) == int:
     #        idOfTicket = str(idOfTicket)
-    img.save('C:/Users/Martin/Documents/GitHub/VUT_FIT_IIS_proj1/static/qr/' + user_email + '_' + idOfTicket + '.png')
+    img.save('C:/Users/Eltody/Documents/GitHub/VUT_FIT_IIS_proj1/static/qr/' + user_email + '_' + idOfTicket + '.png')
 
     pdf = PDF(orientation='L', format='A5')
-    pdf.add_font("OpenSans", "", 'C:/Users/Martin/Documents/GitHub/VUT_FIT_IIS_proj1/static/OpenSans.ttf', uni=True)
+    pdf.add_font("OpenSans", "", 'C:/Users/Eltody/Documents/GitHub/VUT_FIT_IIS_proj1/static/OpenSans.ttf', uni=True)
     pdf.add_page()
     pdf.set_line_width(0.0)
     pdf.set_font('Times', 'B', size=17)
@@ -2605,7 +2607,7 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     pdf.ln(26)
     pdf.cell(64)
     idOfTicket = str(idOfTicket)
-    pdf.image('C:/Users/Martin/Documents/GitHub/VUT_FIT_IIS_proj1/static/qr/' + user_email + '_' + idOfTicket + '.png', w=55)
+    pdf.image('C:/Users/Eltody/Documents/GitHub/VUT_FIT_IIS_proj1/static/qr/' + user_email + '_' + idOfTicket + '.png', w=55)
     pdf.ln(3)
     pdf.cell(47)
     pdf.set_font('OpenSans', size=10)
@@ -2617,7 +2619,7 @@ def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCit
     CO2saved = str(CO2saved) + ' kg emisií CO2.'
     pdf.cell(0, 2, txt=CO2saved, ln=1)
 
-    savePDFname = 'C:/Users/Martin/Documents/GitHub/VUT_FIT_IIS_proj1/static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
+    savePDFname = 'C:/Users/Eltody/Documents/GitHub/VUT_FIT_IIS_proj1/static/tickets/' + user_email + '_' + idOfTicket + '.pdf'
     pdf.output(savePDFname, 'F')
     return ''
 
