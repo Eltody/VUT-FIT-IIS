@@ -1997,7 +1997,7 @@ def signIn(signInPwd, signInEmail):
         if email == user_email and heslo == password:
             administrator.close()
             profileNameMainPage = meno
-            loginData = {'message': 'login', 'email': user_email, 'status': 'administrator'}
+            loginData = {'message': 'login', 'email': user_email, 'status': 'administrator', 'name': profileNameMainPage}
             return redirect(url_for('index'))
     for (meno, email, heslo) in cestujuci:
         if email == user_email and heslo == password:
@@ -2011,13 +2011,15 @@ def signIn(signInPwd, signInEmail):
         if email == user_email and heslo == password:
             personal.close()
             profileNameMainPage = meno
-            loginData = {'message': 'login', 'email': user_email, 'status': 'personal'}
+            loginData = {'message': 'login', 'email': user_email, 'status': 'personal', 'name': profileNameMainPage}
+            loginDataNotGlobal = json.dumps(loginData)
             return redirect(url_for('index'))
     for (nazov, email, heslo) in carrier:
         if email == user_email and heslo == password:
             carrier.close()
             profileNameMainPage = nazov
-            loginData = {'message': 'login', 'email': user_email, 'status': 'carrier'}
+            loginData = {'message': 'login', 'email': user_email, 'status': 'carrier', 'name': profileNameMainPage}
+            loginDataNotGlobal = json.dumps(loginData)
             return redirect(url_for('index'))
     cestujuci.close()
     administrator.close()
