@@ -7,6 +7,7 @@ body {
     color: #777;
     background: #fff;
     margin: 0px;
+    position: relative;
 }
 .background {
     background-size: contain;
@@ -285,8 +286,8 @@ h1, h2, h3, h4, h5, h6, figure {
     color: black;
 }
 .signInFlex {
-    min-height: 100vh;
-    width: 100vw;
+    min-height: 100%;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;

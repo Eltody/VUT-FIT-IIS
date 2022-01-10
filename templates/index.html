@@ -52,7 +52,7 @@
                                 <div class="form-wrap">
                                     <div class="form-content">
                                         <h3>Prihláste sa:</h3>
-                                        <form action="/signIn" method="POST">
+                                        <form>
                                             <div class="search-col">
                                                 <label for="lEmail">Prihlasovací email:</label><br>
                                                 <input class="search-select" type="email" id="lEmail" name="lEmail" required>
@@ -75,13 +75,12 @@
                                 </div>
                             </div>
 
-
                             <!-- Registration form -->
                             <div id="registerForm" class="regForm animate__animated animate__fadeIn hidden">
                                 <div class="form-wrap">
                                     <div class="form-content">
                                         <h3>Zaregistrujte sa:</h3>
-                                        <form action="/registration" method="POST">
+                                        <form>
                                             <div class="search-col">
                                                 <label for="fname">Meno:</label><br>
                                                 <input class="search-select" type="text" id="fname" name="fname" pattern="[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z]+" required>
@@ -104,7 +103,7 @@
                                             </div>
                                             <p id="regError"></p>
                                             <div class="search-col">
-                                                <button id="submitRegister" type="submit" class="buttonSearch"><a>Registrovať</a></button>
+                                                <button id="submitRegister" type="button" class="buttonSearch"><a>Registrovať</a></button>
                                                 <button type="button" class="buttonSwap" onmouseover="showPassword()" onmouseout="hidePassword()"><i name="passIcon" class="far fa-eye"></i></button>
                                             </div><br><br>
                                             <div class="search-col">
@@ -295,52 +294,9 @@
                 document.cookie = "name=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
                 document.cookie = "email=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
                 document.cookie = "status=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
-                location.replace("/");
-            };
-        </script>
-        <script>
-            var message = "{{data.message}}";
-            var email = "{{data.email}}";
-            var name = {{name|tojson}};
-            var status = "{{data.status}}";
-            if (message !== '') {
-                expiry = new Date();
-                expiry.setTime(expiry.getTime()+(3600*1000));
-                document.cookie = "name="+name+"; expires=" + expiry.toGMTString();
-                document.cookie = "email="+email+"; expires=" + expiry.toGMTString();
-                document.cookie = "status="+status+"; expires=" + expiry.toGMTString();
-                if (status === "personal") {
-                    document.getElementById("status").innerHTML = "Editor";
-                } else if (status === "carrier") {
-                    document.getElementById("status").innerHTML = "Editor";
-                } else if (status === "administrator") {
-                    document.getElementById("status").innerHTML = "Editor";
-                };
-                document.getElementById("user").classList.remove("hidden");
-                document.getElementById("login").classList.add("hidden");
-                document.getElementById("user").innerHTML = name;
-                document.getElementById("profile").setAttribute("href", "/profile/" + email);
-            }
-        </script>
-        <script>
-            function swap(){
-                var tmp = document.getElementById("fromCity").options.selectedIndex;
-                document.getElementById("fromCity").options.selectedIndex = document.getElementById("toCity").options.selectedIndex;
-                document.getElementById("toCity").options.selectedIndex = tmp;
-            };
-        </script>
-        <script>
-            var select = document.getElementById('toCity');
-            for (var i = 0; i < select.length; i++) {
-                if (select[i].childNodes[0].nodeValue === 'Praha - Hlavní nádraží'){
-                    select.selectedIndex = i;
-                };
-            };
-            var select = document.getElementById('fromCity');
-            for (var i = 0; i < select.length; i++) {
-                if (select[i].childNodes[0].nodeValue === 'Brno - ÚAN Zvonařka'){
-                    select.selectedIndex = i;
-                };
+
+                document.getElementById("user").classList.add("hidden");
+                document.getElementById("login").classList.remove("hidden");
             };
         </script>
         <script>
@@ -372,22 +328,6 @@
                     $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo($(document.body)).submit();
                 }
             });
-        </script>
-        <script>
-            var error = "{{data.error}}";
-            var email = "{{data.email}}";
-            if (error === 'reg') {
-                document.getElementById("register").classList.remove("animate__fadeIn")
-                document.getElementById("register").classList.remove("hidden");
-                document.getElementById("login").classList.add("hidden");
-                document.getElementById("regError").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
-            }
-            if (error === 'log') {
-                document.getElementById("login").classList.remove("animate__fadeIn")
-                document.getElementById("register").classList.add("hidden");
-                document.getElementById("login").classList.remove("hidden");
-                document.getElementById("logError").innerHTML = "Chybne zadaný email alebo heslo."
-            }
         </script>
         <script>
             function register(){
@@ -499,12 +439,11 @@
                 $("#signIn").click(function (event) {
                     $.getJSON('/signIn/' + $('#lEmail').val() + '/' + $('#lPassword').val())
                     .done(function(data) {
-                        console.log($('#lEmail').val());
-                        var message = "{{data.message}}";
-                        var email = "{{data.email}}";
-                        var name = {{name|tojson}};
-                        var status = "{{data.status}}";
-                        if (message !== '') {
+                        var message = data.message;
+                        var email = data.email;
+                        var name = data.name;
+                        var status = data.status;
+                        if (message == 'login') {
                             expiry = new Date();
                             expiry.setTime(expiry.getTime()+(3600*1000));
                             document.cookie = "name="+name+"; expires=" + expiry.toGMTString();
@@ -521,6 +460,44 @@
                             document.getElementById("login").classList.add("hidden");
                             document.getElementById("user").innerHTML = name;
                             document.getElementById("profile").setAttribute("href", "/profile/" + email);
+
+                            document.getElementById("signInForm").classList.add("hidden");
+                        } else if (message == 'error') {
+                            document.getElementById("logError").innerHTML = "Chybne zadaný email alebo heslo."
+                        }
+                    });
+                });
+            });
+
+            $(function() {
+                $("#submitRegister").click(function (event) {
+                    $.getJSON('/registration/' + $('#fname').val() + '/' + $('#lname').val() + '/' + $('#email').val() + '/' + $('#password').val())
+                    .done(function(data) {
+                        var message = data.message;
+                        var email = data.email;
+                        var name = data.name;
+                        var status = data.status;
+                        if (message == 'reg') {
+                            expiry = new Date();
+                            expiry.setTime(expiry.getTime()+(3600*1000));
+                            document.cookie = "name="+name+"; expires=" + expiry.toGMTString();
+                            document.cookie = "email="+email+"; expires=" + expiry.toGMTString();
+                            document.cookie = "status="+status+"; expires=" + expiry.toGMTString();
+                            if (status === "personal") {
+                                document.getElementById("status").innerHTML = "Editor";
+                            } else if (status === "carrier") {
+                                document.getElementById("status").innerHTML = "Editor";
+                            } else if (status === "administrator") {
+                                document.getElementById("status").innerHTML = "Editor";
+                            };
+                            document.getElementById("user").classList.remove("hidden");
+                            document.getElementById("login").classList.add("hidden");
+                            document.getElementById("user").innerHTML = name;
+                            document.getElementById("profile").setAttribute("href", "/profile/" + email);
+
+                            document.getElementById("signInForm").classList.add("hidden");
+                        } else {
+                            document.getElementById("regError").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
                         }
                     });
                 });
