@@ -9,8 +9,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" type="text/css" href="/static/style.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"> </script>
         <script src="https://kit.fontawesome.com/6079958bc1.js" crossorigin="anonymous"></script>
     </head>
     <!-- Main body -->
@@ -26,7 +28,7 @@
                     <!-- Menu -->
                     <div id="menu">
                         <ul>
-                            <a href='/preSignIn' id="login">Prihlásiť sa</a>
+                            <a href='#' onclick="signIn()" id="login">Prihlásiť sa</a>
                             <!-- Logged in dropdown -->
                             <div class="dropdown">
                                 <a href="#" class="hidden" id="user"></a>
@@ -44,6 +46,75 @@
             <header id="header"role="banner">
                 <div class="container">
                     <div class="flex">
+                        <div id="signInForm" class="signInFlex hidden">
+                            <a style="position: absolute; width: 100vw; height: 100vh; background: rgb(0,0,0,.7)" onclick="signIn()"></a>
+                            <div id="loginForm" class="signInForm animate__animated animate__fadeIn">
+                                <div class="form-wrap">
+                                    <div class="form-content">
+                                        <h3>Prihláste sa:</h3>
+                                        <form action="/signIn" method="POST">
+                                            <div class="search-col">
+                                                <label for="lEmail">Prihlasovací email:</label><br>
+                                                <input class="search-select" type="email" id="lEmail" name="lEmail" required>
+                                            </div>
+                                            <div class="search-col">
+                                                <label for="lPassword">Heslo:</label><br>
+                                                <input class="search-select" type="password" id="lPassword" name="lPassword" required>
+                                            </div>
+                                            <p id="logError"></p>
+                                            <div class="search-col">
+                                                <button type="submit" id="signIn" class="buttonSearch"><a>Prihlásiť</a></button>
+                                                <button type="button" class="buttonSwap" onmouseover="showPassword()" onmouseout="hidePassword()"><i name="passIcon" class="far fa-eye"></i></button>
+                                            </div><br><br>
+                                            <div class="search-col">
+                                                <button type="button" class="buttonRegister" onclick="registration()"><a>Vytvoriť účet</a></button>
+                                            </div>
+                                            <button type="button" class="buttonRegister" id="resetPassword"><a>Obnoviť heslo</a></button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Registration form -->
+                            <div id="registerForm" class="regForm animate__animated animate__fadeIn hidden">
+                                <div class="form-wrap">
+                                    <div class="form-content">
+                                        <h3>Zaregistrujte sa:</h3>
+                                        <form action="/registration" method="POST">
+                                            <div class="search-col">
+                                                <label for="fname">Meno:</label><br>
+                                                <input class="search-select" type="text" id="fname" name="fname" pattern="[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z]+" required>
+                                            </div>
+                                            <div class="search-col">
+                                                <label for="lname">Priezvisko:</label><br>
+                                                <input class="search-select" type="text" id="lname" name="lname" pattern="[äěščřŕžýáíéóôúůďťňľĺÄĚŠČŘŔŽÝÁÍÉÓÔÚŮĎŤŇĽĹa-zA-Z]+" required>
+                                            </div>
+                                            <div class="search-col">
+                                                <label for="email">Email:</label><br>
+                                                <input class="search-select" type="email" id="email" name="email" pattern="[a-z0-9._%-]+@[a-z0-9._%-]+\.[a-z]{2,4}" required title="Email musí byť vo formáte xxx@xxx.xxx">
+                                            </div>
+                                            <div class="search-col">
+                                                <label for="password">Heslo:</label><br>
+                                                <input class="search-select" type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onkeyup="validatePassword()" required title="Heslo musí obsahovať minimálne 8 znakov, jedno číslo a jedno veľké písmeno.">
+                                            </div>
+                                            <div class="search-col">
+                                                <label for="passwordConfirm">Potvrďte heslo:</label><br>
+                                                <input class="search-select" type="password" id="passwordConfirm" name="passwordConfirm" onkeyup="validatePassword()" required>
+                                            </div>
+                                            <p id="regError"></p>
+                                            <div class="search-col">
+                                                <button id="submitRegister" type="submit" class="buttonSearch"><a>Registrovať</a></button>
+                                                <button type="button" class="buttonSwap" onmouseover="showPassword()" onmouseout="hidePassword()"><i name="passIcon" class="far fa-eye"></i></button>
+                                            </div><br><br>
+                                            <div class="search-col">
+                                                <button type="button" class="buttonRegister" onclick="registration()"><a>Prihlásenie</a></button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Slogan -->
                         <div class="col-full">
                             <h1 class="animate__animated animate__fadeIn animate__slow" id="test">Potrebujete nájsť autobus?</h1>
@@ -73,6 +144,13 @@
                         </div>
                     </div>
                 </div>
+                <div id="confirmDialog" class="hidden">
+                    <p id="message" style="color: black">Prajete si obnoviť heslo pre nasledujúci email?</p>
+                    <p id="emailMsg"></p>
+                </div>
+                <div id="successfulDialog" class="hidden">
+                    <p style="color: green">Nové heslo vám bolo odoslané na email.</p>
+                </div>
             </header>
             <!-- Footer -->
             <footer id="footer">
@@ -80,6 +158,25 @@
             </footer>
         </div>
         <!-- Scripts -->
+        <script>
+            function signIn() {
+                if (document.getElementById("signInForm").classList.contains("hidden")) {
+                    document.getElementById("signInForm").classList.remove("hidden");
+                } else {
+                    document.getElementById("signInForm").classList.add("hidden");
+                }
+            }
+
+            function registration() {
+                if (document.getElementById("loginForm").classList.contains("hidden")) {
+                    document.getElementById("loginForm").classList.remove("hidden");
+                    document.getElementById("registerForm").classList.add("hidden");
+                } else {
+                    document.getElementById("loginForm").classList.add("hidden");
+                    document.getElementById("registerForm").classList.remove("hidden");
+                }
+            }
+        </script>
         <script>
             var cities = {{cities|tojson}};
             cities = cities.sort(Intl.Collator().compare);
@@ -274,6 +371,158 @@
                     });
                     $('<form action="' + location + '" method="POST">' + form + '</form>').appendTo($(document.body)).submit();
                 }
+            });
+        </script>
+        <script>
+            var error = "{{data.error}}";
+            var email = "{{data.email}}";
+            if (error === 'reg') {
+                document.getElementById("register").classList.remove("animate__fadeIn")
+                document.getElementById("register").classList.remove("hidden");
+                document.getElementById("login").classList.add("hidden");
+                document.getElementById("regError").innerHTML = "Účet s týmto emailom už existuje. Zadajte iný email alebo sa prihláste."
+            }
+            if (error === 'log') {
+                document.getElementById("login").classList.remove("animate__fadeIn")
+                document.getElementById("register").classList.add("hidden");
+                document.getElementById("login").classList.remove("hidden");
+                document.getElementById("logError").innerHTML = "Chybne zadaný email alebo heslo."
+            }
+        </script>
+        <script>
+            function register(){
+                if (document.getElementById("login").classList[3] === 'hidden' || document.getElementById("login").classList[2] === 'hidden'){
+                    document.getElementById("register").classList.add("hidden");
+                    document.getElementById("login").classList.remove("hidden");
+                } else {
+                    document.getElementById("register").classList.remove("hidden");
+                    document.getElementById("login").classList.add("hidden");
+                }
+            }
+        </script>
+        <script>
+            $(document).on('click','#resetPassword', function() {
+                if (addEmail($("#lEmail").val())) {
+                    $("#confirmDialog").removeClass("hidden");
+                    $("#confirmDialog").dialog({
+                        draggable: false,
+                        resizable: false,
+                        height: 225,
+                        width: 275,
+                        modal: true,
+                        buttons: {
+                            "Potvrdiť": function() {
+                                $("#successfulDialog").removeClass("hidden");
+                                $.post('/resetPassword', {"email": $("#lEmail").val()}, function(result) {});
+                                $(this).dialog("close");
+                                $("#successfulDialog").dialog({
+                                    draggable: false,
+                                    resizable: false,
+                                    height: 150,
+                                    width: 250,
+                                    modal: true,
+                                    hide: {effect: 'fade', duration: 500},
+                                    open: function(event, ui){
+                                        setTimeout("$('#successfulDialog').dialog('close')", 1000);
+                                    }
+                                });
+                                $(".ui-dialog-titlebar").hide();
+                            },
+                            "Zrušiť": function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                    $(".ui-dialog-titlebar").hide();
+                };
+            });
+            function addEmail(email) {
+                var regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+                if (!regex.test(email)) {
+                    document.getElementById("message").classList.add("hidden");
+                    document.getElementById("emailMsg").innerHTML = "Prosím skontrolujte zadaný email";
+
+                    $("#confirmDialog").removeClass("hidden");
+                    $("#confirmDialog").dialog({
+                        draggable: false,
+                        resizable: false,
+                        width: 275,
+                        modal: true,
+                        buttons: {
+                            "Zrušiť": function() {
+                                $(this).dialog("close");
+                                document.getElementById("message").classList.remove("hidden");
+                                return false;
+                            }
+                        }
+                    });
+                    $(".ui-dialog-titlebar").hide();
+                } else {
+                    document.getElementById("emailMsg").innerHTML = email;
+                    return true;
+                };
+            };
+        </script>
+        <script>
+            function validatePassword() {
+                var password = document.getElementById("password");
+                var passwordConfirm = document.getElementById("passwordConfirm");
+                if (password.value == passwordConfirm.value) {
+                    passwordConfirm.setCustomValidity('');
+                } else {
+                    passwordConfirm.setCustomValidity("Heslá sa nezhodujú");
+                };
+            };
+        </script>
+        <script>
+            function showPassword(){
+                document.getElementById("lPassword").type = 'text';
+                document.getElementById("password").type = 'text';
+                document.getElementById("passwordConfirm").type = 'text';
+                document.getElementsByName("passIcon")[0].classList.remove("fa-eye");
+                document.getElementsByName("passIcon")[0].classList.add("fa-eye-slash");
+                document.getElementsByName("passIcon")[1].classList.remove("fa-eye");
+                document.getElementsByName("passIcon")[1].classList.add("fa-eye-slash");
+            }
+            function hidePassword(){
+                document.getElementById("lPassword").type = 'password';
+                document.getElementById("password").type = 'password';
+                document.getElementById("passwordConfirm").type = 'password';
+                document.getElementsByName("passIcon")[0].classList.add("fa-eye");
+                document.getElementsByName("passIcon")[0].classList.remove("fa-eye-slash");
+                document.getElementsByName("passIcon")[1].classList.add("fa-eye");
+                document.getElementsByName("passIcon")[1].classList.remove("fa-eye-slash");
+            }
+        </script>
+        <script>
+            $(function() {
+                $("#signIn").click(function (event) {
+                    $.getJSON('/signIn/[' + data[length - 1] + ']')
+                    .done(function(data) {
+                        var message = "{{data.message}}";
+                        var email = "{{data.email}}";
+                        var name = {{name|tojson}};
+                        var status = "{{data.status}}";
+                        if (message !== '') {
+                            expiry = new Date();
+                            expiry.setTime(expiry.getTime()+(3600*1000));
+                            document.cookie = "name="+name+"; expires=" + expiry.toGMTString();
+                            document.cookie = "email="+email+"; expires=" + expiry.toGMTString();
+                            document.cookie = "status="+status+"; expires=" + expiry.toGMTString();
+                            if (status === "personal") {
+                                document.getElementById("status").innerHTML = "Editor";
+                            } else if (status === "carrier") {
+                                document.getElementById("status").innerHTML = "Editor";
+                            } else if (status === "administrator") {
+                                document.getElementById("status").innerHTML = "Editor";
+                            };
+                            document.getElementById("user").classList.remove("hidden");
+                            document.getElementById("login").classList.add("hidden");
+                            document.getElementById("user").innerHTML = name;
+                            document.getElementById("profile").setAttribute("href", "/profile/" + email);
+                        }
+                    });
+                });
             });
         </script>
     </body>

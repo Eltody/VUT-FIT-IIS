@@ -286,9 +286,12 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 .signInFlex {
     min-height: 100vh;
+    width: 100vw;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 10;
+    position: absolute;
 }
 .signInFlex  .form-wrap {
     width: 80vw !important;
