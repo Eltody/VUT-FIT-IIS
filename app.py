@@ -2044,11 +2044,13 @@ def signIn(signInPwd, signInEmail):
         emails = ['', '']
         emails[0] = user_email
 
-    data = {'error': 'log', 'email': user_email}
-    return render_template('signIn.html', data=data)
+    data = {'message': 'error', 'email': '', 'status': '', 'name': ''}
+    dataToSendError = json.dumps(data)
+    return dataToSendError
+    # return render_template('signIn.html', data=data)
 
 
-@app.route('/registration/<regFName>/<regLName>/<regEmail>/<regPwd>', methods=['POST'])
+@app.route('/registration/<regFName>/<regLName>/<regEmail>/<regPwd>')
 def registration(regFName, regLName, regEmail, regPwd):
     global loginData
     global profileNameMainPage
