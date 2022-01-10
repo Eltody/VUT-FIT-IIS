@@ -2003,7 +2003,7 @@ def signIn(signInPwd, signInEmail):
         if email == user_email and heslo == password:
             cestujuci.close()
             profileNameMainPage = meno
-            loginData = {'message': 'login', 'email': user_email, 'status': 'cestujuci'}
+            loginData = {'message': 'login', 'email': user_email, 'status': 'cestujuci', 'name': profileNameMainPage}
             loginDataNotGlobal = json.dumps(loginData)
             return loginDataNotGlobal
             # return redirect(url_for('index'))
