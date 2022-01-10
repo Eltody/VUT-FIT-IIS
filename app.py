@@ -1998,7 +1998,9 @@ def signIn(signInPwd, signInEmail):
             administrator.close()
             profileNameMainPage = meno
             loginData = {'message': 'login', 'email': user_email, 'status': 'administrator', 'name': profileNameMainPage}
-            return redirect(url_for('index'))
+            loginDataNotGlobal = json.dumps(loginData)
+            return loginDataNotGlobal
+            # return redirect(url_for('index'))
     for (meno, email, heslo) in cestujuci:
         if email == user_email and heslo == password:
             cestujuci.close()
@@ -2013,14 +2015,16 @@ def signIn(signInPwd, signInEmail):
             profileNameMainPage = meno
             loginData = {'message': 'login', 'email': user_email, 'status': 'personal', 'name': profileNameMainPage}
             loginDataNotGlobal = json.dumps(loginData)
-            return redirect(url_for('index'))
+            return loginDataNotGlobal
+            # return redirect(url_for('index'))
     for (nazov, email, heslo) in carrier:
         if email == user_email and heslo == password:
             carrier.close()
             profileNameMainPage = nazov
             loginData = {'message': 'login', 'email': user_email, 'status': 'carrier', 'name': profileNameMainPage}
             loginDataNotGlobal = json.dumps(loginData)
-            return redirect(url_for('index'))
+            return loginDataNotGlobal
+            # return redirect(url_for('index'))
     cestujuci.close()
     administrator.close()
     personal.close()
@@ -2044,14 +2048,14 @@ def signIn(signInPwd, signInEmail):
     return render_template('signIn.html', data=data)
 
 
-@app.route('/registration', methods=['POST'])
-def registration():
+@app.route('/registration/<regFName>/<regLName>/<regEmail>/<regPwd>', methods=['POST'])
+def registration(regFName, regLName, regEmail, regPwd):
     global loginData
     global profileNameMainPage
-    fname = request.form['fname']
-    lname = request.form['lname']
-    user_email = request.form['email']
-    password = request.form['password']
+    fname = regFName
+    lname = regLName
+    user_email = regEmail
+    password = regPwd
 
     cursor = connection.cursor()
     cursor.execute("SELECT email FROM Cestujuci")
@@ -2066,7 +2070,9 @@ def registration():
             passwordOfEmail = passwordOfEmail[0]
             if passwordOfEmail != ' ':
                 data = {'error': 'reg', 'email': user_email}
-                return render_template('signIn.html', data=data)
+                dataToSent = json.dumps(data)
+                return dataToSent
+                # return render_template('signIn.html', data=data)
     cursor.close()
 
     cursor = connection.cursor()
@@ -2082,7 +2088,9 @@ def registration():
             passwordOfEmail = passwordOfEmail[0]
             if passwordOfEmail != ' ':
                 data = {'error': 'reg', 'email': user_email}
-                return render_template('signIn.html', data=data)
+                dataToSent = json.dumps(data)
+                return dataToSent
+                # return render_template('signIn.html', data=data)
     cursor.close()
 
     cursor = connection.cursor()
@@ -2098,7 +2106,9 @@ def registration():
             passwordOfEmail = passwordOfEmail[0]
             if passwordOfEmail != ' ':
                 data = {'error': 'reg', 'email': user_email}
-                return render_template('signIn.html', data=data)
+                dataToSent = json.dumps(data)
+                return dataToSent
+                # return render_template('signIn.html', data=data)
     cursor.close()
 
     cursor = connection.cursor()
@@ -2114,7 +2124,9 @@ def registration():
             passwordOfEmail = passwordOfEmail[0]
             if passwordOfEmail != ' ':
                 data = {'error': 'reg', 'email': user_email}
-                return render_template('signIn.html', data=data)
+                dataToSent = json.dumps(data)
+                return dataToSent
+                # return render_template('signIn.html', data=data)
     cursor.close()
 
     cursor = connection.cursor()
@@ -2124,8 +2136,10 @@ def registration():
     cursor.close()
     sendEmail(user_email, "register", "")
     profileNameMainPage = fname
-    loginData = {'message': 'login', 'email': user_email, 'status': 'cestujuci'}
-    return redirect(url_for('index'))
+    loginData = {'message': 'login', 'email': user_email, 'status': 'cestujuci', 'name': profileNameMainPage}
+    loginDataToSend = json.dumps(loginData)
+    return loginDataToSend
+    #return redirect(url_for('index'))
 
 
 # DOPRAVCA - navrhovanie novych zastavok
