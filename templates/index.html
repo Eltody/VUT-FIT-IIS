@@ -63,7 +63,7 @@
                                             </div>
                                             <p id="logError"></p>
                                             <div class="search-col">
-                                                <button type="submit" id="signIn" class="buttonSearch"><a>Prihlásiť</a></button>
+                                                <button type="button" id="signIn" class="buttonSearch"><a>Prihlásiť</a></button>
                                                 <button type="button" class="buttonSwap" onmouseover="showPassword()" onmouseout="hidePassword()"><i name="passIcon" class="far fa-eye"></i></button>
                                             </div><br><br>
                                             <div class="search-col">
@@ -497,8 +497,9 @@
         <script>
             $(function() {
                 $("#signIn").click(function (event) {
-                    $.getJSON('/signIn/[' + data[length - 1] + ']')
+                    $.getJSON('/signIn/' + $('#lEmail').val() + '/' + $('#lPassword').val())
                     .done(function(data) {
+                        console.log($('#lEmail').val());
                         var message = "{{data.message}}";
                         var email = "{{data.email}}";
                         var name = {{name|tojson}};

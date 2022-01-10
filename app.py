@@ -1978,8 +1978,8 @@ def preSignIn():
     return render_template('signIn.html', data="")
 
 
-@app.route('/signIn', methods=['GET', 'POST'])
-def signIn():
+@app.route('/signIn/<x>')
+def signIn(x):
     global loginData
     global profileNameMainPage
     user_email = str(request.form['lEmail'])
