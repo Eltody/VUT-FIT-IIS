@@ -2071,7 +2071,7 @@ def registration(regFName, regLName, regEmail, regPwd):
             cursor.close()
             passwordOfEmail = passwordOfEmail[0]
             if passwordOfEmail != ' ':
-                data = {'error': 'reg', 'email': user_email}
+                data = {'message': 'reg', 'email': user_email}
                 dataToSent = json.dumps(data)
                 return dataToSent
                 # return render_template('signIn.html', data=data)
@@ -2089,7 +2089,7 @@ def registration(regFName, regLName, regEmail, regPwd):
             cursor.close()
             passwordOfEmail = passwordOfEmail[0]
             if passwordOfEmail != ' ':
-                data = {'error': 'reg', 'email': user_email}
+                data = {'message': 'reg', 'email': user_email}
                 dataToSent = json.dumps(data)
                 return dataToSent
                 # return render_template('signIn.html', data=data)
@@ -2107,7 +2107,7 @@ def registration(regFName, regLName, regEmail, regPwd):
             cursor.close()
             passwordOfEmail = passwordOfEmail[0]
             if passwordOfEmail != ' ':
-                data = {'error': 'reg', 'email': user_email}
+                data = {'message': 'reg', 'email': user_email}
                 dataToSent = json.dumps(data)
                 return dataToSent
                 # return render_template('signIn.html', data=data)
@@ -2125,7 +2125,7 @@ def registration(regFName, regLName, regEmail, regPwd):
             cursor.close()
             passwordOfEmail = passwordOfEmail[0]
             if passwordOfEmail != ' ':
-                data = {'error': 'reg', 'email': user_email}
+                data = {'message': 'reg', 'email': user_email}
                 dataToSent = json.dumps(data)
                 return dataToSent
                 # return render_template('signIn.html', data=data)
@@ -2138,7 +2138,7 @@ def registration(regFName, regLName, regEmail, regPwd):
     cursor.close()
     sendEmail(user_email, "register", "")
     profileNameMainPage = fname
-    loginData = {'message': 'login', 'email': user_email, 'status': 'cestujuci', 'name': profileNameMainPage}
+    loginData = {'message': 'error', 'email': user_email, 'status': 'cestujuci', 'name': profileNameMainPage}
     loginDataToSend = json.dumps(loginData)
     return loginDataToSend
     #return redirect(url_for('index'))
