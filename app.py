@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for  # pip inst
 from math import sin, cos, sqrt, atan2, radians
 from fpdf import FPDF  # fpdf class
 import os
+import re
 import json
 import qrcode
 import string
@@ -2480,6 +2481,25 @@ def purchase(signedInOrOneTime):
         data.append([user_email, idOfTicket, currentLocation])
 
         return render_template('ticket.html', data=data)
+
+# funkcia na vymazanie pdf z archivu, AJAX
+@app.route('/removeTicket', methods=['POST'])
+def removeTicket():
+    pdfToDelete_tmp = request.form['ticket']
+    pdfToDelete = re.sub('\.pdf$', '', pdfToDelete_tmp)
+    pdfToDelete = pdfToDelete.rsplit('_', 1)[1]
+
+    # vymazanie listku z DB
+    cursor1 = connection.cursor()
+    cursor1.execute("DELETE FROM Jizdenka WHERE id = '%s'" % pdfToDelete)
+    connection.commit()
+    cursor1.close()
+    # vymazanie listku z PC
+    pdfToDelete_tmp = pdfToDelete_tmp.rsplit('Lístok: ', 1)[1]
+    pdfDeleteFromPC = 'C:/Users/Eltody/Documents/GitHub/VUT_FIT_IIS_proj1/static/tickets/' + pdfToDelete_tmp
+    os.remove(pdfDeleteFromPC)
+
+    return ''
 
 
 def generatePDF(fname, lname, numberOfConnection, date, numberOfTickets, fromCity, timeFrom, toCity, timeTo,
