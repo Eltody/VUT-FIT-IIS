@@ -11,4 +11,3 @@
 ## Členovia tímu:
 * **Tomáš Zaťko (xzatko02)**
 * **Martin Rakús (xrakus04)**
-* **Milan Koval (xkoval18)**
